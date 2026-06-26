@@ -24,8 +24,8 @@ pipeline {
 
 			steps {
 
-				git branch: 'main',
-				url: 'https://gitlab.company.com/buerger-app-automation.git'
+				git branch: 'feat/user_registration_signed',
+				url: 'https://github.com/CivicAIPortal/mobile-testautomation.git'
 			}
 		}
 
