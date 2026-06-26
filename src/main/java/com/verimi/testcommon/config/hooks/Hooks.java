@@ -174,27 +174,6 @@ public class Hooks implements IConfigurable {
     }
 
 
-    @SneakyThrows
-    public WebDriver getDriverForCucumber(String scenarioName) {
-        /*
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        String language = System.getenv("LOCALE");
-        if (language == null) {
-            language = de_DE; // Default locale is set to German
-        }
-        Locale.setLocale(language);
-        log.info("Locale used for testing: {}", language);
-        TestExecutionRegistry.setTestSide(TestSide.FRONTEND);
-        log.info("Scenario name: {}", scenarioName);
-        initWebdriver(scenarioName);
-        driver = getDriver();
-        log.info("Initialized WebDriver in Before hook for method");
-        return driver;
-
-         */
-        return null;
-    }
-
     public void terminateAndOpenDeutschlandApp() {
         if (isAndroid()) {
             AndroidDriver androidDriver = ((AndroidDriver) driver);
