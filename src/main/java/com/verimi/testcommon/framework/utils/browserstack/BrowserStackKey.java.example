@@ -1,0 +1,6 @@
+// Create ".java" file and specify BrowserStack Key when running test against BrowserStack from you local system
+package com.dipp.frontendtest.framework;
+
+public class BrowserStackKey {
+    public static final String BROWSER_STACK_KEY = "";
+}

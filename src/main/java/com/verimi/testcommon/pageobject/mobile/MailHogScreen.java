@@ -1,0 +1,145 @@
+package com.verimi.testcommon.pageobject.mobile;
+
+import static com.verimi.testcommon.config.Config.LOAD_WAIT;
+import static com.verimi.testcommon.config.Config.isAndroid;
+import static com.verimi.testcommon.pageobject.mobile.OtpScreen.TSY_MAIL_SUBJECT;
+
+import java.time.Duration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.ScreenOrientation;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.verimi.testcommon.framework.utils.constant.NumericConstants;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.pagefactory.AndroidBy;
+import io.appium.java_client.pagefactory.AndroidFindAll;
+import io.appium.java_client.pagefactory.iOSXCUITBy;
+import io.appium.java_client.pagefactory.iOSXCUITFindAll;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class MailHogScreen extends MobileScreen {
+
+    private static final Pattern OTP_PATTERN = Pattern.compile("\\b(\\d{6})\\b");
+    @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@text='Deutschland-App PIN']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+            @iOSXCUITBy(accessibility = "Einstellungen"),
+            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+    })
+    private WebElement screenTitle;
+    @AndroidFindAll({
+            @AndroidBy(id = "com.android.chrome:id/search_box_text"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+    })
+    private WebElement searchBox;
+    @AndroidFindAll({
+            @AndroidBy(id = "com.android.chrome:id/positive_button"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'positive_button')]"),
+    })
+    private WebElement acceptAlert;
+    @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@text='" + TSY_MAIL_SUBJECT + "']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+    })
+    private WebElement subjectText;
+    @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@text='Dieser einmalige Code ist nur für 20 Minuten gültig.']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+    })
+    private WebElement oneTimeCode;
+
+    public MailHogScreen(WebDriver driver) {
+        super(driver);
+    }
+
+    public static void openMobileBrowser(WebDriver driver) {
+        if (isAndroid()) {
+            AndroidDriver androidDriver = ((AndroidDriver) driver);
+            try {
+                androidDriver.activateApp(ANDROID_CHROME_PACKAGE);
+            } catch (WebDriverException e) {
+                androidDriver.activateApp(ANDROID_CHROME_PACKAGE);
+            }
+            androidDriver.rotate(ScreenOrientation.PORTRAIT);
+        } else {
+            IOSDriver iosDriver = ((IOSDriver) driver);
+            iosDriver.activateApp(IOS_SAFARI_PACKAGE);
+        }
+
+    }
+
+    @Override
+    public void waitUntilPageLoads() {
+    }
+
+    @SneakyThrows
+    public String getOtpCode(String mailHogUrl, String emailAddress) {
+        openMobileBrowser(driver);
+        String pageSource = "";
+        if (isAndroid()) {
+            AndroidDriver androidDriver = ((AndroidDriver) driver);
+            WebDriverWait wait = new WebDriverWait(androidDriver, Duration.ofSeconds(LOAD_WAIT));
+            waitUntilClickable(searchBox).sendKeys(mailHogUrl);
+            androidDriver.pressKey(new KeyEvent(AndroidKey.ENTER));
+            if (isElementDisplayedWithWait(acceptAlert, NumericConstants.NUMERIC_12)) {
+                acceptAlert.click();
+            }
+            androidDriver.rotate(ScreenOrientation.LANDSCAPE);
+            WebElement emailElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//*[@text='" + emailAddress + "']")));
+            emailElement.click();
+
+            androidDriver.rotate(ScreenOrientation.PORTRAIT);
+            waitUntilVisible(subjectText);
+            waitUntilVisible(oneTimeCode);
+            pageSource = androidDriver.getPageSource();
+
+        } else {
+            IOSDriver iosDriver = ((IOSDriver) driver);
+            WebDriverWait wait = new WebDriverWait(iosDriver, Duration.ofSeconds(LOAD_WAIT));
+            waitUntilClickable(searchBox).sendKeys(mailHogUrl + "\n");
+            waitUntilClickable(acceptAlert).click();
+
+            iosDriver.rotate(ScreenOrientation.LANDSCAPE);
+
+            WebElement emailElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//*[@text='" + emailAddress + "']")));
+            emailElement.click();
+
+            iosDriver.rotate(ScreenOrientation.PORTRAIT);
+            waitUntilVisible(subjectText);
+            waitUntilVisible(oneTimeCode);
+            pageSource = iosDriver.getPageSource();
+        }
+        Matcher matcher = OTP_PATTERN.matcher(pageSource);
+        if (matcher.find()) {
+            log.info("OTP: " + matcher.group(1));
+            return matcher.group(1);
+        } else {
+            return null;
+        }
+    }
+
+}

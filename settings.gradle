@@ -1,0 +1,9 @@
+pluginManagement{
+    repositories {
+        maven {
+            url "${artifactoryContextUrl}/libs-release"
+        }
+    }
+}
+
+rootProject.name = 'system-test'

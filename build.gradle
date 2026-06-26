@@ -1,0 +1,314 @@
+plugins {
+    id "org.owasp.dependencycheck" version "${dependencyCheckVersion}"
+    id "org.sonarqube" version "${sonarQubeVersion}"
+    id "java"
+    id 'io.gatling.gradle' version "${gatlingGradlePluginVersion}"
+}
+
+repositories {
+    maven {
+        url "${artifactoryContextUrl}/libs-release"
+    }
+    maven {
+        url "${artifactoryContextUrl}/libs-snapshot"
+    }
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+    mavenCentral()
+}
+
+dependencyCheck {
+    format = 'ALL'
+}
+
+gatling {
+    simulations = {
+        include "**/simulation/*.scala"
+        include "**/simulations/*.java"
+    }
+}
+
+group 'com.verimi'
+version "${version}"
+
+sonar {
+    properties {
+        property 'sonar.dependencyCheck.xmlReportPath', 'build/reports/dependency-check-report.xml'
+        property 'sonar.dependencyCheck.htmlReportPath', 'build/reports/dependency-check-report.html'
+        property 'sonar.projectName', 'system-test'
+        property 'sonar.coverage.exclusions', '**'
+        properties["sonar.sources"] += "build.gradle"
+    }
+}
+
+tasks.withType(Test) {
+    systemProperty 'logback.configurationFile', 'src/test/resources/logback-test.xml'
+}
+
+project.compileJava.options.fork = true
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations.implementation {
+    dependencies {
+        exclude module: "swagger-codegen"
+        exclude module: "dipp-swagger-template"
+    }
+}
+
+ext["bcprov-jdk18on.version"] = "${bouncycastleVersion}"
+
+task mobileTest(type: Test) {
+    def groups = System.getProperty('groups', 'mobile-regression')
+    def appName = System.getProperty('appName', 'deutschland-app')
+    if (!appName.contains("deutschland-app")) {
+        systemProperty 'locale', System.getProperty("locale", "en")
+    }
+    systemProperty 'coronaApp', true
+    useTestNG() {
+        include 'com/verimi/frontendtest/**'
+        configFailurePolicy 'continue'
+        includeGroups groups
+        parallel 'classes'
+        threadCount 6
+        options {
+            listeners.add("com.verimi.testcommon.framework.report.AnnotationTransformer")
+            listeners.add("com.verimi.testcommon.framework.report.MSTeamsReporter")
+            listeners.add("com.verimi.testcommon.framework.report.TestRetryListener")
+            listeners.add("com.verimi.testcommon.framework.report.ShinyHtmlTestListener")
+            listeners.add("com.verimi.testcommon.framework.report.ShinyHtmlReport")
+            listeners.add("com.verimi.testcommon.config.ConditionalSkipTestAnalyzer")
+        }
+        systemProperty "buildNumber", System.getProperty("buildNumber")
+        systemProperty "projectName", System.getProperty("projectName")
+    }
+    reports.junitXml.required=true
+    reports.junitXml.outputPerTestCase=false
+    reports.junitXml.setDestination(file("${buildDir}/reports"))
+    systemProperties System.properties
+    testLogging {
+        exceptionFormat = 'full'
+        events "failed", "skipped", "standard_error", "standard_out"
+        showExceptions = true
+        showStackTraces = true
+        showCauses = true
+    }
+}
+
+task backendTestByGroup(type: Test) {
+    def groups = System.getProperty('groups', 'backend-smoke')
+    // regression tests are run against en locale
+    if (!groups.equalsIgnoreCase("backend-smoke")) {
+        systemProperty 'locale', System.getProperty("locale", "de")
+        systemProperty 'coronaApp', true
+    }
+    useTestNG() {
+        include 'com/verimi/backendtest/**'
+        configFailurePolicy 'continue'
+        includeGroups groups
+        // ToDo VD-16081: keep one task to run both be and fe tests
+        // Given that backend tests can not be run in parallel "parallel 'classes'" and
+        // "threadCount 8" should be a conditional statement.
+        options {
+            listeners.add("com.verimi.testcommon.framework.report.AnnotationTransformer")
+            listeners.add("com.verimi.testcommon.framework.report.MSTeamsReporter")
+            listeners.add("com.verimi.testcommon.config.ConditionalSkipTestAnalyzer")
+            listeners.add("com.verimi.testcommon.framework.report.TestRetryListener")
+            listeners.add("com.verimi.testcommon.framework.report.ShinyHtmlTestListener")
+            listeners.add("com.verimi.testcommon.framework.report.ShinyHtmlReport")
+        }
+        systemProperty "buildNumber", System.getProperty("buildNumber")
+        systemProperty "projectName", System.getProperty("projectName")
+    }
+    minHeapSize = "1024m"
+    maxHeapSize = "2048m"
+    reports.junitXml.required=true
+    reports.junitXml.outputPerTestCase=false
+    reports.junitXml.setDestination(file("${buildDir}/reports"))
+    systemProperties System.properties
+}
+
+task frontendTestByGroup(type: Test) {
+    def groups = System.getProperty('groups', 'frontend-smoke')
+    // regression tests are run against en locale
+    if (!groups.contains("frontend-smoke")) {
+        systemProperty 'locale', System.getProperty("locale", "de")
+    }
+    systemProperty 'coronaApp', true
+    useTestNG() {
+        include 'com/verimi/frontendtest/**'
+        configFailurePolicy 'continue'
+        includeGroups groups
+        parallel 'classes'
+        //Added separate thread counts, 8 threads for smoke and 5 threads for regression tests
+        threadCount = (groups.contains("smoke")) ? 8 : 5
+        options {
+            listeners.add("com.verimi.testcommon.framework.report.AnnotationTransformer")
+            listeners.add("com.verimi.testcommon.framework.report.MSTeamsReporter")
+            listeners.add("com.verimi.testcommon.framework.report.TestRetryListener")
+            listeners.add("com.verimi.testcommon.framework.report.ShinyHtmlTestListener")
+            listeners.add("com.verimi.testcommon.framework.report.ShinyHtmlReport")
+        }
+        systemProperty "buildNumber", System.getProperty("buildNumber")
+        systemProperty "projectName", System.getProperty("projectName")
+    }
+    reports.junitXml.required=true
+    reports.junitXml.outputPerTestCase=false
+    reports.junitXml.setDestination(file("${buildDir}/reports"))
+    systemProperties System.properties
+}
+
+
+test {
+    useTestNG(){
+        options {
+        }
+    }
+    include 'com/verimi/**'
+    reports.junitXml.required=true
+    reports.junitXml.outputPerTestCase=false
+    reports.junitXml.setDestination(file("${buildDir}/reports"))
+    systemProperties System.properties
+}
+
+task dbCleanup(type: Test) {
+    useTestNG() {
+        configFailurePolicy 'continue'
+        include 'com/verimi/frontendtest/**'
+        includeGroups 'cleanup'
+        options {
+            listeners.add("com.verimi.testcommon.framework.report.AnnotationTransformer")
+        }
+    }
+    reports.junitXml.required=true
+    reports.junitXml.outputPerTestCase=false
+    reports.junitXml.setDestination(file("${buildDir}/reports"))
+    systemProperties System.properties
+}
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+task spCreate(type: Test) {
+    useTestNG() {
+        configFailurePolicy 'continue'
+        include 'com/verimi/spcreation/**'
+        includeGroups 'create-sp'
+    }
+    reports.junitXml.required=true
+    reports.junitXml.outputPerTestCase=false
+    reports.junitXml.setDestination(file("${buildDir}/reports"))
+    systemProperties System.properties
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    gatling 'commons-codec:commons-codec:1.16.0'
+
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    implementation "ch.qos.logback:logback-core:${logbackVersion}"
+    implementation "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
+    implementation 'org.hamcrest:hamcrest-all:1.3'
+    implementation 'org.skyscreamer:jsonassert:1.2.3'
+    implementation 'javax.mail:mailapi:1.4.3'
+    implementation "org.everit.json:org.everit.json.schema:1.5.1"
+    implementation "org.apache.httpcomponents.client5:httpclient5:${httpClientVersion}"
+    implementation "com.google.code.gson:gson:${gsonVersion}"
+    implementation "joda-time:joda-time:${jodatimeVersion}"
+    implementation "org.apache.poi:poi:${apachePoiVersion}"
+    implementation "org.apache.poi:poi-ooxml:${apachePoiVersion}"
+    implementation "net.javacrumbs.json-unit:json-unit:1.30.0"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "org.testng:testng:${testNgVersion}"
+    implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+    implementation "io.rest-assured:json-path:${restAssuredVersion}"
+    implementation "org.json:json:${jsonVersion}"
+    implementation "com.browserstack:browserstack-local-java:1.0.2"
+    implementation("com.github.lambdatest:lambdatest-tunnel-binary:4.0.2") {
+        exclude group: 'org.testng', module: 'testng'
+    }
+    implementation "org.seleniumhq.selenium:selenium-api:${seleniumVersion}"
+    implementation "org.seleniumhq.selenium:selenium-java:${seleniumVersion}"
+    implementation "org.seleniumhq.selenium:selenium-support:${seleniumVersion}"
+    implementation "org.seleniumhq.selenium:selenium-remote-driver:${seleniumVersion}"
+    implementation "org.seleniumhq.selenium:selenium-firefox-driver:${seleniumVersion}"
+    implementation "org.seleniumhq.selenium:selenium-chrome-driver:${seleniumVersion}"
+    implementation "org.seleniumhq.selenium:selenium-ie-driver:${seleniumVersion}"
+    implementation "io.appium:java-client:${appiumJavaVersion}"
+    implementation "br.com.six2six:fixture-factory:${fixtureFactoryVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonCoreVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonAnnotationsVersion}"
+    implementation ("com.github.javafaker:javafaker:${javaFakerVersion}") {
+        exclude module: 'snakeyaml'
+    }
+    implementation "org.yaml:snakeyaml:${snakeYamlVersion}"
+    implementation 'com.jcabi:jcabi-matchers:1.3'
+    implementation 'org.freemarker:freemarker:2.3.32'
+    implementation "org.assertj:assertj-core:${assertjCoreVersion}"
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+    implementation 'org.apache.kafka:kafka-clients:3.6.1'
+    implementation 'com.jayway.jsonpath:json-path:2.9.0'
+    implementation 'ru.qatools.commons:properties:2.0.RC3'
+    implementation 'io.jsonwebtoken:jjwt:0.2'
+    implementation "org.postgresql:postgresql:${postgresqlVersion}"
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+    implementation 'redis.clients:jedis:2.9.0'
+    implementation 'org.mockito:mockito-core:2.10.0'
+
+    implementation "com.dipp.identityowner:identityowner-api-client:${identityOwnerServiceVersion}"
+    implementation "com.dipp.importexport:importexport-api-client:${importExportServiceVersion}"
+    implementation "com.dipp.master.data:master-data-api-client:${masterDataServiceVersion}"
+    implementation "com.dipp.security:security-api-client:${securityServiceVersion}"
+    implementation "com.verimi.admin:admin-api-client:${adminApiServiceVersion}"
+    implementation "com.dipp.payment.data:payment-data-java-client-feign:${paymentDataClientVersion}"
+
+    implementation 'org.awaitility:awaitility:4.0.2'
+    implementation "org.apache.pdfbox:pdfbox:${pdfBoxVersion}"
+    implementation "io.github.bonigarcia:webdrivermanager:${webdriverManagerVersion}"
+    implementation 'edu.umass.cs.benchlab:harlib:1.1.2'
+    implementation "org.zaproxy:zap:${zapVersion}"
+    implementation "org.zaproxy:zap-clientapi:${zapClientApiVersion}"
+    implementation 'io.fabric8:kubernetes-client:6.1.1'
+    implementation 'com.opencsv:opencsv:5.6'
+    implementation 'com.auth0:java-jwt:4.2.2'
+    implementation 'com.nimbusds:nimbus-jose-jwt:8.23'
+    implementation 'com.github.therapi:therapi-runtime-javadoc:0.13.0'
+
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor 'com.github.therapi:therapi-runtime-javadoc-scribe:0.13.0'
+    testAnnotationProcessor 'com.github.therapi:therapi-runtime-javadoc-scribe:0.13.0'
+
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.3'
+    implementation 'org.jsoup:jsoup:1.15.4'
+    implementation "com.microsoft.graph:microsoft-graph:${microsoftGraphVersion}"
+    implementation "com.microsoft.graph:microsoft-graph-core:${microsoftGraphCoreVersion}"
+    implementation "com.azure:azure-identity:${azureIdentityVersion}"
+    implementation "com.google.zxing:core:3.5.1"
+    implementation "com.google.zxing:javase:3.3.0"
+
+    implementation "io.gatling.highcharts:gatling-charts-highcharts:${gatlingVersion}"
+    implementation "io.gatling:gatling-app:${gatlingVersion}"
+    implementation "io.gatling:gatling-core:${gatlingVersion}"
+    testImplementation "io.gatling:gatling-test-framework:${gatlingVersion}"
+
+    implementation "com.googlecode.libphonenumber:libphonenumber:${libphonenumberVersion}"
+
+    implementation 'io.cucumber:cucumber-java:7.18.1'
+    implementation 'io.cucumber:cucumber-junit:7.18.1'
+
+    implementation(platform("io.cucumber:cucumber-bom:7.34.3"))
+    implementation(platform("org.assertj:assertj-bom:3.27.7"))
+
+    implementation 'junit:junit:4.13.2'
+
+}

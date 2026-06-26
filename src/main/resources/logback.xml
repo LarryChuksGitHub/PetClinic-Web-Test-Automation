@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <Key>testname</Key>
+      <DefaultValue>testrun</DefaultValue>
+    </discriminator>
+    <sift>
+      <appender name="FILE-${testname}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>build${file.separator}logfiles${file.separator}${testname}.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+          <FileNamePattern>${testname}.%i.log</FileNamePattern>
+          <MinIndex>1</MinIndex>
+          <MaxIndex>100</MaxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+          <MaxFileSize>5MB</MaxFileSize>
+        </triggeringPolicy>
+        <layout class="com.verimi.testcommon.config.LogbackHtmlEscapingPatternLayout">
+          <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </layout>
+      </appender>
+    </sift>
+  </appender>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+    <immediateFlush>false</immediateFlush>
+  </appender>
+
+  <appender name="ASYNC_STDOUT" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="STDOUT" />
+    <queueSize>512</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="ASYNC_STDOUT"/>
+    <appender-ref ref="SIFT"/>
+  </root>
+
+
+  <!-- Uncomment for logging ALL HTTP request and responses -->
+  <!--    <logger name="io.gatling.http.ahc" level="TRACE" /> -->
+  <!--    <logger name="io.gatling.http.response" level="TRACE" /> -->
+  <!-- Uncomment for logging ONLY FAILED HTTP request and responses -->
+  <logger name="io.gatling.http.ahc" level="WARN" />
+  <logger name="io.gatling.http.response" level="WARN" />
+
+</configuration>
