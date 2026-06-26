@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DeutschlandAppTests extends Hooks {
-    private static String EMAIL = RandomUtilities.generateRandomEmail();
+    private static final String EMAIL = RandomUtilities.generateRandomEmail();
 
 
     /**
@@ -161,7 +161,6 @@ public class DeutschlandAppTests extends Hooks {
         }
         log.info("Opened Deutschland App successfully");
     }
-
 
     @SneakyThrows
     private void cleanAndSetUpTestData() {

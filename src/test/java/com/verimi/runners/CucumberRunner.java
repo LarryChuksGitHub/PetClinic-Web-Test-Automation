@@ -6,7 +6,6 @@ import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
-//@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example.project.stepdefinitions")
 @CucumberOptions(features = "src/test/resources/features",
         glue = {
                 "com/verimi/testcommon/config/hooks",

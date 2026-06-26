@@ -130,6 +130,5 @@ public class AiIntroScreen extends MobileScreen {
         assertScreenContent();
         nextButton.click();
         return new AdultChildSupportChatScreen(driver);
-
     }
 }

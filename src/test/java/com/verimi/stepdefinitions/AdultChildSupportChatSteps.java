@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class AdultChildSupportChatSteps {
 
-    private static String EMAIL = RandomUtilities.generateRandomEmail();
+    private static final String EMAIL = RandomUtilities.generateRandomEmail();
 
     private WebDriver getDriver() {
         return DriverManager.getDriver();
