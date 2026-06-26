@@ -33,5 +33,5 @@ else
   cp templates/pipeline-failed.html "${TARGET}/index.html"
 fi
 
-echo "pipeline report is available on https://verimi-platform.gitlab.verimi.cloud/system-test/${TEST_ENV}/${CI_JOB_ID}/"
+echo "pipeline report is available on https://github.com/CivicAIPortal/mobile-testautomation/tree/feat/user_registration_signed/${TEST_ENV}/${CI_JOB_ID}/"
 
