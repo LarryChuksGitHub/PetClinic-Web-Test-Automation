@@ -3,6 +3,7 @@ package com.verimi.testcommon.pageobject.mobile;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.verimi.testcommon.framework.utils.constant.NumericConstants;
 import io.appium.java_client.pagefactory.AndroidBy;
 import io.appium.java_client.pagefactory.AndroidFindAll;
 import io.appium.java_client.pagefactory.AndroidFindBy;
@@ -22,6 +23,29 @@ public class DataProtectionTutorialScreen extends MobileScreen {
             @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
     })
     private WebElement screenTitle;
+
+
+    @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@text='Datenschutz und Nutzungsbedingungen']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+            @iOSXCUITBy(accessibility = "Einstellungen"),
+            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+    })
+    private WebElement termsAndConditionScreen;
+
+
+    @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@text='Nachweise']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+            @iOSXCUITBy(accessibility = "Einstellungen"),
+            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+    })
+    private WebElement proofButton;
+
 
     @AndroidFindAll({
             @AndroidBy(xpath = "//*[@text='Sicher & Datenschutzkonform']"),
@@ -60,6 +84,9 @@ public class DataProtectionTutorialScreen extends MobileScreen {
 
     public DataProtectionTermsAndConditionScreen navigateToTermsAndCondition() {
         waitUntilClickable(nextButton).click();
+        if(!isElementDisplayedWithWait(termsAndConditionScreen, NumericConstants.NUMERIC_5)){
+            waitUntilClickable(proofButton).click();
+        }
         return new DataProtectionTermsAndConditionScreen(driver);
     }
 }

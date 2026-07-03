@@ -73,12 +73,12 @@ public class RegistrationSteps {
     public void confirmOtp() {
         OtpScreen otpScreen = new OtpScreen(getDriver());
         otpScreen.enterOpt(EMAIL, TWO_FA_PIN)
-                .navigateToTelePhoneScreen()
-                .navigateToIdentityScreen(PHONE_NUMBER)
+                .navigateToIdentityScreen()
                 .navigateToIdSelectionScreen()
                 .selectIdCard()
                 .navigateToEidPinScreen()
                 .addEidCardPin(EID_PIN);
+
     }
 
     @Then("Wird die Registrierung erfolgreich abgeschlossen und ID Daten werden unter Nachweise angezeigt")

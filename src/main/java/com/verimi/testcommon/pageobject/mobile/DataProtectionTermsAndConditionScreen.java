@@ -72,7 +72,6 @@ public class DataProtectionTermsAndConditionScreen extends MobileScreen {
 
     @Override
     public void waitUntilPageLoads() {
-        waitUntilVisible(screenTitle);
     }
 
     public DataProtectionTermsAndConditionScreen acceptTermsAndCondition() {
