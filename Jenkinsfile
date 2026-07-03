@@ -55,7 +55,7 @@ pipeline {
 				publishHTML([
 					reportDir: 'reports',
 					reportFiles: 'cucumber.html',
-					reportName: 'BDD Deutschland App Report'
+					reportName: 'BDD Mobile Deutschland App Report'
 				])
 			}
 		}
