@@ -6,7 +6,7 @@ import com.verimi.testcommon.flows.DeutschlandAppFlow;
 import com.verimi.testcommon.framework.drivers.DriverManager;
 import com.verimi.testcommon.framework.utils.random.RandomUtilities;
 import com.verimi.testcommon.pageobject.mobile.AiLandingScreen;
-import com.verimi.testcommon.pageobject.mobile.HousRegisterChatScreen;
+import com.verimi.testcommon.pageobject.mobile.HouseRegisterChatScreen;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -44,8 +44,8 @@ public class HouseRegistrationChatSteps {
 
     @And("Es wird nach Datenübernahme für eWA gefragt")
     public void chatAskIfUserDatenCanBeImported() {
-        HousRegisterChatScreen housRegisterChatScreen = new HousRegisterChatScreen(getDriver());
-        housRegisterChatScreen.importData();
+        HouseRegisterChatScreen houseRegisterChatScreen = new HouseRegisterChatScreen(getDriver());
+        houseRegisterChatScreen.importData();
 
 
     }
@@ -53,36 +53,36 @@ public class HouseRegistrationChatSteps {
 
     @When("Der Nutzer die Datenübernahme für eWA bestätigt")
     public void userDontConfirmDataImport() {
-        HousRegisterChatScreen housRegisterChatScreen = new HousRegisterChatScreen(getDriver());
-        housRegisterChatScreen.confirmDataImport();
+        HouseRegisterChatScreen houseRegisterChatScreen = new HouseRegisterChatScreen(getDriver());
+        houseRegisterChatScreen.confirmDataImport();
     }
 
 
     @And("Wird die Nutzerdatenübernahme für eWA erfolgreich durchgeführt")
     public void userDataIsImported() {
-        HousRegisterChatScreen housRegisterChatScreen = new HousRegisterChatScreen(getDriver());
-        housRegisterChatScreen.dataImported();
+        HouseRegisterChatScreen houseRegisterChatScreen = new HouseRegisterChatScreen(getDriver());
+        houseRegisterChatScreen.dataImported();
     }
 
 
     @And("eWA Chat Screen hat die richtige Inhalte")
     public void assertEWAChat() {
-        HousRegisterChatScreen housRegisterChatScreen = new HousRegisterChatScreen(getDriver());
-        housRegisterChatScreen.assertContent();
+        HouseRegisterChatScreen houseRegisterChatScreen = new HouseRegisterChatScreen(getDriver());
+        houseRegisterChatScreen.assertContent();
     }
 
 
     @When("Der Nutzer eine eWA Frage {string} im Textfield eingibt")
     public void userAskForHouseRegistrationApplication(String text) {
-        HousRegisterChatScreen housRegisterChatScreen = new HousRegisterChatScreen(getDriver());
-        housRegisterChatScreen.askForHouseRegistrationApplication(text);
+        HouseRegisterChatScreen houseRegisterChatScreen = new HouseRegisterChatScreen(getDriver());
+        houseRegisterChatScreen.askForHouseRegistrationApplication(text);
     }
 
 
     @Then("Die Antwort enthält eWA Frage")
     public void answerContainsHouseRegistration() {
-        HousRegisterChatScreen housRegisterChatScreen = new HousRegisterChatScreen(getDriver());
-        housRegisterChatScreen.waitForAnswerOptions();
+        HouseRegisterChatScreen houseRegisterChatScreen = new HouseRegisterChatScreen(getDriver());
+        houseRegisterChatScreen.waitForAnswerOptions();
     }
 
     @SneakyThrows

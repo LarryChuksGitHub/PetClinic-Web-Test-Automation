@@ -141,9 +141,9 @@ public class AiIntroScreen extends MobileScreen {
         return new AdultChildSupportChatScreen(driver);
     }
 
-public HousRegisterChatScreen navigateToHouseRegistrationChatScreen() {
+public HouseRegisterChatScreen navigateToHouseRegistrationChatScreen() {
         nextButton.click();
-        return new HousRegisterChatScreen(driver);
+        return new HouseRegisterChatScreen(driver);
     }
 
 

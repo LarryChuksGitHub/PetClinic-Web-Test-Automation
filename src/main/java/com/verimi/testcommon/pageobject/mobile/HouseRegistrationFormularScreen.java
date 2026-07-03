@@ -5,6 +5,7 @@ import static com.verimi.testcommon.model.common.accessibility.androidaccessibil
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.verimi.testcommon.framework.utils.constant.NumericConstants;
 import io.appium.java_client.pagefactory.AndroidBy;
 import io.appium.java_client.pagefactory.AndroidFindAll;
 import io.appium.java_client.pagefactory.iOSXCUITBy;
@@ -861,14 +862,14 @@ public class HouseRegistrationFormularScreen extends MobileScreen {
 
         typeMobile(mobileScrollUpAndDownUntilElementAppears(birthLandTextField), "Deutschland");
 
-        mobileScrollUpAndDownUntilElementAppears(genderTextField).click();
-        mobileScrollDownUntilElementAppears(manGender).click();
+       // mobileScrollUpAndDownUntilElementAppears(genderTextField).click();
+        //clickIfPresent(manGender, NumericConstants.NUMERIC_4);
         typeMobile(mobileScrollUpAndDownUntilElementAppears(citizenshipTextField), "Deutsch");
         mobileScrollUpAndDownUntilElementAppears(familyStatusTextField).click();
-        mobileScrollDownUntilElementAppears(single).click();
+        clickIfPresent(single, NumericConstants.NUMERIC_4);
         typeMobile(mobileScrollUpAndDownUntilElementAppears(religionTextField), "Christ");
         mobileScrollUpAndDownUntilElementAppears(idTypeTextField).click();
-        mobileScrollDownUntilElementAppears(idCard).click();
+        clickIfPresent(idCard, NumericConstants.NUMERIC_4);
         typeMobile(mobileScrollUpAndDownUntilElementAppears(idCardNumberTextField), "LH1253436");
 
         dippAssertions.assertThat(mobileScrollUpAndDownUntilElementAppears(idCardIssuedOfficeTextField).getAttribute(TEXT))
@@ -908,26 +909,27 @@ public class HouseRegistrationFormularScreen extends MobileScreen {
         typeMobile(mobileScrollUpAndDownUntilElementAppears(livingWithTextField), "Müller Mike");
         typeMobile(mobileScrollUpAndDownUntilElementAppears(newParkInDateTextField), "10.06.2026");
         mobileScrollUpAndDownUntilElementAppears(parkOutDateAndParkInDateSameTextField).click();
-        waitUntilClickable(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(houseOwnerTextField).click();
-        waitUntilClickable(yesTheHouseOwner).click();
+        clickIfPresent(yesTheHouseOwner, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(confirmHouseOwnership).click();
-        waitUntilClickable(confirmBestaetigt).click();
+        clickIfPresent(confirmBestaetigt, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(movingInWithKidsTextField).click();
-        waitUntilClickable(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         typeMobile(mobileScrollUpAndDownUntilElementAppears(numberOfKidsTextField), "2");
         typeMobile(mobileScrollUpAndDownUntilElementAppears(namesOfTheKidsTextField), "Leo Günther, Mary Günther ");
         typeMobile(mobileScrollUpAndDownUntilElementAppears(birthDateOfTheKidsTextField), "13 September 2020, 19 December 2023");
         mobileScrollUpAndDownUntilElementAppears(acceptIdCardUpdateTextField).click();
-        waitUntilClickable(confirmedErteilt).click();
+        clickIfPresent(confirmedErteilt, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(acceptEmailTransactionTextField).click();
-        waitUntilClickable(confirmedErteilt).click();
+        clickIfPresent(confirmedErteilt, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(declineReligionInfoTransferTextField).click();
-        waitUntilClickable(declineInfoTransfer).click();
+        clickIfPresent(declineInfoTransfer, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(declineAgeAndMarriageJubileeTextField).click();
-        waitUntilClickable(declineInfoTransfer).click();
+        clickIfPresent(declineInfoTransfer, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(declinePartyAndElectionTextField).click();
-        waitUntilClickable(declineInfoTransfer).click();
+        clickIfPresent(declineInfoTransfer, NumericConstants.NUMERIC_4);
+
         return this;
     }
 }

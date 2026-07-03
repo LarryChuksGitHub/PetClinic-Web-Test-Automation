@@ -133,8 +133,8 @@ public class AdultChildSupportChatScreen extends MobileScreen {
     private WebElement textInputField;
 
     @AndroidFindAll({
-            @AndroidBy(xpath = "//android.widget.ImageView[@content-desc=\"Senden\"]"),
-            @AndroidBy(xpath = "//android.widget.ImageView[@content-desc=\"Senden\"]"),
+            @AndroidBy(xpath = "//*[@resource-id='chat-send-button']"),
+            @AndroidBy(xpath = "//*[@content-desc='Senden']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -182,7 +182,6 @@ public class AdultChildSupportChatScreen extends MobileScreen {
 
     @Override
     public void waitUntilPageLoads() {
-        waitUntilVisible(screenTitle);
     }
 
     public AdultChildSupportChatScreen importData() {

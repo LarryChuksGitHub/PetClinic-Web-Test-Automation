@@ -1,5 +1,7 @@
 package com.verimi.testcommon.pageobject.mobile;
 
+import static com.verimi.testcommon.model.common.accessibility.androidaccessibility.AndroidAccessibilityMobleElement.TEXT;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -25,9 +27,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
     private WebElement screenTitle;
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-auswahl.antragstellerangaben']"),
             @AndroidBy(accessibility = "Wohnen Sie in Deutschland?, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Wohnen Sie in Deutschland?, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-auswahl.antragstellerangaben']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -38,9 +40,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-auswahl.kindangabenkeinausbildung']"),
             @AndroidBy(accessibility = "Hat das Kind eine abgeschlossene Erstausbildung?, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Hat das Kind eine abgeschlossene Erstausbildung?, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-auswahl.kindangabenkeinausbildung']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -51,9 +53,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-auswahl.kind_sachverhalt']"),
             @AndroidBy(accessibility = "Sachverhalt nach Eintritt der Volljährigkeit, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Sachverhalt nach Eintritt der Volljährigkeit, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-auswahl.kind_sachverhalt']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -75,9 +77,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-auslandsbezug.zuerbezugvorhanden']"),
             @AndroidBy(accessibility = "Auslandsbezug vorhanden?, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Auslandsbezug vorhanden?, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-auslandsbezug.zuerbezugvorhanden']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -87,9 +89,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
     private WebElement abroadBenefitTextField;
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-auslandsbezug.zuerwohnhaft']"),
             @AndroidBy(accessibility = "Ehegatte/anderer Elternteil wohnt außerhalb Deutschlands?, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Ehegatte/anderer Elternteil wohnt außerhalb Deutschlands?, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-auslandsbezug.zuerwohnhaft']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -100,9 +102,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_name_vorname']"),
             @AndroidBy(accessibility = "Vorname"),
             @AndroidBy(xpath = "//*[@content-desc='Vorname']"),
-            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_name_vorname']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -113,9 +115,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_name_nachname']"),
             @AndroidBy(accessibility = "Familienname"),
             @AndroidBy(xpath = "//*[@content-desc='Familienname']"),
-            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_name_nachname']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -126,6 +128,7 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='date-picker-angaben_kind.ba_datumsgruppe_0-input']"),
             @AndroidBy(xpath = "//*[@resource-id='date-picker-angaben_kind.ba_datumsgruppe_0']"),
     })
     @iOSXCUITFindAll({
@@ -137,9 +140,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.buttongroup_geschlecht_kind']"),
             @AndroidBy(accessibility = "Geschlecht, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Geschlecht, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='resource-id']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -190,9 +193,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.buttongroup_kindschaftsverhaeltnis_kind']"),
             @AndroidBy(accessibility = "Kindschaftsverhältnis, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Kindschaftsverhältnis, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.buttongroup_kindschaftsverhaeltnis_kind']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -215,9 +218,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_staatsangehoerigkeit']"),
             @AndroidBy(accessibility = "Staatsangehörigkeit"),
             @AndroidBy(xpath = "//*[@content-desc='Staatsangehörigkeit']"),
-            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_staatsangehoerigkeit']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -240,9 +243,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_steuerid']"),
             @AndroidBy(accessibility = "Identifikationsnummer"),
             @AndroidBy(xpath = "//*[@content-desc='Identifikationsnummer']"),
-            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_steuerid']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -253,9 +256,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_has_no_steuerid']"),
             @AndroidBy(accessibility = "Identifikationsnummer ist nicht vorhanden, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Identifikationsnummer ist nicht vorhanden, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_has_no_steuerid']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -294,9 +297,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_abweichende_adresse']"),
             @AndroidBy(accessibility = "Das Kind wohnt nicht in meinem Haushalt, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Das Kind wohnt nicht in meinem Haushalt, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_abweichende_adresse']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -307,9 +310,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_abweichende_adresse_grund']"),
             @AndroidBy(accessibility = "Grund für abweichende Wohnadresse des Kindes, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Grund für abweichende Wohnadresse des Kindes, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_abweichende_adresse_grund']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -320,8 +323,6 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
-            @AndroidBy(accessibility = "Grund für abweichende Wohnadresse des Kindes, Auswählen..."),
-            @AndroidBy(xpath = "//*[@content-desc='Grund für abweichende Wohnadresse des Kindes, Auswählen...']"),
             @AndroidBy(xpath = "//*[@resource-id='text-field-upload_nachweise.upload_files']"),
     })
     @iOSXCUITFindAll({
@@ -345,9 +346,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_anspruchab18_studium_beginnstudiummonat']"),
             @AndroidBy(accessibility = "Beginn des Studiums - Monat..."),
             @AndroidBy(xpath = "//*[@content-desc='Beginn des Studiums - Monat...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_anspruchab18_studium_beginnstudiummonat']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -358,9 +359,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_anspruchab18_studium_beginnstudiumjahr']"),
             @AndroidBy(accessibility = "Beginn des Studiums - Jahr..."),
             @AndroidBy(xpath = "//*[@content-desc='Beginn des Studiums - Jahr...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_anspruchab18_studium_beginnstudiumjahr']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -370,9 +371,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
     private WebElement yearStudyBeginTextField;
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_anspruchab18_angabenzustudium_studiengang']"),
             @AndroidBy(accessibility = "Studiengang"),
             @AndroidBy(xpath = "//*[@content-desc='Studiengang']"),
-            @AndroidBy(xpath = "//*[@resource-id='text-field-angaben_kind.kind_anspruchab18_angabenzustudium_studiengang']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -382,9 +383,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
     private WebElement studyDisciplineTextField;
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_anspruchab18_studium_endestudiummonat']"),
             @AndroidBy(accessibility = "Voraussichtliches Ende des Studiums - Monat..."),
             @AndroidBy(xpath = "//*[@content-desc='Voraussichtliches Ende des Studiums - Monat...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_anspruchab18_studium_endestudiummonat']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -394,9 +395,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
     private WebElement monthStudyEndTextField;
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_anspruchab18_studium_endestudiumjahr']"),
             @AndroidBy(accessibility = "Voraussichtliches Ende des Studiums - Jahr..."),
             @AndroidBy(xpath = "//*[@content-desc='Voraussichtliches Ende des Studiums - Jahr...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-angaben_kind.kind_anspruchab18_studium_endestudiumjahr']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -431,6 +432,7 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='date-picker-antragstellende_person.ba_datumsgruppe_2-input']"),
             @AndroidBy(xpath = "//*[@resource-id='date-picker-antragstellende_person.ba_datumsgruppe_2']"),
     })
     @iOSXCUITFindAll({
@@ -536,9 +538,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-antragstellende_person.antragsteller_adresse_wohnland']"),
             @AndroidBy(accessibility = "Wohnland, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Wohnland, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-antragstellende_person.antragsteller_adresse_wohnland']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -597,9 +599,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-antragstellende_person.antragsteller_titel']"),
             @AndroidBy(accessibility = "Titel, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Titel, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-antragstellende_person.antragsteller_titel']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -622,9 +624,10 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-anderer_elternteil.elternteil_unbekannt']"),
             @AndroidBy(accessibility = "Anderer Elternteil unbekannt, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Anderer Elternteil unbekannt, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-anderer_elternteil.elternteil_unbekannt']"),
+
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -635,9 +638,10 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-anderer_elternteil.elternteil_verstorben']"),
             @AndroidBy(accessibility = "Anderer Elternteil verstorben, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Anderer Elternteil verstorben, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-anderer_elternteil.elternteil_verstorben']"),
+
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -648,9 +652,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='text-field-zahlungsweg.antragsteller_bankdaten_abweichendekontoinhabendeperson']"),
             @AndroidBy(accessibility = "Abweichende kontoinhabende Person"),
             @AndroidBy(xpath = "//*[@content-desc='Abweichende kontoinhabende Person']"),
-            @AndroidBy(xpath = "//*[@resource-id='text-field-zahlungsweg.antragsteller_bankdaten_abweichendekontoinhabendeperson']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -661,9 +665,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='text-field-zahlungsweg.antragsteller_bankdaten_iban']"),
             @AndroidBy(accessibility = "IBAN"),
             @AndroidBy(xpath = "//*[@content-desc='IBAN']"),
-            @AndroidBy(xpath = "//*[@resource-id='resource-id']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -674,9 +678,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='text-field-zahlungsweg.antragsteller_bankdaten_bic']"),
             @AndroidBy(accessibility = "BIC"),
             @AndroidBy(xpath = "//*[@content-desc='BIC']"),
-            @AndroidBy(xpath = "//*[@resource-id='text-field-zahlungsweg.antragsteller_bankdaten_bic']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -687,9 +691,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='text-field-zahlungsweg.antragsteller_bankdaten_kreditinstitut']"),
             @AndroidBy(accessibility = "Kreditinstitut"),
             @AndroidBy(xpath = "//*[@content-desc='Kreditinstitut']"),
-            @AndroidBy(xpath = "//*[@resource-id='text-field-zahlungsweg.antragsteller_bankdaten_kreditinstitut']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -700,9 +704,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-vorbezug.vorbezug_hasvorbezug']"),
             @AndroidBy(accessibility = "Hat ein Vorbezug stattgefunden?, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Hat ein Vorbezug stattgefunden?, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-vorbezug.vorbezug_hasvorbezug']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -713,9 +717,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-oeffentlicher_dienst.imoeffentlichendiensttaetig']"),
             @AndroidBy(accessibility = "Im öffentlichen Dienst tätig?, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Im öffentlichen Dienst tätig?, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-oeffentlicher_dienst.imoeffentlichendiensttaetig']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -728,7 +732,6 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
     @AndroidFindAll({
             @AndroidBy(xpath = "//*[@resource-id='text-field-weitere_angaben.weitere_angaben_text']"),
             @AndroidBy(xpath = "//*[@content-desc='Weitere Angaben']"),
-            @AndroidBy(xpath = "//*[@resource-id='text-field-weitere_angaben.weitere_angaben_text']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -739,9 +742,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.directtransmittedantragab18']"),
             @AndroidBy(accessibility = "Bestätigung elektronische Übermittlung, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Bestätigung elektronische Übermittlung, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.directtransmittedantragab18']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -752,9 +755,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.acknowledgedberechtigenbestimmung']"),
             @AndroidBy(accessibility = "Zustimmung Berechtigtenbestimmung, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Zustimmung Berechtigtenbestimmung, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.acknowledgedberechtigenbestimmung']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -765,9 +768,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.datahandledantragab18']"),
             @AndroidBy(accessibility = "Datenschutzhinweis Verarbeitung, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Datenschutzhinweis Verarbeitung, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.datahandledantragab18']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -778,9 +781,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.datacorrectantragab18']"),
             @AndroidBy(accessibility = "Richtigkeit der Angaben, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Richtigkeit der Angaben, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.datacorrectantragab18']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -791,9 +794,9 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.datenschutz']"),
             @AndroidBy(accessibility = "Kenntnisnahme Merkblatt und Datenschutz, Auswählen..."),
             @AndroidBy(xpath = "//*[@content-desc='Kenntnisnahme Merkblatt und Datenschutz, Auswählen...']"),
-            @AndroidBy(xpath = "//*[@resource-id='select-zusammenfassung.datenschutz']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -838,8 +841,8 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
     private WebElement textInputField;
 
     @AndroidFindAll({
-            @AndroidBy(xpath = "//android.widget.ImageView[@content-desc=\"Senden\"]"),
-            @AndroidBy(xpath = "//android.widget.ImageView[@content-desc=\"Senden\"]"),
+            @AndroidBy(xpath = "//*[@text=\"Senden\"]"),
+            @AndroidBy(xpath = "//*[@content-desc=\"Senden\"]"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -902,38 +905,43 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
         mobileScrollUpAndDownUntilElementAppears(abroadBenefitTextField).click();
         mobileScrollDownUntilElementAppears(noButton).click();
         mobileScrollUpAndDownUntilElementAppears(partnerTextField).click();
-        mobileScrollDownUntilElementAppears(noButton).click();
+        clickIfPresent(noButton, NumericConstants.NUMERIC_4);
 
         // Child Info
         typeMobile(mobileScrollUpAndDownUntilElementAppears(childFirstNameTextField), userData.getChildFirstName());
         typeMobile(mobileScrollUpAndDownUntilElementAppears(childLastNameTextField), userData.getChildLastName());
-        mobileScrollUpAndDownUntilElementAppears(childBirthdateTextField).click();
-        waitUntilClickable(okButton).click();
+        typeMobile(mobileScrollUpAndDownUntilElementAppears(childBirthdateTextField), "12.04.2006");
+
         mobileScrollUpAndDownUntilElementAppears(childGenderTextField).click();
-        mobileScrollDownUntilElementAppears(manGender).click();
+        clickIfPresent(manGender, NumericConstants.NUMERIC_4);
+
         mobileScrollUpAndDownUntilElementAppears(relationshipToChildTextField).click();
-        mobileScrollDownUntilElementAppears(biologicalChild).click();
+        clickIfPresent(biologicalChild, NumericConstants.NUMERIC_4);
         typeMobile(mobileScrollUpAndDownUntilElementAppears(citizenshipTextField), userData.getCitizenship());
         typeMobile(mobileScrollUpAndDownUntilElementAppears(identificationNumberTextField), userData.getIdentificationNumber());
         mobileScrollUpAndDownUntilElementAppears(identificationNumberNotAvailableTextField).click();
-        mobileScrollDownUntilElementAppears(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
+
         mobileScrollUpAndDownUntilElementAppears(childNotLivingInMyHouseTextField).click();
-        mobileScrollDownUntilElementAppears(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(reasonForNotLivingInMyHouseTextField).click();
-        mobileScrollDownUntilElementAppears(study).click();
+        clickIfPresent(study, NumericConstants.NUMERIC_4);
+
 
         // Applicant info
         WebElement element = mobileScrollUpAndDownUntilElementAppears(applicantBirthDateTextField);
-        dippAssertions.assertThat(element.getAttribute(CONTENT_DESC_ATTRIBUTE))
+        dippAssertions.assertThat(element.getAttribute(TEXT))
                 .as("Applicant birthdate is not automatically filled")
-                .isEqualTo("Geburtsdatum, 25.1.1946");
+                .isEqualTo("25.01.1946");
 
         mobileScrollUpAndDownUntilElementAppears(applicantGenderTextField).click();
-        mobileScrollDownUntilElementAppears(manGender).click();
+        clickIfPresent(manGender, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(familyStatusTextField).click();
-        mobileScrollDownUntilElementAppears(single).click();
+        clickIfPresent(single, NumericConstants.NUMERIC_4);
+
         mobileScrollUpAndDownUntilElementAppears(countryTextField).click();
-        mobileScrollDownUntilElementAppears(germany).click();
+        clickIfPresent(germany, NumericConstants.NUMERIC_4);
+
         //mobileScrollUpAndDownUntilElementAppears(title).click();
         //mobileScrollDownUntilElementAppears(profDrtitle).click();
         if (isElementDisplayedWithWait(applicantFirstNameTextField, NumericConstants.NUMERIC_3)) {
@@ -951,38 +959,34 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
         // Other parent info
-        /*
-        mobileScrollDownUntilElementAppears(otherParentsTextField).click();
-        mobileScrollDownUntilElementAppears(noButton).click();
-        mobileScrollDownUntilElementAppears(otherParentDeadTextField).click();
-        mobileScrollDownUntilElementAppears(noButton).click();
-
-         */
         mobileScrollUpAndDownUntilElementAppears(otherParentUnknownTextField).click();
-        mobileScrollDownUntilElementAppears(noButton).click();
+        clickIfPresent(noButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(otherParentDeadTextField).click();
-        mobileScrollDownUntilElementAppears(noButton).click();
+        clickIfPresent(noButton, NumericConstants.NUMERIC_4);
+
+
         typeMobile(mobileScrollUpAndDownUntilElementAppears(differentAccountOwnerTextField), userData.getOtherParent().getFirstName() + " " + userData.getOtherParent().getLastName());
         typeMobile(mobileScrollUpAndDownUntilElementAppears(ibanTextField), userData.getOtherParent().getIban());
         typeMobile(mobileScrollUpAndDownUntilElementAppears(bicTextField), userData.getOtherParent().getBic());
         typeMobile(mobileScrollUpAndDownUntilElementAppears(bankNameTextField), userData.getOtherParent().getBank());
 
         mobileScrollUpAndDownUntilElementAppears(childSupportGottenBeforeTextField).click();
-        mobileScrollDownUntilElementAppears(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
+
         mobileScrollUpAndDownUntilElementAppears(workingInPublicSectorTextField).click();
-        mobileScrollDownUntilElementAppears(noButton).click();
-        mobileScrollUpAndDownUntilElementAppears(furtherInfoTextField);
+        clickIfPresent(noButton, NumericConstants.NUMERIC_4);
+
         typeMobile(mobileScrollUpAndDownUntilElementAppears(furtherInfoTextField), userData.getFurtherInfo());
         mobileScrollUpAndDownUntilElementAppears(confirmElectronicTransferTextField).click();
-        mobileScrollDownUntilElementAppears(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(confirmRight).click();
-        mobileScrollDownUntilElementAppears(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(dataProtectionTextField).click();
-        mobileScrollDownUntilElementAppears(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(infoCorrectnessTextField).click();
-        mobileScrollDownUntilElementAppears(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(merkblattAndDataProtectionTextField).click();
-        mobileScrollDownUntilElementAppears(yesButton).click();
+        clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         return this;
     }
 }

@@ -177,6 +177,7 @@ public class MobileScreen extends Page {
             textField.sendKeys(text);
             Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(NUMERIC_1));// wait for the text to be entered
         } catch (Exception exception) {
+            log.info(driver.getPageSource());
             log.info("InvalidElementStateException caught while typing into the text field");
             TestContext.setLastException(exception);
             throw exception;

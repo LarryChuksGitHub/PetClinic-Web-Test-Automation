@@ -12,7 +12,7 @@ import io.appium.java_client.pagefactory.iOSXCUITFindAll;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class HousRegisterChatScreen extends MobileScreen {
+public class HouseRegisterChatScreen extends MobileScreen {
 
     @AndroidFindAll({
             @AndroidBy(xpath = "//*[@text='Wohnsitzanmeldung']"),
@@ -236,7 +236,7 @@ public class HousRegisterChatScreen extends MobileScreen {
     })
     private WebElement digitalIdentity;
 
-    public HousRegisterChatScreen(WebDriver driver) {
+    public HouseRegisterChatScreen(WebDriver driver) {
         super(driver);
     }
 
@@ -245,24 +245,24 @@ public class HousRegisterChatScreen extends MobileScreen {
     public void waitUntilPageLoads() {
     }
 
-    public HousRegisterChatScreen importData() {
+    public HouseRegisterChatScreen importData() {
         waitUntilVisible(screenTitle);
         waitUntilVisible(greeting);
         waitUntilClickable(dataImportButton).click();
         return this;
     }
 
-    public HousRegisterChatScreen cancelDataImport() {
+    public HouseRegisterChatScreen cancelDataImport() {
         waitUntilClickable(cancelButton).click();
         return this;
     }
 
-    public HousRegisterChatScreen dataNotImported() {
+    public HouseRegisterChatScreen dataNotImported() {
         waitUntilClickable(dataNotImported).click();
         return this;
     }
 
-    public HousRegisterChatScreen dataImported() {
+    public HouseRegisterChatScreen dataImported() {
        boolean dataImported =  RetryUtils.isConditionFulfilledWithWait( ()-> driver.getPageSource().contains("Vornamen: HANS-GÜNTHER"), NumericConstants.NUMERIC_60);
         dippAssertions.assertThat(dataImported)
                 .as("HANS-GÜNTHER eID Data was not imported")
@@ -288,7 +288,7 @@ public class HousRegisterChatScreen extends MobileScreen {
                 .isTrue();
     }
 
-    public HousRegisterChatScreen confirmDataImport() {
+    public HouseRegisterChatScreen confirmDataImport() {
         waitUntilVisible(digitalIdentity);
         waitUntilVisible(selectAllButton).click();
         return this;

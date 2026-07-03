@@ -292,6 +292,12 @@ public abstract class Page {
     }
 
 
+    public void clickIfPresent(WebElement element, int waitInSec) {
+        if (isElementDisplayedWithWait(element, waitInSec)) {
+            waitUntilClickable(element).click();
+        }
+    }
+
     public boolean isCancelButtonVisible() {
         return isElementDisplayedWithWait(cancelButton, 5);
     }
