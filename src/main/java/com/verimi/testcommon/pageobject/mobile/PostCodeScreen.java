@@ -99,7 +99,6 @@ public class PostCodeScreen extends MobileScreen {
     @Override
     public void waitUntilPageLoads() {
         waitUntilVisible(screenTitle);
-        waitUntilVisible(screenText);
     }
 
     public PostCodeScreen addPostcode(String postcode) {

@@ -1,17 +1,12 @@
 package com.verimi.stepdefinitions;
 
-import static com.verimi.stepdefinitions.RegistrationSteps.EID_PIN;
-import static com.verimi.stepdefinitions.RegistrationSteps.PHONE_NUMBER;
-import static com.verimi.stepdefinitions.RegistrationSteps.POSTCODE;
-import static com.verimi.stepdefinitions.RegistrationSteps.TWO_FA_PIN;
-
 import org.openqa.selenium.WebDriver;
 
+import com.verimi.testcommon.flows.DeutschlandAppFlow;
 import com.verimi.testcommon.framework.drivers.DriverManager;
 import com.verimi.testcommon.framework.utils.random.RandomUtilities;
 import com.verimi.testcommon.pageobject.mobile.AdultChildSupportChatScreen;
 import com.verimi.testcommon.pageobject.mobile.AiLandingScreen;
-import com.verimi.testcommon.pageobject.mobile.DWelcomeScreen;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -34,40 +29,16 @@ public class AdultChildSupportChatSteps {
     @Given("Die Nutzer ist registriert und eingeloggt")
     public void registerUser() {
         cleanAndSetUpTestData();
-
-        DWelcomeScreen dWelcomeScreen = new DWelcomeScreen(getDriver());
-        dWelcomeScreen
-                .navigateToAdultChildSupportOnboardingScreen()
-                .activateMockEid()
-                .navigateToHouseRegistrationOnboardingScreen()
-                .navigateToDataProtectionOnboardingScreen()
-                .navigateToTermsAndCondition()
-                .acceptTermsAndCondition()
-                .navigateToPostcodeScreen()
-                .addPostcode(POSTCODE)
-                .navigateToRegistrationScreen()
-                .starRegistration()
-                .navigateTo2FaSetUpScreen()
-                .setUp2FaPin(TWO_FA_PIN + TWO_FA_PIN)
-                .navigateToEmailScreen()
-                .addEmail(EMAIL)
-                .navigateToOtpScreen()
-                .enterOpt(EMAIL, TWO_FA_PIN)
-                .navigateToTelePhoneScreen()
-                .navigateToIdentityScreen(PHONE_NUMBER)
-                .navigateToIdSelectionScreen()
-                .selectIdCard()
-                .navigateToEidPinScreen()
-                .addEidCardPin(EID_PIN)
-                .waitForEidData()
-                .navigateToHomeScreen(TWO_FA_PIN);
+        DeutschlandAppFlow deutschlandAppFlow = new DeutschlandAppFlow(getDriver());
+        deutschlandAppFlow.registerUserWithoutPhoneNumber(EMAIL);
     }
 
     @SneakyThrows
     @And("Der Nutzer befindet sich im Chat für Kindergeld ab 18")
     public void navigateToAdultChildChatScreen() {
         AiLandingScreen aiLandingScreen = new AiLandingScreen(getDriver());
-        aiLandingScreen.navigateToAiIntroScreen()
+        aiLandingScreen.selectChildSupportAndNavigateToAiIntroScreen()
+                .assertScreenContent()
                 .navigateToAdultChildSupportChatScreen();
     }
 
@@ -89,7 +60,7 @@ public class AdultChildSupportChatSteps {
 
 
     @And("Wird die Nutzerdatenübernahme erfolgreich durchgeführt")
-    public void userDataIsNotImported() {
+    public void userDataImported() {
         AdultChildSupportChatScreen adultChildSupportChatScreen = new AdultChildSupportChatScreen(getDriver());
         adultChildSupportChatScreen.dataImported();
     }

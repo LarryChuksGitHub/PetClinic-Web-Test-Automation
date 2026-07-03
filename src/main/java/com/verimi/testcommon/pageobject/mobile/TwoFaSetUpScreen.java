@@ -74,7 +74,6 @@ public class TwoFaSetUpScreen extends MobileScreen {
 
     @Override
     public void waitUntilPageLoads() {
-        // isElementDisplayedWithWait(screenTitle, NumericConstants.NUMERIC_10);
     }
 
     public TwoFaSetUpScreen setUp2FaPin(String twoFaPin) {

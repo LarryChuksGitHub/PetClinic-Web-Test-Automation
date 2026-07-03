@@ -1,9 +1,5 @@
 package com.verimi.frontendtest.mobile.deutschlandapp;
 
-import static com.verimi.stepdefinitions.RegistrationSteps.EID_PIN;
-import static com.verimi.stepdefinitions.RegistrationSteps.PHONE_NUMBER;
-import static com.verimi.stepdefinitions.RegistrationSteps.POSTCODE;
-import static com.verimi.stepdefinitions.RegistrationSteps.TWO_FA_PIN;
 import static com.verimi.testcommon.config.Config.isAndroid;
 import static com.verimi.testcommon.config.Config.isIOS;
 
@@ -17,10 +13,10 @@ import org.testng.annotations.Test;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.verimi.testcommon.config.hooks.Hooks;
+import com.verimi.testcommon.flows.DeutschlandAppFlow;
 import com.verimi.testcommon.framework.report.Reference;
 import com.verimi.testcommon.framework.utils.constant.NumericConstants;
 import com.verimi.testcommon.framework.utils.random.RandomUtilities;
-import com.verimi.testcommon.pageobject.mobile.DWelcomeScreen;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.appmanagement.AndroidTerminateApplicationOptions;
 import io.appium.java_client.ios.IOSDriver;
@@ -51,35 +47,8 @@ public class DeutschlandAppTests extends Hooks {
     @Reference()
     public void deutschlandAppRegistrationFlow() {
         cleanAndSetUpTestData();
-        DWelcomeScreen dWelcomeScreen = new DWelcomeScreen(getDriver());
-        dWelcomeScreen
-                .navigateToAdultChildSupportOnboardingScreen()
-                .activateMockEid()
-                .navigateToHouseRegistrationOnboardingScreen()
-                .navigateToDataProtectionOnboardingScreen()
-                .navigateToTermsAndCondition()
-                .acceptTermsAndCondition()
-                .navigateToPostcodeScreen()
-                .addPostcode(POSTCODE)
-                .navigateToRegistrationScreen()
-                .starRegistration()
-                .navigateTo2FaSetUpScreen()
-                .setUp2FaPin(TWO_FA_PIN + TWO_FA_PIN)
-                .navigateToEmailScreen()
-                .addEmail(EMAIL)
-                .navigateToOtpScreen()
-                .enterOpt(EMAIL, TWO_FA_PIN)
-                .navigateToTelePhoneScreen()
-                .navigateToIdentityScreen(PHONE_NUMBER)
-                .navigateToIdSelectionScreen()
-                .selectIdCard()
-                .assertEidScopeToBeDelivered()
-                .navigateToEidPinScreen()
-                .addEidCardPin(EID_PIN)
-                .waitForEidData()
-                .navigateToHomeScreen(TWO_FA_PIN)
-                .assertHomeScreenContent();
-
+        DeutschlandAppFlow deutschlandAppFlow = new DeutschlandAppFlow(getDriver());
+        deutschlandAppFlow.registerUserWithPhoneNumber(EMAIL);
     }
 
 

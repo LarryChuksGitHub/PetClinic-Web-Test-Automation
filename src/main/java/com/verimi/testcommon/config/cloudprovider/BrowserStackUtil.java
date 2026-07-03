@@ -55,7 +55,7 @@ public class BrowserStackUtil {
             // + "browserstack_executor: {\"action\":\"setSessionStatus\", "
             String browserstackCommand =
                     "{"
-                            + "{\"action\":\"setSessionStatus\", "
+                            + "browserstack_executor: {\"action\":\"setSessionStatus\", "
                             + "\"arguments\": {"
                             + "\"status\": \"" + status + "\","
                             + "\"reason\": \"" + reason + "\""

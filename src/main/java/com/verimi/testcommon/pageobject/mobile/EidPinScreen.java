@@ -46,7 +46,8 @@ public class EidPinScreen extends MobileScreen {
     private WebElement retryButton;
 
     @AndroidFindAll({
-            @AndroidBy(xpath = "//android.widget.TextView[@text='Weiter']"),
+            @AndroidBy(xpath = "//*[@text='Weiter']"),
+            @AndroidBy(xpath = "//*[@text='Erlauben']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),

@@ -86,7 +86,7 @@ public class AiIntroScreen extends MobileScreen {
     private WebElement inputTextField;
 
     @AndroidFindAll({
-            @AndroidBy(xpath = "//android.widget.TextView[@text='Weiter']"),
+            @AndroidBy(xpath = "//*[@text='Weiter']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -95,6 +95,16 @@ public class AiIntroScreen extends MobileScreen {
     })
     private WebElement nextButton;
 
+    @AndroidFindAll({
+            @AndroidBy(xpath = "//android.widget.TextView[@text='Weiter']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+            @iOSXCUITBy(accessibility = "Einstellungen"),
+            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+    })
+    private WebElement formularButton;
+
     public AiIntroScreen(WebDriver driver) {
         super(driver);
     }
@@ -102,10 +112,9 @@ public class AiIntroScreen extends MobileScreen {
     @Override
     public void waitUntilPageLoads() {
         waitUntilVisible(screenTitle);
-        waitUntilVisible(interactionModeButton);
     }
 
-    public void assertScreenContent() {
+    public AiIntroScreen assertScreenContent() {
         log.info("Asserting contents on the screen");
 
         DippAssertions dippAssertions = new DippAssertions();
@@ -124,11 +133,18 @@ public class AiIntroScreen extends MobileScreen {
         dippAssertions.assertThat(isElementDisplayedWithWait(avatarText, NumericConstants.NUMERIC_3))
                 .as("Avatar text should be displayed")
                 .isTrue();
+        return this;
     }
 
     public AdultChildSupportChatScreen navigateToAdultChildSupportChatScreen() {
-        assertScreenContent();
         nextButton.click();
         return new AdultChildSupportChatScreen(driver);
     }
+
+public HousRegisterChatScreen navigateToHouseRegistrationChatScreen() {
+        nextButton.click();
+        return new HousRegisterChatScreen(driver);
+    }
+
+
 }

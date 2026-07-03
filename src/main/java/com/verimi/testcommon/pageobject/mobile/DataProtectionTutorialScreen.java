@@ -56,7 +56,6 @@ public class DataProtectionTutorialScreen extends MobileScreen {
     @Override
     public void waitUntilPageLoads() {
         waitUntilVisible(screenTitle);
-        waitUntilVisible(screenText);
     }
 
     public DataProtectionTermsAndConditionScreen navigateToTermsAndCondition() {

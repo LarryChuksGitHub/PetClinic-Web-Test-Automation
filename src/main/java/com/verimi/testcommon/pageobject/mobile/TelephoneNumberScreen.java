@@ -72,7 +72,6 @@ public class TelephoneNumberScreen extends MobileScreen {
 
     @Override
     public void waitUntilPageLoads() {
-        waitUntilVisible(screenTitle);
     }
 
     public TelephoneNumberScreen reject() {

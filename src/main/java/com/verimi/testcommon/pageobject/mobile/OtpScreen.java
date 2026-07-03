@@ -118,9 +118,11 @@ public class OtpScreen extends MobileScreen {
         openDeutschlandApp();
         waitUntilClickable(proofButton).click();
         setMode(ScreenOrientation.PORTRAIT);
-        if (isElementDisplayedWithWait(appPinText, NumericConstants.NUMERIC_5)) {
+        int counter = 0;
+        while (isElementDisplayedWithWait(appPinText, NumericConstants.NUMERIC_5) && counter < 3) {
             new TwoFaSetUpScreen(driver).typePIN(twoFaPin);
             waitUntilClickable(unblock).click();
+            counter++;
         }
         waitUntilClickable(otpField).sendKeys(otp);
         return this;
@@ -170,6 +172,11 @@ public class OtpScreen extends MobileScreen {
     public TelephoneNumberScreen navigateToTelePhoneScreen() {
         waitUntilClickable(nextButton).click();
         return new TelephoneNumberScreen(driver);
+    }
+
+    public IdentityScreen navigateToIdentityScreen() {
+        waitUntilClickable(nextButton).click();
+        return new IdentityScreen(driver);
     }
 
 }

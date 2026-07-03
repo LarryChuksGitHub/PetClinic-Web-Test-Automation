@@ -147,7 +147,8 @@ public class EidScopeScreen extends MobileScreen {
 
 
     @AndroidFindAll({
-            @AndroidBy(xpath = "//android.widget.TextView[@text='Weiter']"),
+            @AndroidBy(xpath = "//*[@text='Weiter']"),
+            @AndroidBy(xpath = "//*[@text='Erlauben']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),

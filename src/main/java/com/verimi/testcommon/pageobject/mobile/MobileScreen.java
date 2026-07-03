@@ -1,13 +1,14 @@
 package com.verimi.testcommon.pageobject.mobile;
 
+import static com.verimi.testcommon.config.Config.LOAD_WAIT;
 import static com.verimi.testcommon.config.Config.isAndroid;
 import static com.verimi.testcommon.config.Config.isIOS;
 import static com.verimi.testcommon.config.Config.isIpad;
 import static com.verimi.testcommon.framework.utils.constant.NumericConstants.NUMERIC_1;
-import static com.verimi.testcommon.framework.utils.constant.NumericConstants.WAIT_1000;
 import static com.verimi.testcommon.framework.utils.constant.NumericConstants.WAIT_2000;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -169,10 +171,16 @@ public class MobileScreen extends Page {
     }
 
     protected void typeMobile(WebElement textField, String text) {
-
-        log.info("inputting {} into {}", text, textField.getText().isEmpty() ? textField : textField.getText());
-        textField.sendKeys(text);
-        Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(NUMERIC_1));// wait for the text to be entered
+        try {
+            log.info("inputting {} into {}", text, textField.getText().isEmpty() ? textField : textField.getText());
+            textField.clear();
+            textField.sendKeys(text);
+            Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(NUMERIC_1));// wait for the text to be entered
+        } catch (Exception exception) {
+            log.info("InvalidElementStateException caught while typing into the text field");
+            TestContext.setLastException(exception);
+            throw exception;
+        }
     }
 
 
@@ -259,6 +267,28 @@ public class MobileScreen extends Page {
         scrollUntilElementIsVisible(webElement, pointX, fromY, toY);
     }
 
+    protected WebElement mobileScrollDownUntilElementAppears(WebElement webElement) {
+        Dimension dimension = driver.manage().window().getSize();
+        int pointX = dimension.width / 2;
+        int fromY = dimension.height / 2;
+        int toY = (int) (dimension.height * 0.15);
+
+        log.info(LOOKING_FOR_ELEMENT, webElement);
+        scrollUntilElementIsVisible(webElement, pointX, fromY, toY);
+        return webElement;
+    }
+
+    protected WebElement mobileScrollUpAndDownUntilElementAppears(WebElement webElement) {
+        Dimension dimension = driver.manage().window().getSize();
+        int pointX = dimension.width / 2;
+        int fromY = dimension.height / 2;
+        int toY = (int) (dimension.height * 0.15);
+
+        log.info(LOOKING_FOR_ELEMENT, webElement);
+        scrollUpAndDownUntilElementIsVisible(webElement, pointX, fromY, toY);
+        return webElement;
+    }
+
     protected void mobileScrollDownUntilElementIsVisibleAndScrollMore(WebElement webElement) {
         Dimension dimension = driver.manage().window().getSize();
         int pointX = dimension.width / 2;
@@ -319,6 +349,48 @@ public class MobileScreen extends Page {
                     .addAction(input.createPointerUp(PointerInput.MouseButton.MIDDLE.asArg()));
             ((AppiumDriver) driver).perform(Collections.singletonList(sequence));
             attemptCount++;
+        }
+        Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(NUMERIC_1));
+        if (!isElementDisplayed(webElement)) {
+            TestContext.setLastException(new NoSuchElementException("Element is not displayed"));
+        }
+    }
+
+    private void scrollUpAndDownUntilElementIsVisible(WebElement webElement, int pointX, int fromY, int toY) {
+        int attemptCount = 0;
+        String pageSource = "";
+        PointerInput input = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+        while (!isElementDisplayed(webElement) && attemptCount < 7 && !pageSource.equals(driver.getPageSource())) {
+            pageSource = driver.getPageSource();
+            Sequence sequence = new Sequence(input, 0)
+                    .addAction(input.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), pointX, fromY))
+                    .addAction(input.createPointerDown(PointerInput.MouseButton.MIDDLE.asArg()))
+                    .addAction(input.createPointerMove(Duration.ofMillis(300), PointerInput.Origin.viewport(), pointX, toY))
+                    .addAction(input.createPointerUp(PointerInput.MouseButton.MIDDLE.asArg()));
+            ((AppiumDriver) driver).perform(Collections.singletonList(sequence));
+            attemptCount++;
+            Uninterruptibles.sleepUninterruptibly(Duration.ofMillis(300));
+        }
+        Dimension dimension = driver.manage().window().getSize();
+        toY = (int) (dimension.height * 0.85);
+
+
+        attemptCount = 0;
+        pageSource = "";
+        while (!isElementDisplayed(webElement) && attemptCount < 10 && !pageSource.equals(driver.getPageSource())) {
+            pageSource = driver.getPageSource();
+            Sequence sequence = new Sequence(input, 0)
+                    .addAction(input.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), pointX, fromY))
+                    .addAction(input.createPointerDown(PointerInput.MouseButton.MIDDLE.asArg()))
+                    .addAction(input.createPointerMove(Duration.ofMillis(300), PointerInput.Origin.viewport(), pointX, toY))
+                    .addAction(input.createPointerUp(PointerInput.MouseButton.MIDDLE.asArg()));
+            ((AppiumDriver) driver).perform(Collections.singletonList(sequence));
+            Uninterruptibles.sleepUninterruptibly(Duration.ofMillis(300));
+            attemptCount++;
+        }
+        Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(NUMERIC_1));
+        if (!isElementDisplayed(webElement)) {
+            TestContext.setLastException(new NoSuchElementException("Element is not displayed"));
         }
     }
 
@@ -490,10 +562,17 @@ public class MobileScreen extends Page {
         }
     }
 
-    public void mobileScrollDownToBottomWithTimes(int times) {
+    public void mobileScrollDownWithTimes(int milliSeconds) {
         startTimer = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTimer < (long) WAIT_1000 * times) {
-            swipe(SwipeDirection.UP, Duration.ofSeconds(1));
+        while (System.currentTimeMillis() - startTimer < (long) milliSeconds) {
+            swipe(SwipeDirection.UP, Duration.ofMillis(1));
+        }
+    }
+
+    public void mobileScrollUpWithTimes(int milliSeconds) {
+        startTimer = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTimer < (long) milliSeconds) {
+            swipe(SwipeDirection.DOWN, Duration.ofSeconds(1));
         }
     }
 
@@ -760,13 +839,13 @@ public class MobileScreen extends Page {
     private void swipeUp() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
-        if (driver instanceof io.appium.java_client.ios.IOSDriver) {
+        if (driver instanceof IOSDriver) {
             // iOS → old-style "mobile: swipe"
             Map<String, Object> params = new HashMap<>();
             params.put("direction", "up");
             js.executeScript("swipe", params);
 
-        } else if (driver instanceof io.appium.java_client.android.AndroidDriver) {
+        } else if (driver instanceof AndroidDriver) {
             // Android → new "mobile: swipeGesture" and needs area rect
             Dimension size = driver.manage().window().getSize();
             int left = 0;
@@ -836,5 +915,193 @@ public class MobileScreen extends Page {
         throw new NoSuchElementException(Arrays.toString(elements) + ELEMENT_NOT_FOUND + initialWaitTime + WAIT_SECONDS);
     }
 
+
+    public WebElement mobileScrollAndBringElementToTheMiddle(WebElement element) {
+
+        if (element == null) {
+            throw new IllegalArgumentException("Element must not be null.");
+        }
+        log.info(LOOKING_FOR_ELEMENT, element);
+        Dimension screen;
+        if (isAndroid()) {
+            AndroidDriver androidDriver = ((AndroidDriver) driver);
+            screen = androidDriver.manage().window().getSize();
+        } else if (isIOS()) {
+            IOSDriver iosDriver = ((IOSDriver) driver);
+            screen = iosDriver.manage().window().getSize();
+        } else {
+            throw new IllegalStateException("Driver must be AndroidDriver or IOSDriver.");
+        }
+
+
+        int screenWidth = screen.getWidth();
+        int screenHeight = screen.getHeight();
+
+        int middleY = screenHeight / 2;
+        int tolerance = 80;
+
+        Instant endTime = Instant.now().plus(Duration.ofSeconds(LOAD_WAIT));
+
+        boolean scrollDown = true;
+        int swipeCount = 0;
+
+        while (Instant.now().isBefore(endTime)) {
+            if (isElementDisplayedWithWait(element, NUMERIC_1)) {
+                moveElementToMiddle(element, middleY, tolerance);
+                return element;
+            } else {
+                if (scrollDown) {
+                    swipe(screenWidth / 2, (int) (screenHeight * 0.80), screenWidth / 2, (int) (screenHeight * 0.30));
+                } else {
+                    swipe(screenWidth / 2, (int) (screenHeight * 0.30), screenWidth / 2, (int) (screenHeight * 0.80));
+                }
+            }
+            swipeCount++;
+
+            // Change direction every 4 swipes
+            if (swipeCount >= 4) {
+                swipeCount = 0;
+                scrollDown = !scrollDown;
+            }
+            Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(NUMERIC_1));
+        }
+        TestContext.setLastException(new NoSuchElementException("Element not found after waiting for element " + element + " " + Duration.ofSeconds(LOAD_WAIT).getSeconds()
+                + " seconds."));
+        throw new TimeoutException(
+                "Unable to locate element after scrolling for "
+                        + Duration.ofSeconds(LOAD_WAIT).getSeconds()
+                        + " seconds.");
+
+    }
+
+
+    private void moveElementToMiddle(WebElement element, int targetY, int tolerance) {
+
+        Dimension screen;
+        if (isAndroid()) {
+            AndroidDriver androidDriver = ((AndroidDriver) driver);
+            screen = androidDriver.manage().window().getSize();
+        } else if (isIOS()) {
+            IOSDriver iosDriver = ((IOSDriver) driver);
+            screen = iosDriver.manage().window().getSize();
+        } else {
+            throw new IllegalStateException("Driver must be AndroidDriver or IOSDriver.");
+        }
+
+        int screenWidth = screen.getWidth();
+        int screenHeight = screen.getHeight();
+
+        int maxAdjustments = 3;
+
+        while (maxAdjustments-- > 0) {
+
+            try {
+
+                Point point = element.getLocation();
+
+                int centerY = point.getY() + element.getSize().getHeight() / 2;
+
+                int delta = centerY - targetY;
+
+                if (Math.abs(delta) <= tolerance) {
+                    return;
+                }
+
+                if (delta > 0) {
+
+                    swipe(screenWidth / 2, (int) (screenHeight * 0.75), screenWidth / 2, (int) (screenHeight * 0.45));
+
+                } else {
+
+                    swipe(screenWidth / 2, (int) (screenHeight * 0.45), screenWidth / 2, (int) (screenHeight * 0.75));
+                }
+
+                Thread.sleep(250);
+
+            } catch (StaleElementReferenceException ignored) {
+                break;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+    }
+
+    private void swipe(int startX, int startY, int endX, int endY) {
+
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+
+        Sequence swipe = new Sequence(finger, 1);
+
+        swipe.addAction(
+                finger.createPointerMove(
+                        Duration.ZERO,
+                        PointerInput.Origin.viewport(),
+                        startX,
+                        startY));
+
+        swipe.addAction(
+                finger.createPointerDown(
+                        PointerInput.MouseButton.LEFT.asArg()));
+
+        swipe.addAction(
+                finger.createPointerMove(
+                        Duration.ofMillis(600),
+                        PointerInput.Origin.viewport(),
+                        endX,
+                        endY));
+
+        swipe.addAction(
+                finger.createPointerUp(
+                        PointerInput.MouseButton.LEFT.asArg()));
+
+        if (isAndroid()) {
+            AndroidDriver androidDriver = ((AndroidDriver) driver);
+            androidDriver.perform(Collections.singletonList(swipe));
+        } else if (isIOS()) {
+            IOSDriver iosDriver = ((IOSDriver) driver);
+            iosDriver.perform(Collections.singletonList(swipe));
+        } else {
+            throw new IllegalStateException("Driver must be AndroidDriver or IOSDriver.");
+        }
+
+
+    }
+
+    public boolean isElementPresentWhileScrollingUpAndDown(WebElement element) {
+        log.info(LOOKING_FOR_ELEMENT, element);
+        Dimension dimension = driver.manage().window().getSize();
+        int pointX = dimension.width / 2;
+        int fromY = dimension.height / 2;
+        int toY = (int) (dimension.height * 0.15);
+
+
+        String pageSource = "";
+        int counter = 0;
+        while (!isElementPresent(element) && counter < 4 && !pageSource.equals(driver.getPageSource())) {
+            pageSource = driver.getPageSource();
+            counter++;
+            log.info(LOOKING_FOR_ELEMENT, element);
+            scrollUpAndDownUntilElementIsVisible(element, pointX, fromY, toY);
+            Uninterruptibles.sleepUninterruptibly(Duration.ofMillis(300));
+            if (isElementPresent(element)) {
+                return element.isDisplayed();
+            }
+        }
+        pageSource = "";
+        counter = 0;
+        toY = (int) (dimension.height * 0.85);
+        while (!isElementPresent(element) && counter < 7 && !pageSource.equals(driver.getPageSource())) {
+            pageSource = driver.getPageSource();
+            counter++;
+            scrollUpAndDownUntilElementIsVisible(element, pointX, fromY, toY);
+            Uninterruptibles.sleepUninterruptibly(Duration.ofMillis(300));
+            if (isElementPresent(element)) {
+                return element.isDisplayed();
+            }
+
+        }
+        return false;
+    }
 
 }

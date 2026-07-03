@@ -45,6 +45,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.verimi.testcommon.config.Config;
 import com.verimi.testcommon.config.cloudprovider.CloudProvider;
+import com.verimi.testcommon.framework.asserts.DippAssertions;
 import com.verimi.testcommon.framework.utils.BrowserTabOperation;
 import com.verimi.testcommon.framework.utils.retry.RetryUtils;
 import com.verimi.testcommon.framework.utils.sleep.SleepUtil;
@@ -79,6 +80,8 @@ public abstract class Page {
     private final String url;
     protected WebElement save;
     protected WebDriver driver;
+    protected static DippAssertions dippAssertions = new DippAssertions();
+
 
     @FindBy(id = SAVE_BUTTON_ID)
     protected By saveBy = By.id(SAVE_BUTTON_ID);

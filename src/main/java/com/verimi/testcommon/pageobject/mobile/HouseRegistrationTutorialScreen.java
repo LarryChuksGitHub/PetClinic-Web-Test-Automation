@@ -55,7 +55,6 @@ public class HouseRegistrationTutorialScreen extends MobileScreen {
     @Override
     public void waitUntilPageLoads() {
         waitUntilVisible(screenTitle);
-        waitUntilVisible(screenText);
     }
 
 

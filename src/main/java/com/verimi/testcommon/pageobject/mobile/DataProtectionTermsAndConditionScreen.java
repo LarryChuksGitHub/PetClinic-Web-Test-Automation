@@ -21,18 +21,10 @@ public class DataProtectionTermsAndConditionScreen extends MobileScreen {
     private WebElement screenTitle;
 
     @AndroidFindAll({
-            @AndroidBy(xpath = "//*[@text='Bitte stimmen Sie den Nutzungsbedingungen zu und nehmen die Datenschutzhinweise zur Kenntnis.']"),
-    })
-    @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
-    })
-    private WebElement screenText;
-
-
-    @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='walletsdk_consent_privacy_checkbox']"),
             @AndroidBy(xpath = "//*[@text='Datenschutzerklärung akzeptieren']/following-sibling::android.widget.CheckBox"),
+            @AndroidBy(xpath = "//*[@text='Ich habe die Datenschutzerklärung zur Kenntnis genommen']/following-sibling::android.widget.CheckBox"),
+
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
@@ -43,6 +35,8 @@ public class DataProtectionTermsAndConditionScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='walletsdk_consent_terms_checkbox']"),
+            @AndroidBy(xpath = "//*[@text='Ich akzeptiere die Nutzungsbedingungen']/following-sibling::android.widget.CheckBox"),
             @AndroidBy(xpath = "//*[@text='Nutzungsbedingungen akzeptieren']/following-sibling::android.widget.CheckBox"),
     })
     @iOSXCUITFindAll({
@@ -79,13 +73,12 @@ public class DataProtectionTermsAndConditionScreen extends MobileScreen {
     @Override
     public void waitUntilPageLoads() {
         waitUntilVisible(screenTitle);
-        waitUntilVisible(screenText);
     }
 
     public DataProtectionTermsAndConditionScreen acceptTermsAndCondition() {
         waitUntilVisible(acceptDataProtectionTerms).click();
         waitUntilVisible(acceptUsageTerms).click();
-        waitUntilVisible(transferPhoneNumber).click();
+        //waitUntilVisible(transferPhoneNumber).click();
         return this;
     }
 

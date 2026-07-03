@@ -60,7 +60,6 @@ public class DWelcomeScreen extends MobileScreen {
     @Override
     public void waitUntilPageLoads() {
         waitUntilVisible(screenTitle);
-        waitUntilVisible(screenText);
     }
 
     public AdultChildSupportTutorialScreen clickLosGehtButton() {

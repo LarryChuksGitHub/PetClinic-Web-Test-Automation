@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 public class NumericConstants {
 
     public static final Integer WAIT_300 = 300;
+    public static final Integer WAIT_100 = 300;
     public static final Integer WAIT_500 = 500;
     public static final Integer WAIT_1000 = 1000;
     public static final Integer WAIT_2000 = 2000;

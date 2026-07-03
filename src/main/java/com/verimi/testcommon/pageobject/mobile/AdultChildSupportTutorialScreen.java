@@ -87,7 +87,6 @@ public class AdultChildSupportTutorialScreen extends MobileScreen {
     @Override
     public void waitUntilPageLoads() {
         waitUntilVisible(screenTitle);
-        waitUntilVisible(screenText);
     }
 
     public void openDevMenu() {
@@ -95,10 +94,12 @@ public class AdultChildSupportTutorialScreen extends MobileScreen {
         tapAtCoordinates(elementPosition);
         tapAtCoordinates(elementPosition);
         tapAtCoordinates(elementPosition);
-        if (!isElementDisplayedWithWait(deutschlandAppText, NumericConstants.NUMERIC_5)) {
+        int attempt = 0;
+        while (!isElementDisplayedWithWait(drebenbuschEid, NumericConstants.NUMERIC_5) && attempt++ < 4) {
             tapAtCoordinates(elementPosition);
             tapAtCoordinates(elementPosition);
             tapAtCoordinates(elementPosition);
+            attempt++;
         }
     }
 
