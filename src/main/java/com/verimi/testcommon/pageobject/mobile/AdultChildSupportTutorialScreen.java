@@ -125,7 +125,7 @@ public class AdultChildSupportTutorialScreen extends MobileScreen {
         Point location = element.getLocation();
         int x = location.getX();
         int y = location.getY();
-        log.info("Element location: " + "X point: " + x + " Y point: " + y);
+        log.info("Element location: " + "X point: " + x + ", Y point: " + y);
         return new Point(x, y);
     }
 
