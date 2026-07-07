@@ -27,7 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OtpScreen extends MobileScreen {
 
-    public static final String TSY_MAIL_HOG_URL = "https://mailhog:KivpPassword1!@mailhog.dev.kivp.eudi-telekom.de/";
+    public static final String TSY_DEV_MAIL_HOG_URL = "https://mailhog:KivpPassword1!@mailhog.dev.kivp.eudi-telekom.de/";
+    public static final String TSY_DEMO_MAIL_HOG_URL = "https://mailhog:KivpPassword1!@mailhog.demo.kivp.eudi-telekom.de/";
     public static final String TSY_MAIL_SUBJECT = "Ihr Bestaetigungscode fuer die KIVP-App";
 
     @AndroidFindAll({
@@ -156,13 +157,13 @@ public class OtpScreen extends MobileScreen {
 
     @SneakyThrows
     public String getOpt(String email) {
-        String otp = new MailHogScreen(driver).getOtpCode(TSY_MAIL_HOG_URL, email);
+        String otp = new MailHogScreen(driver).getOtpCode(TSY_DEV_MAIL_HOG_URL, TSY_DEMO_MAIL_HOG_URL, email);
         int counter = 0;
         while (otp == null && counter < 3) {
             log.warn("OTP code not found in email. Retrying...");
             Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(NumericConstants.NUMERIC_3)); // Wait for the email to arrive
             counter++;
-            otp = new MailHogScreen(driver).getOtpCode(TSY_MAIL_HOG_URL, email);
+            otp = new MailHogScreen(driver).getOtpCode(TSY_DEV_MAIL_HOG_URL, TSY_DEMO_MAIL_HOG_URL, email);
         }
         log.info("OTP code retrieved from email: {}", otp);
         return otp;

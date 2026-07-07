@@ -17,6 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.verimi.testcommon.framework.utils.constant.NumericConstants;
+import com.verimi.testcommon.framework.utils.testhelper.TestContext;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
@@ -32,6 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MailHogScreen extends MobileScreen {
 
     private static final Pattern OTP_PATTERN = Pattern.compile("\\b(\\d{6})\\b");
+
+
     @AndroidFindAll({
             @AndroidBy(xpath = "//*[@text='Deutschland-App PIN']"),
     })
@@ -41,6 +44,8 @@ public class MailHogScreen extends MobileScreen {
             @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
     })
     private WebElement screenTitle;
+
+
     @AndroidFindAll({
             @AndroidBy(id = "com.android.chrome:id/search_box_text"),
     })
@@ -48,6 +53,17 @@ public class MailHogScreen extends MobileScreen {
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
     })
     private WebElement searchBox;
+
+
+    @AndroidFindAll({
+            @AndroidBy(xpath ="//*[@resource-id='com.android.chrome:id/url_bar']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+    })
+    private WebElement landscapeSearchBox;
+
+
     @AndroidFindAll({
             @AndroidBy(id = "com.android.chrome:id/positive_button"),
     })
@@ -55,6 +71,8 @@ public class MailHogScreen extends MobileScreen {
             @iOSXCUITBy(xpath = "//*[contains(@label,'positive_button')]"),
     })
     private WebElement acceptAlert;
+
+
     @AndroidFindAll({
             @AndroidBy(xpath = "//*[@text='" + TSY_MAIL_SUBJECT + "']"),
     })
@@ -62,6 +80,7 @@ public class MailHogScreen extends MobileScreen {
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
     })
     private WebElement subjectText;
+
     @AndroidFindAll({
             @AndroidBy(xpath = "//*[@text='Dieser einmalige Code ist nur für 20 Minuten gültig.']"),
     })
@@ -70,9 +89,11 @@ public class MailHogScreen extends MobileScreen {
     })
     private WebElement oneTimeCode;
 
+
     public MailHogScreen(WebDriver driver) {
         super(driver);
     }
+
 
     public static void openMobileBrowser(WebDriver driver) {
         if (isAndroid()) {
@@ -95,42 +116,63 @@ public class MailHogScreen extends MobileScreen {
     }
 
     @SneakyThrows
-    public String getOtpCode(String mailHogUrl, String emailAddress) {
+    public String getOtpCode(String devMailHogUrl, String demoMailHogUrl, String emailAddress) {
         openMobileBrowser(driver);
         String pageSource = "";
+        WebElement element;
+        String xpath;
         if (isAndroid()) {
             AndroidDriver androidDriver = ((AndroidDriver) driver);
             WebDriverWait wait = new WebDriverWait(androidDriver, Duration.ofSeconds(LOAD_WAIT));
-            waitUntilClickable(searchBox).sendKeys(mailHogUrl);
+            waitUntilClickable(searchBox).sendKeys(devMailHogUrl);
             androidDriver.pressKey(new KeyEvent(AndroidKey.ENTER));
             if (isElementDisplayedWithWait(acceptAlert, NumericConstants.NUMERIC_12)) {
                 acceptAlert.click();
             }
             androidDriver.rotate(ScreenOrientation.LANDSCAPE);
-            WebElement emailElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//*[@text='" + emailAddress + "']")));
-            emailElement.click();
+            xpath = "//*[@text='" + emailAddress + "']";
+
+            log.info(LOOKING_FOR_ELEMENT, xpath);
+
+            if(isElementDisplayedWithWait(By.xpath(xpath), LOAD_WAIT)){
+                element = findElement(By.xpath(xpath));
+                element.click();
+            }else {
+                waitUntilClickable(landscapeSearchBox).sendKeys(demoMailHogUrl);
+                androidDriver.pressKey(new KeyEvent(AndroidKey.ENTER));
+                element = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                       By.xpath(xpath)));
+                element.click();
+            }
 
             androidDriver.rotate(ScreenOrientation.PORTRAIT);
             waitUntilVisible(subjectText);
-            waitUntilVisible(oneTimeCode);
+            isElementDisplayedWithWait(oneTimeCode);
             pageSource = androidDriver.getPageSource();
 
         } else {
             IOSDriver iosDriver = ((IOSDriver) driver);
             WebDriverWait wait = new WebDriverWait(iosDriver, Duration.ofSeconds(LOAD_WAIT));
-            waitUntilClickable(searchBox).sendKeys(mailHogUrl + "\n");
+            waitUntilClickable(searchBox).sendKeys(devMailHogUrl + "\n");
             waitUntilClickable(acceptAlert).click();
-
             iosDriver.rotate(ScreenOrientation.LANDSCAPE);
+            xpath = "//*[@label='" + emailAddress + "']";
 
-            WebElement emailElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//*[@text='" + emailAddress + "']")));
-            emailElement.click();
+            log.info(LOOKING_FOR_ELEMENT, xpath);
+
+            if(isElementDisplayedWithWait(By.xpath(xpath), LOAD_WAIT)){
+                element = findElement(By.xpath(xpath));
+                element.click();
+            }else {
+                waitUntilClickable(landscapeSearchBox).sendKeys(demoMailHogUrl + "\n");
+                element = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath(xpath)));
+                element.click();
+            }
 
             iosDriver.rotate(ScreenOrientation.PORTRAIT);
             waitUntilVisible(subjectText);
-            waitUntilVisible(oneTimeCode);
+            isElementDisplayedWithWait(oneTimeCode);
             pageSource = iosDriver.getPageSource();
         }
         Matcher matcher = OTP_PATTERN.matcher(pageSource);
@@ -138,8 +180,9 @@ public class MailHogScreen extends MobileScreen {
             log.info("OTP: " + matcher.group(1));
             return matcher.group(1);
         } else {
-            return null;
+            Exception exception = new Exception("OTP not found in the Mail Hog");
+            TestContext.setLastException(exception);
+            throw exception ;
         }
     }
-
 }

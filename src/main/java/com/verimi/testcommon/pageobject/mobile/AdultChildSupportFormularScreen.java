@@ -908,17 +908,21 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
         clickIfPresent(noButton, NumericConstants.NUMERIC_4);
 
         // Child Info
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(childFirstNameTextField), userData.getChildFirstName());
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(childLastNameTextField), userData.getChildLastName());
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(childBirthdateTextField), "12.04.2006");
+        WebElement element;
+        element = mobileScrollUpAndDownUntilElementAppears(childFirstNameTextField);
+        typeMobile(element, userData.getChildFirstName());
+        element = mobileScrollUpAndDownUntilElementAppears(childLastNameTextField);
+        typeMobile(element, userData.getChildLastName());
+        element = mobileScrollUpAndDownUntilElementAppears(childBirthdateTextField);
+        typeMobile(element, "12.04.2006");
 
         mobileScrollUpAndDownUntilElementAppears(childGenderTextField).click();
         clickIfPresent(manGender, NumericConstants.NUMERIC_4);
 
         mobileScrollUpAndDownUntilElementAppears(relationshipToChildTextField).click();
         clickIfPresent(biologicalChild, NumericConstants.NUMERIC_4);
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(citizenshipTextField), userData.getCitizenship());
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(identificationNumberTextField), userData.getIdentificationNumber());
+        element = mobileScrollUpAndDownUntilElementAppears(citizenshipTextField);
+        typeMobile(element, userData.getIdentificationNumber());
         mobileScrollUpAndDownUntilElementAppears(identificationNumberNotAvailableTextField).click();
         clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
 
@@ -929,7 +933,7 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
 
 
         // Applicant info
-        WebElement element = mobileScrollUpAndDownUntilElementAppears(applicantBirthDateTextField);
+        element = mobileScrollUpAndDownUntilElementAppears(applicantBirthDateTextField);
         dippAssertions.assertThat(element.getAttribute(TEXT))
                 .as("Applicant birthdate is not automatically filled")
                 .isEqualTo("25.01.1946");
@@ -945,16 +949,26 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
         //mobileScrollUpAndDownUntilElementAppears(title).click();
         //mobileScrollDownUntilElementAppears(profDrtitle).click();
         if (isElementDisplayedWithWait(applicantFirstNameTextField, NumericConstants.NUMERIC_3)) {
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(applicantFirstNameTextField), userData.getApplicantFirstName());
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(applicantLastNameTextField), userData.getApplicantLastName());
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(postCodeTextField), userData.getPoctcode());
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(cityTextField), userData.getCity());
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(streetTextField), userData.getStreetAddress());
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(houseNumberTextField), userData.getHouseNumber());
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(additionalAddressTextField), userData.getAdditionalAddress());
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(telePhoneCodeTextField), userData.getPhoneCode());
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(telePhoneNumberTextField), userData.getPhoneNumber());
-            typeMobile(mobileScrollUpAndDownUntilElementAppears(identificationNumberTextField), userData.getIdentificationNumber());
+            element = mobileScrollUpAndDownUntilElementAppears(applicantFirstNameTextField);
+            typeMobile(element, userData.getApplicantFirstName());
+            element = mobileScrollUpAndDownUntilElementAppears(applicantLastNameTextField);
+            typeMobile(element, userData.getApplicantLastName());
+            element = mobileScrollUpAndDownUntilElementAppears(postCodeTextField);
+            typeMobile(element, userData.getPoctcode());
+            element = mobileScrollUpAndDownUntilElementAppears(cityTextField);
+            typeMobile(element, userData.getCity());
+            element = mobileScrollUpAndDownUntilElementAppears(streetTextField);
+            typeMobile(element, userData.getStreetAddress());
+            element = mobileScrollUpAndDownUntilElementAppears(houseNumberTextField);
+            typeMobile(element, userData.getHouseNumber());
+            element = mobileScrollUpAndDownUntilElementAppears(additionalAddressTextField);
+            typeMobile(element, userData.getAdditionalAddress());
+            element = mobileScrollUpAndDownUntilElementAppears(telePhoneCodeTextField);
+            typeMobile(element, userData.getPhoneCode());
+            element = mobileScrollUpAndDownUntilElementAppears(telePhoneNumberTextField);
+            typeMobile(element, userData.getPhoneNumber());
+            element = mobileScrollUpAndDownUntilElementAppears(identificationNumberTextField);
+            typeMobile(element, userData.getIdentificationNumber());
         }
 
 
@@ -965,10 +979,14 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
         clickIfPresent(noButton, NumericConstants.NUMERIC_4);
 
 
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(differentAccountOwnerTextField), userData.getOtherParent().getFirstName() + " " + userData.getOtherParent().getLastName());
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(ibanTextField), userData.getOtherParent().getIban());
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(bicTextField), userData.getOtherParent().getBic());
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(bankNameTextField), userData.getOtherParent().getBank());
+        element = mobileScrollUpAndDownUntilElementAppears(differentAccountOwnerTextField);
+        typeMobile(element, userData.getOtherParent().getFirstName() + " " + userData.getOtherParent().getLastName());
+        element = mobileScrollUpAndDownUntilElementAppears(ibanTextField);
+        typeMobile(element, userData.getOtherParent().getIban());
+        element = mobileScrollUpAndDownUntilElementAppears(bicTextField);
+        typeMobile(element, userData.getOtherParent().getBic());
+        element = mobileScrollUpAndDownUntilElementAppears(bankNameTextField);
+        typeMobile(element, userData.getOtherParent().getBank());
 
         mobileScrollUpAndDownUntilElementAppears(childSupportGottenBeforeTextField).click();
         clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
@@ -976,7 +994,8 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
         mobileScrollUpAndDownUntilElementAppears(workingInPublicSectorTextField).click();
         clickIfPresent(noButton, NumericConstants.NUMERIC_4);
 
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(furtherInfoTextField), userData.getFurtherInfo());
+        element = mobileScrollUpAndDownUntilElementAppears(furtherInfoTextField);
+        typeMobile(element, userData.getFurtherInfo());
         mobileScrollUpAndDownUntilElementAppears(confirmElectronicTransferTextField).click();
         clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(confirmRight).click();

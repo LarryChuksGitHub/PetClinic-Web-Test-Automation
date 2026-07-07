@@ -842,7 +842,8 @@ public class HouseRegistrationFormularScreen extends MobileScreen {
                 .as("Applicant last name is not automatically filled")
                 .isEqualTo("VON DREBENBUSCH-DALGOẞEN");
 
-        typeMobile(waitUntilClickable(birthNameTextField), "Weiß");
+        WebElement element = waitUntilClickable(birthNameTextField);
+        typeMobile(element, "Weiß");
 
         dippAssertions.assertThat(waitUntilVisible(firstNameTextField).getAttribute(TEXT))
                 .as("Applicant first name is not automatically filled")
@@ -860,23 +861,28 @@ public class HouseRegistrationFormularScreen extends MobileScreen {
                 .as("Applicant birth place is not automatically filled")
                 .isEqualTo("HAMBURG");
 
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(birthLandTextField), "Deutschland");
+        element = mobileScrollUpAndDownUntilElementAppears(birthLandTextField);
+        typeMobile(element, "Deutschland");
 
-       // mobileScrollUpAndDownUntilElementAppears(genderTextField).click();
+        // mobileScrollUpAndDownUntilElementAppears(genderTextField).click();
         //clickIfPresent(manGender, NumericConstants.NUMERIC_4);
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(citizenshipTextField), "Deutsch");
+        element = mobileScrollUpAndDownUntilElementAppears(citizenshipTextField);
+        typeMobile(element, "Deutsch");
         mobileScrollUpAndDownUntilElementAppears(familyStatusTextField).click();
         clickIfPresent(single, NumericConstants.NUMERIC_4);
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(religionTextField), "Christ");
+        element = mobileScrollUpAndDownUntilElementAppears(religionTextField);
+        typeMobile(element, "Christ");
         mobileScrollUpAndDownUntilElementAppears(idTypeTextField).click();
         clickIfPresent(idCard, NumericConstants.NUMERIC_4);
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(idCardNumberTextField), "LH1253436");
+        element = mobileScrollUpAndDownUntilElementAppears(idCardNumberTextField);
+        typeMobile(element, "LH1253436");
 
         dippAssertions.assertThat(mobileScrollUpAndDownUntilElementAppears(idCardIssuedOfficeTextField).getAttribute(TEXT))
                 .as("Id Card issued office is not automatically filled")
                 .isEqualTo("Governikus");
 
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(idCardIssuedDateTextField),"10.11.2015");
+        element = mobileScrollUpAndDownUntilElementAppears(idCardIssuedDateTextField);
+        typeMobile(element, "10.11.2015");
 
         dippAssertions.assertThat(mobileScrollUpAndDownUntilElementAppears(idCardValidityDateTextField).getAttribute(TEXT))
                 .as("Id Card issued validity date is not automatically filled")
@@ -898,16 +904,26 @@ public class HouseRegistrationFormularScreen extends MobileScreen {
                 .as("Old postcode is not automatically filled")
                 .isEqualTo("HAMBURG");
 
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(formerParkInDateTextField), "20.12.2010");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(newStreetTextField), "Luckeweg");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(newHouseNumberTextField), "200");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(newPostcodeTextField), "12279");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(newCityTextField), "Berlin");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(cityPartTextField), "Tempelhof");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(flatNumberTextField), "Erdgeschoss");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(additionalInfoTextField), "1 Re");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(livingWithTextField), "Müller Mike");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(newParkInDateTextField), "10.06.2026");
+        element = mobileScrollUpAndDownUntilElementAppears(formerParkInDateTextField);
+        typeMobile(element, "20.12.2010");
+        element = mobileScrollUpAndDownUntilElementAppears(newStreetTextField);
+        typeMobile(element, "Luckeweg");
+        element = mobileScrollUpAndDownUntilElementAppears(newHouseNumberTextField);
+        typeMobile(element, "200");
+        element = mobileScrollUpAndDownUntilElementAppears(newPostcodeTextField);
+        typeMobile(element, "12279");
+        element = mobileScrollUpAndDownUntilElementAppears(newCityTextField);
+        typeMobile(element, "Berlin");
+        element = mobileScrollUpAndDownUntilElementAppears(cityPartTextField);
+        typeMobile(element, "Tempelhof");
+        element = mobileScrollUpAndDownUntilElementAppears(flatNumberTextField);
+        typeMobile(element, "Erdgeschoss");
+        element = mobileScrollUpAndDownUntilElementAppears(additionalInfoTextField);
+        typeMobile(element, "1 Re");
+        element = mobileScrollUpAndDownUntilElementAppears(livingWithTextField);
+        typeMobile(element, "Müller Mike");
+        element = mobileScrollUpAndDownUntilElementAppears(newParkInDateTextField);
+        typeMobile(element, "10.06.2026");
         mobileScrollUpAndDownUntilElementAppears(parkOutDateAndParkInDateSameTextField).click();
         clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(houseOwnerTextField).click();
@@ -916,9 +932,12 @@ public class HouseRegistrationFormularScreen extends MobileScreen {
         clickIfPresent(confirmBestaetigt, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(movingInWithKidsTextField).click();
         clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(numberOfKidsTextField), "2");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(namesOfTheKidsTextField), "Leo Günther, Mary Günther ");
-        typeMobile(mobileScrollUpAndDownUntilElementAppears(birthDateOfTheKidsTextField), "13 September 2020, 19 December 2023");
+        element = mobileScrollUpAndDownUntilElementAppears(numberOfKidsTextField);
+        typeMobile(element, "2");
+        element = mobileScrollUpAndDownUntilElementAppears(namesOfTheKidsTextField);
+        typeMobile(element, "Leo Günther, Mary Günther ");
+        element = mobileScrollUpAndDownUntilElementAppears(birthDateOfTheKidsTextField);
+        typeMobile(element, "13 September 2020, 19 December 2023");
         mobileScrollUpAndDownUntilElementAppears(acceptIdCardUpdateTextField).click();
         clickIfPresent(confirmedErteilt, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(acceptEmailTransactionTextField).click();
