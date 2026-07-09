@@ -7,6 +7,7 @@ import com.verimi.testcommon.framework.drivers.DriverManager;
 import com.verimi.testcommon.framework.utils.random.RandomUtilities;
 import com.verimi.testcommon.pageobject.mobile.AdultChildSupportChatScreen;
 import com.verimi.testcommon.pageobject.mobile.AiLandingScreen;
+import com.verimi.testcommon.pageobject.mobile.AvatarScreen;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -18,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 
 @AllArgsConstructor
-public class AdultChildSupportChatSteps {
+public class AdultChildSupportChatAvatarSteps {
 
     private static final String EMAIL = RandomUtilities.generateRandomEmail();
 
@@ -84,6 +85,22 @@ public class AdultChildSupportChatSteps {
     public void answerContainsEducationalInformationOfTheChild(String educationalInformation) {
         AdultChildSupportChatScreen adultChildSupportChatScreen = new AdultChildSupportChatScreen(getDriver());
         adultChildSupportChatScreen.waitForAnswerOptions();
+    }
+
+    @And("Kindergeld ab 18 Avatar is sichtbar")
+    public void ensureK18AvatarIsShown() {
+        AdultChildSupportChatScreen adultChildSupportChatScreen = new AdultChildSupportChatScreen(getDriver());
+        adultChildSupportChatScreen.switchToAvatarScreen().assertAvatarScreenContent();
+    }
+
+    @And("Kindergeld ab 18 Mikrofone und Anhang sind sichtar")
+    public void ensureK18MicAndAttachmentAreShown() {
+        AvatarScreen avatarScreen = new AvatarScreen(getDriver());
+        avatarScreen
+                .checkMic()
+                .navigateToAttachmentScreen()
+                .assertAttachmentScreenContent()
+                .navigateBackToAvatar();
     }
 
     @SneakyThrows

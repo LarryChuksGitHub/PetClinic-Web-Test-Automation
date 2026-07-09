@@ -88,6 +88,18 @@ public class HouseRegisterChatScreen extends MobileScreen {
 
 
     @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='ai-assistant-voice-tab']"),
+            @AndroidBy(xpath = "//*[@content-desc='Wechsel zu Voicechatmodus']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+            @iOSXCUITBy(accessibility = "Einstellungen"),
+            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+    })
+    private WebElement avatarButton;
+
+
+    @AndroidFindAll({
             @AndroidBy(xpath = "//*[@text='Anmeldung (Zuzug von außerhalb)']"),
             @AndroidBy(xpath = "//*[@resource-id='suggested-reply-Anmeldung']"),
     })
@@ -157,16 +169,6 @@ public class HouseRegisterChatScreen extends MobileScreen {
     })
     private WebElement attachButton;
 
- @AndroidFindAll({
-            @AndroidBy(xpath = "//*[@resource-id='ai-assistant-voice-tab']"),
-            @AndroidBy(xpath = "//*[@content-desc='Wechsel zu Voicechatmodus']"),
-    })
-    @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
-    })
-    private WebElement avatar;
 
  @AndroidFindAll({
             @AndroidBy(xpath = "//*[@resource-id='ai-assistant-form-tab']"),
@@ -308,7 +310,7 @@ public class HouseRegisterChatScreen extends MobileScreen {
                 .as("Attach Button should be displayed")
                 .isTrue();
 
-        dippAssertions.assertThat(isElementDisplayedWithWait(avatar, NumericConstants.NUMERIC_10))
+        dippAssertions.assertThat(isElementDisplayedWithWait(avatarButton, NumericConstants.NUMERIC_10))
                 .as("Avatar button  should be displayed")
                 .isTrue();
      dippAssertions.assertThat(isElementDisplayedWithWait(formButton, NumericConstants.NUMERIC_10))
@@ -323,5 +325,10 @@ public class HouseRegisterChatScreen extends MobileScreen {
     public HouseRegistrationFormularScreen navigateToHouseRegistrationFormularScreen() {
         waitUntilClickable(formButton).click();
         return new HouseRegistrationFormularScreen(driver);
+    }
+
+    public AvatarScreen switchToAvatarScreen() {
+        waitUntilClickable(avatarButton).click();
+        return new AvatarScreen(driver);
     }
 }

@@ -66,6 +66,7 @@ public class MailHogScreen extends MobileScreen {
 
     @AndroidFindAll({
             @AndroidBy(id = "com.android.chrome:id/positive_button"),
+            @AndroidBy(xpath = "//*[@text='Allow']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'positive_button')]"),
@@ -133,6 +134,9 @@ public class MailHogScreen extends MobileScreen {
             xpath = "//*[@text='" + emailAddress + "']";
 
             log.info(LOOKING_FOR_ELEMENT, xpath);
+            if(isElementDisplayedWithWait(acceptAlert, NumericConstants.NUMERIC_12)) {
+                acceptAlert.click();
+            }
 
             if(isElementDisplayedWithWait(By.xpath(xpath), LOAD_WAIT)){
                 element = findElement(By.xpath(xpath));
@@ -158,6 +162,9 @@ public class MailHogScreen extends MobileScreen {
             iosDriver.rotate(ScreenOrientation.LANDSCAPE);
             xpath = "//*[@label='" + emailAddress + "']";
 
+            if(isElementDisplayedWithWait(acceptAlert, NumericConstants.NUMERIC_12)) {
+                acceptAlert.click();
+            }
             log.info(LOOKING_FOR_ELEMENT, xpath);
 
             if(isElementDisplayedWithWait(By.xpath(xpath), LOAD_WAIT)){

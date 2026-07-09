@@ -62,13 +62,8 @@ public class DWelcomeScreen extends MobileScreen {
         waitUntilVisible(screenTitle);
     }
 
-    public AdultChildSupportTutorialScreen clickLosGehtButton() {
-        waitUntilClickable(losGehtButton).click();
-        return new AdultChildSupportTutorialScreen(driver);
-    }
-
     public AdultChildSupportTutorialScreen navigateToAdultChildSupportOnboardingScreen() {
-        clickLosGehtButton();
+        waitUntilClickable(losGehtButton).click();
         return new AdultChildSupportTutorialScreen(driver);
     }
 }

@@ -994,8 +994,7 @@ public class AdultChildSupportFormularScreen extends MobileScreen {
         mobileScrollUpAndDownUntilElementAppears(workingInPublicSectorTextField).click();
         clickIfPresent(noButton, NumericConstants.NUMERIC_4);
 
-        element = mobileScrollUpAndDownUntilElementAppears(furtherInfoTextField);
-        typeMobile(element, userData.getFurtherInfo());
+        mobileScrollUpAndDownUntilElementAppears(furtherInfoTextField).sendKeys(userData.getFurtherInfo());
         mobileScrollUpAndDownUntilElementAppears(confirmElectronicTransferTextField).click();
         clickIfPresent(yesButton, NumericConstants.NUMERIC_4);
         mobileScrollUpAndDownUntilElementAppears(confirmRight).click();

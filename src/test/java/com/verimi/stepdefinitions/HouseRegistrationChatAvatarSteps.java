@@ -6,6 +6,7 @@ import com.verimi.testcommon.flows.DeutschlandAppFlow;
 import com.verimi.testcommon.framework.drivers.DriverManager;
 import com.verimi.testcommon.framework.utils.random.RandomUtilities;
 import com.verimi.testcommon.pageobject.mobile.AiLandingScreen;
+import com.verimi.testcommon.pageobject.mobile.AvatarScreen;
 import com.verimi.testcommon.pageobject.mobile.HouseRegisterChatScreen;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -18,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 
 @AllArgsConstructor
-public class HouseRegistrationChatSteps {
+public class HouseRegistrationChatAvatarSteps {
 
     private static final String EMAIL = RandomUtilities.generateRandomEmail();
 
@@ -83,6 +84,22 @@ public class HouseRegistrationChatSteps {
     public void answerContainsHouseRegistration() {
         HouseRegisterChatScreen houseRegisterChatScreen = new HouseRegisterChatScreen(getDriver());
         houseRegisterChatScreen.waitForAnswerOptions();
+    }
+
+    @And("eWA Avatar is sichtbar")
+    public void ensureEwaAvatarIsShown() {
+        HouseRegisterChatScreen houseRegisterChatScreen = new HouseRegisterChatScreen(getDriver());
+        houseRegisterChatScreen.switchToAvatarScreen().assertAvatarScreenContent();
+    }
+
+    @And("eWA Mikrofone und Anhang sind sichtbar")
+    public void ensureEwaMicAndAttachmentAreShown() {
+        AvatarScreen avatarScreen = new AvatarScreen(getDriver());
+        avatarScreen
+                .checkMic()
+                .navigateToAttachmentScreen()
+                .assertAttachmentScreenContent()
+                .navigateBackToAvatar();
     }
 
     @SneakyThrows

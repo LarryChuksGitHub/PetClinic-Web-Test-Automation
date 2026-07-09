@@ -129,7 +129,6 @@ public class AdultChildSupportTutorialScreen extends MobileScreen {
         return new Point(x, y);
     }
 
-
     public HouseRegistrationTutorialScreen clickNextButton() {
         waitUntilClickable(nextButton).click();
         return new HouseRegistrationTutorialScreen(driver);

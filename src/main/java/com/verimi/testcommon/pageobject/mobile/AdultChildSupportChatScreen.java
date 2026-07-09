@@ -1,5 +1,7 @@
 package com.verimi.testcommon.pageobject.mobile;
 
+import static com.verimi.testcommon.config.Config.LOAD_WAIT;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -202,7 +204,7 @@ public class AdultChildSupportChatScreen extends MobileScreen {
     }
 
     public AdultChildSupportChatScreen dataImported() {
-        boolean dataImported =  RetryUtils.isConditionFulfilledWithWait( ()-> driver.getPageSource().contains("Vornamen: HANS-GÜNTHER"), NumericConstants.NUMERIC_60);
+        boolean dataImported =  RetryUtils.isConditionFulfilledWithWait( ()-> driver.getPageSource().contains("Vornamen: HANS-GÜNTHER"), LOAD_WAIT);
         dippAssertions.assertThat(dataImported)
                 .as("HANS-GÜNTHER eID Data was not imported")
                 .isTrue();
@@ -246,5 +248,10 @@ public class AdultChildSupportChatScreen extends MobileScreen {
     public AdultChildSupportFormularScreen navigateToAdultChildSupportAvatarScreen() {
         waitUntilClickable(avatarButton).click();
         return new AdultChildSupportFormularScreen(driver);
+    }
+
+    public AvatarScreen switchToAvatarScreen() {
+        waitUntilClickable(avatarButton).click();
+        return new AvatarScreen(driver);
     }
 }
