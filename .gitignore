@@ -195,3 +195,7 @@ jmeterdashboardreport*/
 # Gatling
 /target
 /externalFiles/downloadFiles/ident-data_1020.zip
+
+# Cucumber reports
+reports/cucumber.html
+reports/cucumber.json
