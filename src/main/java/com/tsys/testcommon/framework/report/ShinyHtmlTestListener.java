@@ -1,5 +1,7 @@
 package com.tsys.testcommon.framework.report;
 
+import static org.assertj.core.util.Arrays.asList;
+
 import java.lang.reflect.Method;
 import java.util.stream.Stream;
 

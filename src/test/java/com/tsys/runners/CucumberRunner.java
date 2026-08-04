@@ -10,7 +10,7 @@ import io.cucumber.junit.CucumberOptions;
 @CucumberOptions(features = "src/test/resources/features",
         glue = {
                 "com/tsys/testcommon/config/hooks",
-                "com/verimi/stepdefinitions"
+                "com/tsys/stepdefinitions"
         },
         plugin = {"pretty", "html:reports/cucumber.html", "json:reports/cucumber.json"})
 

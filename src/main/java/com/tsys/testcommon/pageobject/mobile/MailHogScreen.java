@@ -1,6 +1,4 @@
-package com.tsys.testcommon.pageobject.mobile
-
--system.testcommon.pageobject.mobile;
+package com.tsys.testcommon.pageobject.mobile;
 
 import static com.tsys.testcommon.config.Config.LOAD_WAIT;
 import static com.tsys.testcommon.config.Config.isAndroid;
@@ -157,7 +155,8 @@ public class MailHogScreen extends MobileScreen {
         if (isAndroid()) {
             AndroidDriver androidDriver = ((AndroidDriver) driver);
             WebDriverWait wait = new WebDriverWait(androidDriver, Duration.ofSeconds(LOAD_WAIT));
-            waitUntilClickable(searchBox).sendKeys(devMailHogUrl);
+            waitUntilClickable(searchBox).click();
+            waitUntilClickable(portraitUrlBar).sendKeys(devMailHogUrl);
             androidDriver.pressKey(new KeyEvent(AndroidKey.ENTER));
             if (isElementDisplayedWithWait(furtherInfoButton, NumericConstants.NUMERIC_12)) {
                 furtherInfoButton.click();
