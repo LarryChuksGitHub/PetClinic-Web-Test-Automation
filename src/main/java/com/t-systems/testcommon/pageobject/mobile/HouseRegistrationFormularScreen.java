@@ -13,7 +13,7 @@ import io.appium.java_client.pagefactory.iOSXCUITFindAll;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class HouseRegistrationFormularScreen extends MobileScreen {
+public class HouseRegistrationFormularScreen extends com.verimi.testcommon.pageobject.mobile.MobileScreen {
 
     @AndroidFindAll({
             @AndroidBy(xpath = "//*[@text='Wohnsitzanmeldung']"),

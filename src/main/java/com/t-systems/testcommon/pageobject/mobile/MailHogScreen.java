@@ -30,7 +30,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MailHogScreen extends MobileScreen {
+public class MailHogScreen extends com.verimi.testcommon.pageobject.mobile.MobileScreen {
 
     private static final Pattern OTP_PATTERN = Pattern.compile("\\b(\\d{6})\\b");
 
@@ -61,17 +61,47 @@ public class MailHogScreen extends MobileScreen {
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
     })
+    private WebElement portraitUrlBar;
+
+
+    @AndroidFindAll({
+            @AndroidBy(xpath ="//*[@resource-id='com.android.chrome:id/url_bar']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+    })
     private WebElement landscapeSearchBox;
 
 
     @AndroidFindAll({
             @AndroidBy(id = "com.android.chrome:id/positive_button"),
             @AndroidBy(xpath = "//*[@text='Allow']"),
+            @AndroidBy(xpath = "//*[@text='Zulassen']"),
     })
     @iOSXCUITFindAll({
             @iOSXCUITBy(xpath = "//*[contains(@label,'positive_button')]"),
     })
     private WebElement acceptAlert;
+
+
+    @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='KByQx']"),
+            @AndroidBy(xpath = "//*[@text='Weitere Informationen']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'positive_button')]"),
+    })
+    private WebElement furtherInfoButton;
+
+
+    @AndroidFindAll({
+            @AndroidBy(xpath = "//*[@resource-id='L2AGLb']"),
+            @AndroidBy(xpath = "//*[@text='Alle akzeptieren']"),
+    })
+    @iOSXCUITFindAll({
+            @iOSXCUITBy(xpath = "//*[contains(@label,'positive_button')]"),
+    })
+    private WebElement acceptAllButton;
 
 
     @AndroidFindAll({
@@ -127,6 +157,13 @@ public class MailHogScreen extends MobileScreen {
             WebDriverWait wait = new WebDriverWait(androidDriver, Duration.ofSeconds(LOAD_WAIT));
             waitUntilClickable(searchBox).sendKeys(devMailHogUrl);
             androidDriver.pressKey(new KeyEvent(AndroidKey.ENTER));
+            if (isElementDisplayedWithWait(furtherInfoButton, NumericConstants.NUMERIC_12)) {
+                furtherInfoButton.click();
+                waitUntilClickable(acceptAllButton).click();
+                waitUntilClickable(portraitUrlBar).click();
+                portraitUrlBar.sendKeys(devMailHogUrl);
+                androidDriver.pressKey(new KeyEvent(AndroidKey.ENTER));
+            }
             if (isElementDisplayedWithWait(acceptAlert, NumericConstants.NUMERIC_12)) {
                 acceptAlert.click();
             }
@@ -144,6 +181,7 @@ public class MailHogScreen extends MobileScreen {
             }else {
                 waitUntilClickable(landscapeSearchBox).sendKeys(demoMailHogUrl);
                 androidDriver.pressKey(new KeyEvent(AndroidKey.ENTER));
+                clickIfPresent(acceptAlert, NumericConstants.NUMERIC_12);
                 element = wait.until(ExpectedConditions.visibilityOfElementLocated(
                        By.xpath(xpath)));
                 element.click();

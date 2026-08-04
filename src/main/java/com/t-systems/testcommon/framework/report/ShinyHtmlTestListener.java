@@ -1,7 +1,5 @@
 package com.verimi.testcommon.framework.report;
 
-import static java.util.Arrays.asList;
-
 import java.lang.reflect.Method;
 import java.util.stream.Stream;
 

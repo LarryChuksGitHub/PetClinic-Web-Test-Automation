@@ -1,6 +1,5 @@
 package com.verimi.testcommon.framework.errorHandling;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

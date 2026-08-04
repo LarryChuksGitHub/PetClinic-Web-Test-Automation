@@ -25,7 +25,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OtpScreen extends MobileScreen {
+public class OtpScreen extends com.verimi.testcommon.pageobject.mobile.MobileScreen {
 
     public static final String TSY_DEV_MAIL_HOG_URL = "https://mailhog:KivpPassword1!@mailhog.dev.kivp.eudi-telekom.de/";
     public static final String TSY_DEMO_MAIL_HOG_URL = "https://mailhog:KivpPassword1!@mailhog.demo.kivp.eudi-telekom.de/";
@@ -121,7 +121,7 @@ public class OtpScreen extends MobileScreen {
         setMode(ScreenOrientation.PORTRAIT);
         int counter = 0;
         while (isElementDisplayedWithWait(appPinText, NumericConstants.NUMERIC_5) && counter < 3) {
-            new TwoFaSetUpScreen(driver).typePIN(twoFaPin);
+            new com.verimi.testcommon.pageobject.mobile.TwoFaSetUpScreen(driver).typePIN(twoFaPin);
             waitUntilClickable(unblock).click();
             counter++;
         }
@@ -157,27 +157,27 @@ public class OtpScreen extends MobileScreen {
 
     @SneakyThrows
     public String getOpt(String email) {
-        String otp = new MailHogScreen(driver).getOtpCode(TSY_DEV_MAIL_HOG_URL, TSY_DEMO_MAIL_HOG_URL, email);
+        String otp = new com.verimi.testcommon.pageobject.mobile.MailHogScreen(driver).getOtpCode(TSY_DEV_MAIL_HOG_URL, TSY_DEMO_MAIL_HOG_URL, email);
         int counter = 0;
         while (otp == null && counter < 3) {
             log.warn("OTP code not found in email. Retrying...");
             Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(NumericConstants.NUMERIC_3)); // Wait for the email to arrive
             counter++;
-            otp = new MailHogScreen(driver).getOtpCode(TSY_DEV_MAIL_HOG_URL, TSY_DEMO_MAIL_HOG_URL, email);
+            otp = new com.verimi.testcommon.pageobject.mobile.MailHogScreen(driver).getOtpCode(TSY_DEV_MAIL_HOG_URL, TSY_DEMO_MAIL_HOG_URL, email);
         }
         log.info("OTP code retrieved from email: {}", otp);
         return otp;
     }
 
 
-    public TelephoneNumberScreen navigateToTelePhoneScreen() {
+    public com.verimi.testcommon.pageobject.mobile.TelephoneNumberScreen navigateToTelePhoneScreen() {
         waitUntilClickable(nextButton).click();
-        return new TelephoneNumberScreen(driver);
+        return new com.verimi.testcommon.pageobject.mobile.TelephoneNumberScreen(driver);
     }
 
-    public IdentityScreen navigateToIdentityScreen() {
+    public com.verimi.testcommon.pageobject.mobile.IdentityScreen navigateToIdentityScreen() {
         waitUntilClickable(nextButton).click();
-        return new IdentityScreen(driver);
+        return new com.verimi.testcommon.pageobject.mobile.IdentityScreen(driver);
     }
 
 }

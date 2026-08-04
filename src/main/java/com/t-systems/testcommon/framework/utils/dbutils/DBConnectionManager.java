@@ -8,8 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import com.verimi.testcommon.config.Config;
-import com.verimi.testcommon.framework.db.DatabaseConfig;
 import com.verimi.testcommon.framework.db.PostgresDataSource;
 import com.verimi.testcommon.model.common.Service;
 import lombok.extern.slf4j.Slf4j;

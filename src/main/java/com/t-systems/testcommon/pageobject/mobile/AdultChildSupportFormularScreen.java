@@ -14,7 +14,7 @@ import io.appium.java_client.pagefactory.iOSXCUITFindAll;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AdultChildSupportFormularScreen extends MobileScreen {
+public class AdultChildSupportFormularScreen extends com.verimi.testcommon.pageobject.mobile.MobileScreen {
 
     @AndroidFindAll({
             @AndroidBy(xpath = "//*[@text='Kindergeld ab 18']"),
