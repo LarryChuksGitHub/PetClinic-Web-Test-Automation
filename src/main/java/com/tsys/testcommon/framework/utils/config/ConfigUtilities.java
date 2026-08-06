@@ -12,10 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 public class ConfigUtilities {
 
     public static final String ENV_VARIABLE_OF_TEST_ENV = "TEST_ENV";
-    public static final String DEV1 = "dev1";
-    public static final String DEV2 = "dev2";
+    public static final String DEV = "dev";
+    public static final String STAGING = "staging";
 
-    private static final String[] VALID_PROP_FILE_NAMES = {DEV1, DEV2};
+    private static final String[] VALID_PROP_FILE_NAMES = {DEV, STAGING};
 
     public static Properties loadProperties() {
         String testEnvironmentName = validateEnvironmentVariable(System.getenv(ENV_VARIABLE_OF_TEST_ENV));

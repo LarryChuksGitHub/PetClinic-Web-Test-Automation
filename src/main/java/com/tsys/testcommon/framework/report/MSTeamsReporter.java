@@ -1,7 +1,7 @@
 package com.tsys.testcommon.framework.report;
 
 import static com.tsys.testcommon.config.hooks.Hooks.jobDuration;
-import static com.tsys.testcommon.framework.utils.config.ConfigUtilities.DEV1;
+import static com.tsys.testcommon.framework.utils.config.ConfigUtilities.DEV;
 import static java.lang.String.valueOf;
 
 import java.io.File;
@@ -80,7 +80,7 @@ public class MSTeamsReporter implements IReporter {
         params.put("themeColor", "90EE90");
 
         if (System.getenv(ConfigUtilities.ENV_VARIABLE_OF_TEST_ENV).equals("prod")) {
-            params.put("environment", DEV1);
+            params.put("environment", DEV);
         }
         if (skippedCases > 0) {
             params.put("activityImage", getActivityImageBase64(QUESTION_MARK_IMAGE));

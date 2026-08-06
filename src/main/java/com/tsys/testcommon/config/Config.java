@@ -126,11 +126,11 @@ public class Config {
     }
 
     public static boolean isDev() {
-        List<String> devEnvList = List.of(ConfigUtilities.DEV1, ConfigUtilities.DEV2);
+        List<String> devEnvList = List.of(ConfigUtilities.DEV, ConfigUtilities.STAGING);
 
         return devEnvList.stream().anyMatch(ConfigUtilities::isCurrentEnvironment) ||
-                ConfigUtilities.isCurrentEnvironment(ConfigUtilities.DEV1) ||
-                ConfigUtilities.isCurrentEnvironment(ConfigUtilities.DEV2);
+                ConfigUtilities.isCurrentEnvironment(ConfigUtilities.DEV) ||
+                ConfigUtilities.isCurrentEnvironment(ConfigUtilities.STAGING);
     }
 
 
