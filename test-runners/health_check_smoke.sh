@@ -1,11 +1,11 @@
 #!/bin/bash
 
-export DIPP_TEST_ENV=${TEST_ENV}
+export TEST_ENV=${TEST_ENV}
 export LOCALE=en
 source "$(dirname "$(realpath "$0")")/_setup_cloud.sh"
 
 export so_device_id=${DEVICE_ID}
-echo "DIPP_TEST_ENV = $DIPP_TEST_ENV"
+echo "TEST_ENV = $TEST_ENV"
 echo "BROWSERSTACK = $BROWSERSTACK"
 TEAMS_HOOK_URL=$3
 echo " Microsoft Teams webhook url: ${TEAMS_HOOK_URL}"

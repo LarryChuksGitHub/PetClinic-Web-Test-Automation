@@ -42,23 +42,24 @@ import org.testng.ITestResult;
 
 import com.jayway.jsonpath.JsonPath;
 import com.tsys.testcommon.config.hooks.Hooks;
+import com.tsys.testcommon.config.hooks.ScenarioManager;
 import com.tsys.testcommon.framework.utils.logging.LoggingFilters;
 import com.tsys.testcommon.framework.utils.sleep.SleepUtil;
 import com.tsys.testcommon.model.common.Locale;
+import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.options.XCUITestOptions;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class BrowserstackProvider extends CloudProvider {
+public class MobileDeviceCloudProvider extends CloudProvider {
 
-    public static final String BROWSER_STACK_MOBILE_APPS_URI = "https://api-cloud.browserstack.com/app-automate/recent_apps";
-    public static final String BROWSER_STACK_MOBILE_APPS_FOR_CUSTOM_ID_URI = "https://api-cloud.browserstack.com/app-automate/recent_apps/{customId}";
+    public static final String MOBILE_DEVICE_CLOUD_APPS_FOR_CUSTOM_ID_URI = "";
     //for FE tests
-    public static final String BROWSER_STACK_WEB_SESSION_URI = "https://api.browserstack.com/automate/sessions/";
+    public static final String MOBILE_DEVICE_CLOUD_WEB_SESSION_URI = "";
     // for Mobile tests
-    public static final String BROWSER_STACK_APP_SESSION_URI = "https://api.browserstack.com/app-automate/sessions/";
-    public static final String BROWSER_STACK_MEDIA_UPLOAD_URI = "https://api-cloud.browserstack.com/app-automate/upload-media";
+    public static final String MOBILE_DEVICE_CLOUD_APP_SESSION_URI = "";
+    public static final String MOBILE_DEVICE_CLOUD_MEDIA_UPLOAD_URI = "";
 
     @Override
     public String uploadMediaFile(final DocumentImageName imageName) {
@@ -69,7 +70,7 @@ public class BrowserstackProvider extends CloudProvider {
                 .auth().preemptive().basic(getUserName(), getKey())
                 .multiPart("file", file)
                 .multiPart("custom_id", imageName.toString().toLowerCase())
-                .post(BROWSER_STACK_MEDIA_UPLOAD_URI)
+                .post(MOBILE_DEVICE_CLOUD_MEDIA_UPLOAD_URI)
                 .then()
                 .statusCode(HttpURLConnection.HTTP_OK)
                 .extract()
@@ -85,7 +86,7 @@ public class BrowserstackProvider extends CloudProvider {
                 .auth().preemptive().basic(getUserName(), getKey())
                 .multiPart("file", file)
                 .multiPart("custom_id", DocumentImageName.PROCESS_ID_QR.toString().toLowerCase())
-                .post(BROWSER_STACK_MEDIA_UPLOAD_URI)
+                .post(MOBILE_DEVICE_CLOUD_MEDIA_UPLOAD_URI)
                 .then()
                 .statusCode(HttpURLConnection.HTTP_OK)
                 .extract()
@@ -113,29 +114,31 @@ public class BrowserstackProvider extends CloudProvider {
         // Test target is mobile browser
         if (BROWSER == SAFARI_IOS) {
             desiredCapabilities.setCapability(XCUITestOptions.BROWSER_NAME_OPTION, SAFARI.browserName());
-            // https://www.browserstack.com/app-automate/capabilities?tag=w3c and https://www.browserstack.com/automate/capabilities
-            // Unfortunately any BrowserStack capability passed outside bstack:options will not be honoured.
-            Map<String, Object> browserstackOptions = new HashMap<>();
-            browserstackOptions.put("osVersion", iosDeviceVersion);
-            browserstackOptions.put("deviceName", iosDeviceName);
-            browserstackOptions.put("realMobile", "true");
-            browserstackOptions.put("local", "false");
-            configureBrowserCapabilities(desiredCapabilities, browserstackOptions);
+            Map<String, Object> mobileDeviceCloudOptions = new HashMap<>();
+            mobileDeviceCloudOptions.put("osVersion", iosDeviceVersion);
+            mobileDeviceCloudOptions.put("deviceName", iosDeviceName);
+            mobileDeviceCloudOptions.put("realMobile", "true");
+            mobileDeviceCloudOptions.put("local", "false");
+            configureBrowserCapabilities(desiredCapabilities, mobileDeviceCloudOptions);
             // Test target is mobile app
-        } else {
-            String appName = APP_NAME.contains(appFileExtension) ? APP_NAME : APP_NAME + appFileExtension;
-            desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + XCUITestOptions.APP_OPTION, getAppUrl(appName));
-            desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.enableCameraImageInjection", "true");
         }
         if (PLATFORM_NAME == IPAD) {
             String appName = DEUTSCHLAND_APP_NAME + appFileExtension;
             String[] localIdentApp = {getAppUrl(appName)};
             desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + XCUITestOptions.OTHER_APPS_OPTION, localIdentApp);
         }
+        String appName = APP_NAME.contains(appFileExtension) ? APP_NAME : APP_NAME + appFileExtension;
+        desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + XCUITestOptions.APP_OPTION, getAppUrl(appName));
         desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + XCUITestOptions.DEVICE_NAME_OPTION, iosDeviceName);
         desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + XCUITestOptions.PLATFORM_VERSION_OPTION, iosDeviceVersion);
         desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + XCUITestOptions.AUTO_ACCEPT_ALERTS_OPTION, Boolean.TRUE);
         desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "language", Locale.getLocale());
+
+        if(CloudProvider.getInstance() instanceof MobileDeviceCloudProvider) {
+            desiredCapabilities.setCapability("digitalai:accessKey", CloudProvider.getInstance().getKey());
+            desiredCapabilities.setCapability("digitalai:testName", ScenarioManager.getScenario().getName());
+            desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + UiAutomator2Options.APP_OPTION, CloudProvider.getInstance().getAppUrl(appName));
+        }
 
         return desiredCapabilities;
     }
@@ -143,7 +146,7 @@ public class BrowserstackProvider extends CloudProvider {
 
     @Override
     String getUserName() {
-        String user = System.getenv("BROWSER_STACK_USER");
+        String user = System.getenv("MOBILE_DEVICE_CLOUD_USER");
         if (user == null) {
             user = "tarun206";
         }
@@ -151,26 +154,26 @@ public class BrowserstackProvider extends CloudProvider {
     }
 
     @Override
-    String getKey() {
-        final String browserStackKey = System.getenv("BROWSER_STACK_KEY");
-        if (null != browserStackKey) {
-            return browserStackKey;
+    public String getKey() {
+        final String mobileDeviceCloudKey = System.getenv("MOBILE_DEVICE_CLOUD_KEY");
+        if (null != mobileDeviceCloudKey) {
+            return mobileDeviceCloudKey;
         } else {
-            throw new RuntimeException("BROWSER_STACK_KEY environment variable is not set");
+            throw new RuntimeException("MOBILE_DEVICE_CLOUD_KEY environment variable is not set");
         }
     }
 
     @Override
     public String getHubUrl() {
-        return String.format("https://%s:%s@hub-cloud.browserstack.com/wd/hub", getUserName(), getKey());
+        return "https://mobiledevicecloud.t-systems-mms.eu/wd/hub";
     }
 
-    private String getBrowserStackAppDataForCustomId(final String customId) {
+    private String getMobileDeviceCloudAppDataForCustomId(final String customId) {
         return given()
                 .auth().preemptive().basic(getUserName(), getKey())
                 .filters(LoggingFilters.getFilters())
                 .pathParam("customId", customId)
-                .get(BROWSER_STACK_MOBILE_APPS_FOR_CUSTOM_ID_URI)
+                .get(MOBILE_DEVICE_CLOUD_APPS_FOR_CUSTOM_ID_URI)
                 .then()
                 .statusCode(HttpURLConnection.HTTP_OK)
                 .extract()
@@ -183,8 +186,8 @@ public class BrowserstackProvider extends CloudProvider {
     public String getAppId(final String app) throws JSONException {
         String json = null;
 
-        if (app.contains(DEUTSCHLAND_APP_NAME)) {
-            json = getBrowserStackAppDataForCustomId(DEUTSCHLAND_APP_NAME);
+        if (app.contains(DEUTSCHLAND_APP_NAME) && CloudProvider.getInstance() instanceof MobileDeviceCloudProvider) {
+            json = getMobileDeviceCloudAppDataForCustomId(DEUTSCHLAND_APP_NAME);
 
         } else {
             log.info("App name is not found: {}", app);
@@ -195,12 +198,12 @@ public class BrowserstackProvider extends CloudProvider {
 
     @Override
     public String getAppUrl(String app) throws JSONException {
-        return "bs://" + getAppId(app);
+        return "cloud:de.bund.bmds.kivp.app.dev";
     }
 
     @Override
     public String getCloudProviderName() throws JSONException {
-        return "Browserstack";
+        return "TSY Mobile Device Cloud";
     }
 
     @Override
@@ -208,7 +211,7 @@ public class BrowserstackProvider extends CloudProvider {
         return given()
                 .auth().preemptive().basic(getUserName(), getKey())
                 .filters(LoggingFilters.getFilters())
-                .get(BROWSER_STACK_WEB_SESSION_URI + sessionId + "/network-logs")
+                .get(MOBILE_DEVICE_CLOUD_WEB_SESSION_URI + sessionId + "/network-logs")
                 .then()
                 .statusCode(HttpURLConnection.HTTP_OK)
                 .extract()
@@ -235,8 +238,8 @@ public class BrowserstackProvider extends CloudProvider {
             return;
         }
 
-        String browserStackSessionURI = getSessionUrl(sessionId);
-        URI uri = new URI(browserStackSessionURI);
+        String mobileDeviceCloudSessionURI = getSessionUrl(sessionId);
+        URI uri = new URI(mobileDeviceCloudSessionURI);
         HttpPut putRequest = new HttpPut(uri);
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
         if (testResult.getStatus() == ITestResult.SUCCESS) {
@@ -278,33 +281,33 @@ public class BrowserstackProvider extends CloudProvider {
         if (sessionId == null) {
             return null;
         }
-        String browserStackSessionUrl = getSessionUrl(sessionId);
-        HttpGet httpGet = new HttpGet(browserStackSessionUrl);
+        String mobileDeviceCloudSessionUrl = getSessionUrl(sessionId);
+        HttpGet httpGet = new HttpGet(mobileDeviceCloudSessionUrl);
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpResponse response = httpClient.execute(httpGet);
             String responseText = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             String publicUrl = JsonPath.parse(responseText).read("$.automation_session.public_url").toString();
-            log.info("Browserstack report URL: <a href=\"{}\">{}</a>", publicUrl, publicUrl);
+            log.info("Mobile device cloud report URL: <a href=\"{}\">{}</a>", publicUrl, publicUrl);
             return publicUrl;
         } catch (Exception e) {
-            log.error("Error getting browserstack report URL", e);
+            log.error("Error getting mobileDeviceCloud report URL", e);
         }
         return null;
     }
 
     public String getDeviceLogsUrl(final String sessionId) throws IOException {
-        URL browserStackSessionURL = new URL(BROWSER_STACK_APP_SESSION_URI + sessionId + ".json");
+        URL mobileDeviceCloudSessionURL = new URL(MOBILE_DEVICE_CLOUD_APP_SESSION_URI + sessionId + ".json");
         String authString = getUserName() + ":" + getKey();
         String basicAuth = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
 
-        JSONObject browserStackSessionAsJsonObject = getSession(browserStackSessionURL, basicAuth);
-        JSONObject automationSession = browserStackSessionAsJsonObject.getJSONObject("automation_session");
+        JSONObject mobileDeviceCloudSessionAsJsonObject = getSession(mobileDeviceCloudSessionURL, basicAuth);
+        JSONObject automationSession = mobileDeviceCloudSessionAsJsonObject.getJSONObject("automation_session");
         return automationSession.getString("device_logs_url");
     }
 
     //returns the full info of BS session as JSON
-    private @NotNull JSONObject getSession(final URL browserStackSessionURL, final String basicAuth) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) browserStackSessionURL.openConnection();
+    private @NotNull JSONObject getSession(final URL mobileDeviceCloudSessionURL, final String basicAuth) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) mobileDeviceCloudSessionURL.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", basicAuth);
 

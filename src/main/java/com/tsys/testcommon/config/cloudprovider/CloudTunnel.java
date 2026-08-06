@@ -11,6 +11,9 @@ public abstract class CloudTunnel {
         if (Boolean.parseBoolean(System.getProperty("browserStackRun", "false"))) {
             return new BrowserstackTunnel();
         }
+        if (Boolean.parseBoolean(System.getProperty("mobileDeviceCloudRun", "false"))) {
+            return new MobileDeviceCloudTunnel();
+        }
         throw new IllegalStateException("No cloud provider is configured!");
     }
 

@@ -102,6 +102,7 @@ public class PostCodeScreen extends MobileScreen {
     }
 
     public PostCodeScreen addPostcode(String postcode) {
+        mobileScrollDownUntilElementAppears(postcodeTextField);
         waitUntilClickable(postcodeTextField).sendKeys(postcode);
         return this;
     }

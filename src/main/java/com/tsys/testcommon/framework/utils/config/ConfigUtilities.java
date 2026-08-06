@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConfigUtilities {
 
-    public static final String ENV_VARIABLE_OF_TEST_ENV = "DIPP_TEST_ENV";
+    public static final String ENV_VARIABLE_OF_TEST_ENV = "TEST_ENV";
     public static final String DEV1 = "dev1";
     public static final String DEV2 = "dev2";
 

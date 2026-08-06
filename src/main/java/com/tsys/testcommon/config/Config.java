@@ -67,7 +67,7 @@ public class Config {
 
         BROWSER = Browser.parse(System.getenv("BROWSER"));
         ENV_PROXY = System.getenv("PROXY");
-        CURRENT_ENV = System.getenv("DIPP_TEST_ENV");
+        CURRENT_ENV = System.getenv("TEST_ENV");
 
         DEVICE_NAME = System.getenv("DEVICE_NAME");
         DEVICE_UDID = System.getenv("DEVICE_UDID");

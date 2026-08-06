@@ -22,13 +22,13 @@ fi
 
 if [[ -z ${WEB_HOOK_URL} ]]; then
   echo "Webhook URL not set. Posting results on env. channel on which tests were run"
-  if [[ (${DIPP_TEST_ENV} == "dev1") ]]; then
+  if [[ (${TEST_ENV} == "dev1") ]]; then
     reportResults "${message_body}" "${WEB_HOOK_URL_DEV1}" "${buildUrl}"
-  elif [[ (${DIPP_TEST_ENV} == "dev2") ]]; then
+  elif [[ (${TEST_ENV} == "dev2") ]]; then
     reportResults "${message_body}" "${WEB_HOOK_URL_DEV2}" "${buildUrl}"
 
   else
-    echo "Please set Webhook URL for ${DIPP_TEST_ENV}"
+    echo "Please set Webhook URL for ${TEST_ENV}"
   fi
 else
   reportResults "${message_body}" "${WEB_HOOK_URL}" "${buildUrl}"

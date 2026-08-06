@@ -79,12 +79,12 @@ public class DataProtectionTutorialScreen extends MobileScreen {
 
     @Override
     public void waitUntilPageLoads() {
-        waitUntilVisible(screenTitle);
     }
 
     public DataProtectionTermsAndConditionScreen navigateToTermsAndCondition() {
         waitUntilClickable(nextButton).click();
-        if(!isElementDisplayedWithWait(termsAndConditionScreen, NumericConstants.NUMERIC_5)){
+        waitUntilClickable(nextButton).click();
+        if (!isElementDisplayedWithWait(termsAndConditionScreen, NumericConstants.NUMERIC_5)) {
             waitUntilClickable(proofButton).click();
         }
         return new DataProtectionTermsAndConditionScreen(driver);

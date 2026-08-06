@@ -21,7 +21,11 @@ public abstract class CloudProvider {
         if (instance == null) {
             if (Boolean.parseBoolean(System.getProperty("browserStackRun", "false"))) {
                 instance = new BrowserstackProvider();
-            } else if (Boolean.parseBoolean(System.getProperty("lambdaTestRun", "false"))) {
+            }
+            if (Boolean.parseBoolean(System.getProperty("mobileDeviceCloudRun", "false"))) {
+                instance = new MobileDeviceCloudProvider();
+            }
+            else if (Boolean.parseBoolean(System.getProperty("lambdaTestRun", "false"))) {
             }
         }
         return instance;
@@ -35,12 +39,14 @@ public abstract class CloudProvider {
 
     public static boolean isCloudRun() {
         return Boolean.parseBoolean(System.getProperty("browserStackRun", "false"))
-                || Boolean.parseBoolean(System.getProperty("lambdaTestRun", "false"));
+                || Boolean.parseBoolean(System.getProperty("lambdaTestRun", "false"))
+                || Boolean.parseBoolean(System.getProperty("mobileDeviceCloudRun", "false"));
     }
 
     public abstract String getAppId(String app) throws JSONException;
 
     public abstract String getAppUrl(String app) throws JSONException;
+    public abstract String getCloudProviderName() throws JSONException;
 
     public abstract String getNetworkLogs(String sessionId);
     @NotNull

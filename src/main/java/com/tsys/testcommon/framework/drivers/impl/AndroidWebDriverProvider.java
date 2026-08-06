@@ -20,7 +20,10 @@ import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.tsys.testcommon.config.Config;
+import com.tsys.testcommon.config.cloudprovider.BrowserstackProvider;
 import com.tsys.testcommon.config.cloudprovider.CloudProvider;
+import com.tsys.testcommon.config.cloudprovider.MobileDeviceCloudProvider;
+import com.tsys.testcommon.config.hooks.ScenarioManager;
 import com.tsys.testcommon.framework.drivers.BaseMobileWebDriverProvider;
 import com.tsys.testcommon.framework.drivers.RemoteWebDriverProvider;
 import com.tsys.testcommon.framework.report.TestCase;
@@ -44,7 +47,9 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
                 "Samsung Galaxy S22"
         ));
         String selectedAndroidDevice;
-        if (APP_NAME.contains(DEUTSCHLAND_APP_NAME)) {
+        if (APP_NAME.contains(DEUTSCHLAND_APP_NAME) && CloudProvider.getInstance() instanceof MobileDeviceCloudProvider) {
+            selectedAndroidDevice = "Google Pixel 9 (Nr 1)";
+        } else if (APP_NAME.contains(DEUTSCHLAND_APP_NAME) && CloudProvider.getInstance() instanceof BrowserstackProvider) {
             selectedAndroidDevice = "Google Pixel 9";
         } else {
             selectedAndroidDevice = androidDevicesList.toArray()[new Random().nextInt(androidDevicesList.size())].toString();
@@ -94,6 +99,12 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
     @Override
     protected DesiredCapabilities getCapabilities() throws JSONException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        String appName = APP_NAME.contains(getAppFileExtension()) ? APP_NAME : APP_NAME + getAppFileExtension();
+        if(CloudProvider.getInstance() instanceof MobileDeviceCloudProvider) {
+            desiredCapabilities.setCapability("digitalai:accessKey", ((MobileDeviceCloudProvider) CloudProvider.getInstance()).getKey());
+            desiredCapabilities.setCapability("digitalai:testName", ScenarioManager.getScenario().getName());
+        }
+
         HashMap<String, Object> browserstackOptions = new HashMap<>();
         // Test target is mobile browser
         if (BROWSER == CHROME_ANDROID) {
@@ -105,13 +116,13 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
 
             // Test target is mobile app
         } else {
-            String appName = APP_NAME.contains(getAppFileExtension()) ? APP_NAME : APP_NAME + getAppFileExtension();
-            desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + UiAutomator2Options.APP_OPTION, CloudProvider.getInstance().getAppUrl(appName));
             desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.enableBiometric", "true");
             desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.enableCameraImageInjection", "true");
             desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.uiautomator2ServerReadTimeout", "5400000");
             browserstackOptions.put("local", "false"); //suggested by BS support team to avoid no internet issue on android
             browserstackOptions.put("deviceOrientation", "portrait");
+            desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + UiAutomator2Options.APP_OPTION, CloudProvider.getInstance().getAppUrl(appName));
+
         }
         CloudProvider.getInstance().configureBrowserCapabilities(desiredCapabilities, browserstackOptions);
 
@@ -151,6 +162,9 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
 
     @Override
     protected String getAppFileExtension() {
+        if (System.getenv("APP_NAME").contains(".aab")){
+            return ".aab";
+        }
         return ".apk";
     }
 

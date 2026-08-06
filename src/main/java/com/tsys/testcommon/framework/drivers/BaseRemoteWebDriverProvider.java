@@ -13,6 +13,7 @@ import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.tsys.testcommon.config.Config;
+import com.tsys.testcommon.config.cloudprovider.BrowserstackProvider;
 import com.tsys.testcommon.config.cloudprovider.CloudProvider;
 import com.tsys.testcommon.config.cloudprovider.CloudTunnel;
 import com.tsys.testcommon.model.common.Platform;
@@ -91,8 +92,10 @@ public abstract class BaseRemoteWebDriverProvider extends BaseWebDriverProvider 
     }
 
     public void startCloudTunnel(final Map<String, Object> cloudTunnelOptions) throws Exception {
-        cloudTunnel = CloudTunnel.newTunnel();
-        cloudTunnel.startTunnel(cloudTunnelOptions);
+        if (CloudProvider.getInstance() instanceof BrowserstackProvider) {
+            cloudTunnel = CloudTunnel.newTunnel();
+            cloudTunnel.startTunnel(cloudTunnelOptions);
+        }
     }
 
 }

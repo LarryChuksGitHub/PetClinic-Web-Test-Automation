@@ -1,6 +1,6 @@
 #!/bin/bash
 
-  export DIPP_TEST_ENV="${TEST_ENV}"
+  export TEST_ENV="${TEST_ENV}"
   export HEADLESS_MODE="${HEADLESS_MODE:-HEADLESS_MODE}"
   export BROWSERSTACK="false"
   export so_device_id="${DEVICE_ID:-}"
@@ -14,7 +14,7 @@
 
 
   echo "GROUP = $GROUP"
-  echo "DIPP_TEST_ENV = $DIPP_TEST_ENV"
+  echo "TEST_ENV = $TEST_ENV"
   echo "BROWSERSTACK = $BROWSERSTACK"
   #echo "Microsoft Teams webhook url: ${TEAMS_HOOK_URL}"
 

@@ -8,7 +8,7 @@ import io.cucumber.java.Scenario;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class BrowserStackUtil {
+public class CloudTestStatusUtil {
 
     public static void captureFailure(AppiumDriver driver, Scenario scenario) {
 
@@ -37,16 +37,13 @@ public class BrowserStackUtil {
                     scenario.isFailed()
                             ? scenario.getName() + " Test Scenario Failed"
                             : scenario.getName() + " Test Scenario Passed";
-
+            Throwable throwable =
+                    TestContext.getLastException();
+            TestContext.clear();
             if (scenario.isFailed()) {
-
-                Throwable throwable =
-                        TestContext.getLastException();
-                TestContext.clear();
-
                 if (throwable != null) {
                     reason = throwable.getClass().getSimpleName()
-                            + " "+ throwable.getMessage();
+                            + " " + throwable.getMessage();
                 }
             }
             reason = sanitizeReason(reason);
@@ -61,12 +58,29 @@ public class BrowserStackUtil {
                             + "\"reason\": \"" + reason + "\""
                             + "}"
                             + "}";
-            driver.executeScript(browserstackCommand);
+
+            if (CloudProvider.getInstance() instanceof BrowserstackProvider) {
+                driver.executeScript(browserstackCommand);
+            } else if (CloudProvider.getInstance() instanceof MobileDeviceCloudProvider) {
+                Object[] args;
+
+                if (scenario.isFailed() && throwable != null) {
+                    args = new Object[]{
+                            status,
+                            reason
+                    };
+                } else {
+                    args = new Object[]{
+                            status,
+                            reason
+                    };
+                }
+
+                driver.executeScript("seetest:client.setReportStatus", args);
+            }
 
         } catch (Exception e) {
-            log.error(
-                    "Failed to update BrowserStack status",
-                    e);
+            log.error("Failed to update status in the cloud provider {} ",CloudProvider.getInstance().getCloudProviderName(), e);
         }
     }
 

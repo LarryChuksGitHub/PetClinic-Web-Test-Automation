@@ -60,7 +60,7 @@ import org.testng.annotations.Parameters;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.tsys.testcommon.config.Config;
-import com.tsys.testcommon.config.cloudprovider.BrowserStackUtil;
+import com.tsys.testcommon.config.cloudprovider.CloudTestStatusUtil;
 import com.tsys.testcommon.config.cloudprovider.CloudProvider;
 import com.tsys.testcommon.framework.asserts.DippAssertions;
 import com.tsys.testcommon.framework.asserts.DippSoftAssertions;
@@ -157,6 +157,7 @@ public class Hooks implements IConfigurable {
         log.info("Locale used for testing: {}", language);
         TestExecutionRegistry.setTestSide(TestSide.FRONTEND);
         log.info("Scenario name: {}", scenario.getName());
+        ScenarioManager.setScenario(scenario);
         initWebdriver(scenario.getName());
         driver = getDriver();
 
@@ -167,8 +168,8 @@ public class Hooks implements IConfigurable {
     @After(order = Integer.MAX_VALUE)
     public void teardownScenario(Scenario scenario) {
         if (driver != null) {
-            BrowserStackUtil.captureFailure((AppiumDriver) driver, scenario);
-            BrowserStackUtil.updateScenarioStatus((AppiumDriver) driver, scenario);
+            CloudTestStatusUtil.captureFailure((AppiumDriver) driver, scenario);
+            CloudTestStatusUtil.updateScenarioStatus((AppiumDriver) driver, scenario);
             driver.quit();
         }
     }
@@ -407,9 +408,9 @@ public class Hooks implements IConfigurable {
     }
 
     private void setupBrowser(String methodName) throws Exception {
-        log.info("Test running on environment: {}", System.getenv("DIPP_TEST_ENV"));
+        log.info("Test running on environment: {}", System.getenv("TEST_ENV"));
         if (CloudProvider.isCloudRun()) {
-            log.info("Using cloud provider to run the tests");
+            log.info("Using {} cloud provider to run the tests", CloudProvider.getInstance().getCloudProviderName());
             remoteWebDriverProvider = (BaseRemoteWebDriverProvider) DriverProvider.getRemoteProvider(methodName);
             driver = remoteWebDriverProvider.startRemote();
         } else {
