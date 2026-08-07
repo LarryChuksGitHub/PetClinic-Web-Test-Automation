@@ -1,5 +1,8 @@
 package com.tsys.testcommon.config.cloudprovider;
 
+import static com.tsys.testcommon.config.Config.isBrowserStackRun;
+import static com.tsys.testcommon.config.Config.isMobileDeviceCloudRun;
+
 import org.openqa.selenium.OutputType;
 
 import com.tsys.testcommon.framework.utils.testhelper.TestContext;
@@ -59,9 +62,9 @@ public class CloudTestStatusUtil {
                             + "}"
                             + "}";
 
-            if (CloudProvider.getInstance() instanceof BrowserstackProvider) {
+            if (isBrowserStackRun()) {
                 driver.executeScript(browserstackCommand);
-            } else if (CloudProvider.getInstance() instanceof MobileDeviceCloudProvider) {
+            } else if (isMobileDeviceCloudRun()) {
                 Object[] args;
 
                 if (scenario.isFailed() && throwable != null) {

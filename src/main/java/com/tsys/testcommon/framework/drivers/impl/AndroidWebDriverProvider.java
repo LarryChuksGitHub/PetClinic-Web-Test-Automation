@@ -1,6 +1,8 @@
 package com.tsys.testcommon.framework.drivers.impl;
 
 import static com.tsys.testcommon.config.Config.BROWSER;
+import static com.tsys.testcommon.config.Config.isBrowserStackRun;
+import static com.tsys.testcommon.config.Config.isMobileDeviceCloudRun;
 import static com.tsys.testcommon.config.cloudprovider.CloudProvider.DEUTSCHLAND_APP_NAME;
 import static com.tsys.testcommon.model.common.Browser.CHROME_ANDROID;
 
@@ -100,11 +102,10 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
     protected DesiredCapabilities getCapabilities() throws JSONException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         String appName = APP_NAME.contains(getAppFileExtension()) ? APP_NAME : APP_NAME + getAppFileExtension();
-        if(CloudProvider.getInstance() instanceof MobileDeviceCloudProvider) {
+        if(isMobileDeviceCloudRun()) {
             desiredCapabilities.setCapability("digitalai:accessKey", ((MobileDeviceCloudProvider) CloudProvider.getInstance()).getKey());
             desiredCapabilities.setCapability("digitalai:testName", ScenarioManager.getScenario().getName());
         }
-
         HashMap<String, Object> browserstackOptions = new HashMap<>();
         // Test target is mobile browser
         if (BROWSER == CHROME_ANDROID) {
@@ -116,16 +117,17 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
 
             // Test target is mobile app
         } else {
-            desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.enableBiometric", "true");
-            desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.enableCameraImageInjection", "true");
-            desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.uiautomator2ServerReadTimeout", "5400000");
-            browserstackOptions.put("local", "false"); //suggested by BS support team to avoid no internet issue on android
-            browserstackOptions.put("deviceOrientation", "portrait");
+            if(isBrowserStackRun()){
+                desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.enableBiometric", "true");
+                desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.enableCameraImageInjection", "true");
+                desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.uiautomator2ServerReadTimeout", "5400000");
+                browserstackOptions.put("local", "false"); //suggested by BS support team to avoid no internet issue on android
+                browserstackOptions.put("deviceOrientation", "portrait");
+            }
             desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + UiAutomator2Options.APP_OPTION, CloudProvider.getInstance().getAppUrl(appName));
 
         }
         CloudProvider.getInstance().configureBrowserCapabilities(desiredCapabilities, browserstackOptions);
-
         desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + UiAutomator2Options.DEVICE_NAME_OPTION, ANDROID_DEVICE);
         desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "language", Locale.getLocale());
         return setCommonCapabilities(desiredCapabilities);

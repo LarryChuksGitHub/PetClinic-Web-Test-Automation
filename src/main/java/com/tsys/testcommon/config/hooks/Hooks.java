@@ -137,7 +137,7 @@ public class Hooks implements IConfigurable {
     }
 
     public static String changeToApiUrl(String url) {
-        if (Config.isDev1()) {
+        if (Config.isDev()) {
             return url.replace("www-", "api-")
                     .replace("web.", "api.");
         } else {

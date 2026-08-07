@@ -2,6 +2,7 @@ package com.tsys.testcommon.config.cloudprovider;
 
 import static com.tsys.testcommon.config.Config.BROWSER;
 import static com.tsys.testcommon.config.Config.PLATFORM_NAME;
+import static com.tsys.testcommon.config.Config.isMobileDeviceCloudRun;
 import static com.tsys.testcommon.config.hooks.Hooks.isMobilePlatform;
 import static com.tsys.testcommon.framework.drivers.impl.IosWebDriverProvider.APP_NAME;
 import static com.tsys.testcommon.model.common.Browser.SAFARI_IOS;
@@ -134,7 +135,7 @@ public class MobileDeviceCloudProvider extends CloudProvider {
         desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + XCUITestOptions.AUTO_ACCEPT_ALERTS_OPTION, Boolean.TRUE);
         desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "language", Locale.getLocale());
 
-        if(CloudProvider.getInstance() instanceof MobileDeviceCloudProvider) {
+        if(isMobileDeviceCloudRun()) {
             desiredCapabilities.setCapability("digitalai:accessKey", CloudProvider.getInstance().getKey());
             desiredCapabilities.setCapability("digitalai:testName", ScenarioManager.getScenario().getName());
             desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + UiAutomator2Options.APP_OPTION, CloudProvider.getInstance().getAppUrl(appName));

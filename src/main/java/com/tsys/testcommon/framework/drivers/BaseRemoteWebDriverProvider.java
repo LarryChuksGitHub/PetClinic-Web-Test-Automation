@@ -1,6 +1,7 @@
 package com.tsys.testcommon.framework.drivers;
 
 import static com.tsys.testcommon.config.Config.PLATFORM_NAME;
+import static com.tsys.testcommon.config.Config.isBrowserStackRun;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,7 +14,6 @@ import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.tsys.testcommon.config.Config;
-import com.tsys.testcommon.config.cloudprovider.BrowserstackProvider;
 import com.tsys.testcommon.config.cloudprovider.CloudProvider;
 import com.tsys.testcommon.config.cloudprovider.CloudTunnel;
 import com.tsys.testcommon.model.common.Platform;
@@ -92,7 +92,7 @@ public abstract class BaseRemoteWebDriverProvider extends BaseWebDriverProvider 
     }
 
     public void startCloudTunnel(final Map<String, Object> cloudTunnelOptions) throws Exception {
-        if (CloudProvider.getInstance() instanceof BrowserstackProvider) {
+        if (isBrowserStackRun()) {
             cloudTunnel = CloudTunnel.newTunnel();
             cloudTunnel.startTunnel(cloudTunnelOptions);
         }

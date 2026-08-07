@@ -3,7 +3,6 @@ package com.tsys.testcommon.config;
 
 import static com.tsys.testcommon.model.common.Platform.WINDOWS;
 
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
@@ -96,7 +95,6 @@ public class Config {
     }
 
 
-
     private static String getExternalDeviceId() {
         String externalDeviceId = System.getenv("external_device_id");
         if (externalDeviceId != null) {
@@ -117,28 +115,25 @@ public class Config {
         return action != null && action.contains("regression");
     }
 
-    public static boolean isDev1() {
-        return (ConfigUtilities.getCurrentEnvironment().toLowerCase().contains("dev1"));
-    }
-
-    public static boolean isDev2() {
-        return (ConfigUtilities.getCurrentEnvironment().toLowerCase().contains("dev2"));
-    }
-
     public static boolean isDev() {
-        List<String> devEnvList = List.of(ConfigUtilities.DEV, ConfigUtilities.STAGING);
-
-        return devEnvList.stream().anyMatch(ConfigUtilities::isCurrentEnvironment) ||
-                ConfigUtilities.isCurrentEnvironment(ConfigUtilities.DEV) ||
-                ConfigUtilities.isCurrentEnvironment(ConfigUtilities.STAGING);
+        return (ConfigUtilities.getCurrentEnvironment().toLowerCase().contains("dev"));
     }
 
+    public static boolean isStaging() {
+        return (ConfigUtilities.getCurrentEnvironment().toLowerCase().contains("staging"));
+    }
+
+    public static boolean isBrowserStackRun() {
+        return Boolean.parseBoolean(System.getProperty("browserStackRun", "false"));
+    }
+
+    public static boolean isMobileDeviceCloudRun() {
+        return Boolean.parseBoolean(System.getProperty("mobileDeviceCloudRun", "false"));
+    }
 
     public static String getLanguage() {
         return System.getProperty("lang", Locale.en_UK);
     }
-
-
 
 
     public static boolean isIOS() {
@@ -206,7 +201,6 @@ public class Config {
                 loadProperties(env).
                 getProperty("postgres_hydra_database");
     }
-
 
 
     public static boolean isCiRun() {
