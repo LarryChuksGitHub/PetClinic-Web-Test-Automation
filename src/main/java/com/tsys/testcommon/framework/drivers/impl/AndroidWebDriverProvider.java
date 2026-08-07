@@ -22,7 +22,6 @@ import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.tsys.testcommon.config.Config;
-import com.tsys.testcommon.config.cloudprovider.BrowserstackProvider;
 import com.tsys.testcommon.config.cloudprovider.CloudProvider;
 import com.tsys.testcommon.config.cloudprovider.MobileDeviceCloudProvider;
 import com.tsys.testcommon.config.hooks.ScenarioManager;
@@ -44,14 +43,15 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
 
     private static String getRandomAndroidDevice() {
         List<String> androidDevicesList = new ArrayList<>(Arrays.asList(
-                "Google Pixel 6",
-                "Huawei P30",
-                "Samsung Galaxy S22"
+                "Google Pixel 7a (Nr 1)",
+                "Google Pixel 9 (Nr 1)",
+                "Google Pixel 10 (Nr 1)",
+                "Samsung Galaxy S24 Ultra (Nr 1)",
+                "Samsung Galaxy S25 Plus (Nr 1)",
+                "Samsung Galaxy S25 (Nr 1)"
         ));
         String selectedAndroidDevice;
-        if (APP_NAME.contains(DEUTSCHLAND_APP_NAME) && CloudProvider.getInstance() instanceof MobileDeviceCloudProvider) {
-            selectedAndroidDevice = "Google Pixel 9 (Nr 1)";
-        } else if (APP_NAME.contains(DEUTSCHLAND_APP_NAME) && CloudProvider.getInstance() instanceof BrowserstackProvider) {
+        if (APP_NAME.contains(DEUTSCHLAND_APP_NAME) && isBrowserStackRun()) {
             selectedAndroidDevice = "Google Pixel 9";
         } else {
             selectedAndroidDevice = androidDevicesList.toArray()[new Random().nextInt(androidDevicesList.size())].toString();
@@ -59,7 +59,6 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
 
         log.info("[SELECTED MOBILE DEVICE].." + selectedAndroidDevice);
         TestCase.setMobileDevice(selectedAndroidDevice);
-
         return selectedAndroidDevice;
     }
 
@@ -102,7 +101,7 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
     protected DesiredCapabilities getCapabilities() throws JSONException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         String appName = APP_NAME.contains(getAppFileExtension()) ? APP_NAME : APP_NAME + getAppFileExtension();
-        if(isMobileDeviceCloudRun()) {
+        if (isMobileDeviceCloudRun()) {
             desiredCapabilities.setCapability("digitalai:accessKey", ((MobileDeviceCloudProvider) CloudProvider.getInstance()).getKey());
             desiredCapabilities.setCapability("digitalai:testName", ScenarioManager.getScenario().getName());
         }
@@ -117,7 +116,7 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
 
             // Test target is mobile app
         } else {
-            if(isBrowserStackRun()){
+            if (isBrowserStackRun()) {
                 desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.enableBiometric", "true");
                 desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.enableCameraImageInjection", "true");
                 desiredCapabilities.setCapability(APPIUM_CAPABILITY_PREFIX + "browserstack.uiautomator2ServerReadTimeout", "5400000");
@@ -164,7 +163,7 @@ public class AndroidWebDriverProvider extends BaseMobileWebDriverProvider implem
 
     @Override
     protected String getAppFileExtension() {
-        if (System.getenv("APP_NAME").contains(".aab")){
+        if (System.getenv("APP_NAME").contains(".aab")) {
             return ".aab";
         }
         return ".apk";
