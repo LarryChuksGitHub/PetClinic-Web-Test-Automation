@@ -19,9 +19,7 @@ public class DWelcomeScreen extends MobileScreen {
 
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Willkommen in der Deutschland-App')]"),
     })
     private WebElement screenTitle;
 
@@ -31,9 +29,7 @@ public class DWelcomeScreen extends MobileScreen {
 
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Das Bürgeramt.&#10;Einfach. Digital. Überall.')]"),
     })
     private WebElement screenText;
 
@@ -41,9 +37,7 @@ public class DWelcomeScreen extends MobileScreen {
             @AndroidBy(xpath = "//android.widget.TextView[@text='Los geht’s']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//XCUIElementTypeButton[@name=\"welcome-start\"]"),
     })
     private WebElement losGehtButton;
 
@@ -59,7 +53,7 @@ public class DWelcomeScreen extends MobileScreen {
 
     @Override
     public void waitUntilPageLoads() {
-        waitUntilVisible(screenTitle);
+       waitUntilVisible(screenTitle);
     }
 
     public AdultChildSupportTutorialScreen navigateToAdultChildSupportOnboardingScreen() {

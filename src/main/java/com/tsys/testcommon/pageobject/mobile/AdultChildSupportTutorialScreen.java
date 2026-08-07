@@ -21,9 +21,7 @@ public class AdultChildSupportTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Deutschland-App']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Deutschland-App')]"),
     })
     private WebElement deutschlandAppText;
 
@@ -32,9 +30,7 @@ public class AdultChildSupportTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='vonDrebenbuschDalgossenHansG19460125']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'vonDrebenbuschDalgossenHansG19460125')]"),
     })
     private WebElement drebenbuschEid;
 
@@ -43,9 +39,7 @@ public class AdultChildSupportTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Bürgerservice']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Bürgerservice')]"),
     })
     private WebElement screenTitle;
 
@@ -53,9 +47,7 @@ public class AdultChildSupportTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Kindergeld ab 18 beantragen']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Kindergeld ab 18 beantragen')]")
     })
     private WebElement screenText;
 
@@ -63,16 +55,9 @@ public class AdultChildSupportTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//android.widget.TextView[@text='Weiter']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Weiter')]")
     })
     private WebElement nextButton;
-
-
-    @AndroidFindBy(accessibility = "Nutzungsbedingungen, link, durch doppeltippen verlassen sie die app")
-    @iOSXCUITFindBy(xpath = "//XCUIElementTypeLink[@name='Nutzungsbedingungen']")
-    private WebElement termsAndConditionsLink;
 
 
     @AndroidFindBy(xpath = "//android.widget.ImageButton[@content-desc='Nach oben']")

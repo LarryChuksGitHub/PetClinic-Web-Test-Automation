@@ -14,9 +14,7 @@ public class DataProtectionTermsAndConditionScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Datenschutz und Nutzungsbedingungen']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Datenschutz und Nutzungsbedingungen')]"),
     })
     private WebElement screenTitle;
 

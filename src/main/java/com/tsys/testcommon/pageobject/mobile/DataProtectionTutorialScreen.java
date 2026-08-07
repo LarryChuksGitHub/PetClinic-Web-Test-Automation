@@ -18,7 +18,7 @@ public class DataProtectionTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Ihre Daten']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Ihre Daten')]"),
             @iOSXCUITBy(accessibility = "Einstellungen"),
             @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
     })
@@ -29,9 +29,7 @@ public class DataProtectionTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Datenschutz und Nutzungsbedingungen']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Datenschutz und Nutzungsbedingungen')]"),
     })
     private WebElement termsAndConditionScreen;
 
@@ -40,9 +38,7 @@ public class DataProtectionTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Nachweise']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Nachweise')]"),
     })
     private WebElement proofButton;
 
@@ -51,9 +47,7 @@ public class DataProtectionTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Sicher & Datenschutzkonform']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Sicher & Datenschutzkonform')]"),
     })
     private WebElement screenText;
 
@@ -61,9 +55,7 @@ public class DataProtectionTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//android.widget.TextView[@text='Weiter']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Weiter')]"),
     })
     private WebElement nextButton;
 

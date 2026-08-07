@@ -2,6 +2,8 @@ package com.tsys.testcommon.framework.drivers.impl;
 
 import static com.tsys.testcommon.config.Config.BROWSER;
 import static com.tsys.testcommon.config.Config.PLATFORM_NAME;
+import static com.tsys.testcommon.config.Config.isBrowserStackRun;
+import static com.tsys.testcommon.config.Config.isMobileDeviceCloudRun;
 import static com.tsys.testcommon.model.common.Browser.SAFARI_IOS;
 import static com.tsys.testcommon.model.common.Platform.IPAD;
 import static org.openqa.selenium.remote.Browser.SAFARI;
@@ -43,7 +45,13 @@ public class IosWebDriverProvider extends BaseMobileWebDriverProvider implements
         if (PLATFORM_NAME == IPAD) {
             phonesAvailable.put("iPad Air 5", "26");
         } else {
-            phonesAvailable.put("iPhone 15", "26.0");
+            if(isMobileDeviceCloudRun()){
+                phonesAvailable.put("Apple iPhone 12 Pro (Nr 2)", "26.0");
+            }
+            if(isBrowserStackRun()){
+                phonesAvailable.put("iPhone 15", "26");
+            }
+
         }
         int index = new Random().nextInt(phonesAvailable.size());
         try {

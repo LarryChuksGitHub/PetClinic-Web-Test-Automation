@@ -17,9 +17,7 @@ public class HouseRegistrationTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Bürgerservice']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Bürgerservice')]"),
     })
     private WebElement screenTitle;
 
@@ -27,9 +25,7 @@ public class HouseRegistrationTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//*[@text='Umzug melden']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Umzug melden')]"),
     })
     private WebElement screenText;
 
@@ -37,9 +33,7 @@ public class HouseRegistrationTutorialScreen extends MobileScreen {
             @AndroidBy(xpath = "//android.widget.TextView[@text='Weiter']"),
     })
     @iOSXCUITFindAll({
-            @iOSXCUITBy(xpath = "//*[contains(@label,'Einwilligungen')]"),
-            @iOSXCUITBy(accessibility = "Einstellungen"),
-            @iOSXCUITBy(iOSNsPredicate = "type == 'XCUIElementTypeButton' AND (name == 'Settings' OR name == 'Einstellungen')")
+            @iOSXCUITBy(xpath = "//*[contains(@label,'Weiter')]"),
     })
     private WebElement nextButton;
 
