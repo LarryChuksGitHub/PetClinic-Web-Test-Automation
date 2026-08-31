@@ -24,8 +24,8 @@ pipeline {
 
 			steps {
 
-				git branch: 'feat/user_registration_signed',
-				url: 'https://github.com/CivicAIPortal/mobile-testautomation.git'
+				git branch: 'feat/',
+				url: 'https://'
 			}
 		}
 
@@ -55,7 +55,7 @@ pipeline {
 				publishHTML([
 					reportDir: 'reports',
 					reportFiles: 'cucumber.html',
-					reportName: 'BDD Mobile Deutschland App Report'
+					reportName: 'Report'
 				])
 			}
 		}

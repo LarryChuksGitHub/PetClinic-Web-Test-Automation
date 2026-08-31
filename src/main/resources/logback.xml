@@ -16,7 +16,7 @@
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
           <MaxFileSize>5MB</MaxFileSize>
         </triggeringPolicy>
-        <layout class="com.tsys.testcommon.config.LogbackHtmlEscapingPatternLayout">
+        <layout class="com.petclinic.testcommon.config.LogbackHtmlEscapingPatternLayout">
           <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
         </layout>
       </appender>

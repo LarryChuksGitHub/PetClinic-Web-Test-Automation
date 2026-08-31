@@ -1,0 +1,227 @@
+package com.petclinic.frontendtest.web;
+
+
+import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_REGRESSION_PETCLINIC;
+import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_SMOKE_PETCLINIC;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import org.junit.jupiter.api.DisplayName;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.testng.xml.dom.Tag;
+
+import com.github.javafaker.Faker;
+import com.petclinic.testcommon.config.hooks.Hooks;
+import com.petclinic.testcommon.flows.PetClinicFlow;
+import com.petclinic.testcommon.framework.asserts.DippSoftAssertions;
+import com.petclinic.testcommon.framework.utils.constant.NumericConstants;
+import com.petclinic.testcommon.framework.utils.random.RandomUtilities;
+import com.petclinic.testcommon.framework.utils.retry.RetryUtils;
+import com.petclinic.testcommon.model.petclinic.PetData;
+import com.petclinic.testcommon.model.petclinic.PetOwnerData;
+import com.petclinic.testcommon.model.petclinic.PetType;
+import com.petclinic.testcommon.pageobject.web.petclinic.AddPetPage;
+import com.petclinic.testcommon.pageobject.web.petclinic.HomePage;
+import com.petclinic.testcommon.pageobject.web.petclinic.OwnerInfoPage;
+import com.petclinic.testcommon.testdata.petclinic.TestDataFactory;
+
+
+public class PetTests extends Hooks {
+
+    HomePage homePage;
+
+    @BeforeMethod(alwaysRun = true)
+    private void setUp() {
+        homePage = new HomePage(getDriver());
+        homePage.openHomePage();
+        softAssertion = new DippSoftAssertions();
+    }
+
+    @Tag(name = "major")
+    @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
+    @DisplayName("TC-PET-001: Neues PetData kann angelegt werden")
+    void shouldAddNewPet() {
+        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
+        petClinicFlow.createNewPetOwner();
+        String id = RandomUtilities.generateRandomUID().substring(0, 10);
+        PetData pet = PetData.getEmptyPetData().setName("Bello" + id).setDateOfBirth("10.10.2020").setPetType(PetType.LIZARD);
+
+        OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+        ownerInfoPage.clickAddNewPetButton().addPet(pet);
+        assertTrue(
+                RetryUtils.isConditionFulfilledWithWait(() -> getDriver().getPageSource().contains(pet.getName()), NumericConstants.NUMERIC_8),
+                "PetData Name should be created with name " + pet.getName()
+        );
+    }
+
+
+    @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
+    @Tag(name = "major")
+    @DisplayName("TC-PET-009: Alle PetData typen kann angelegt werden")
+    void shouldAddAllPetTypes() {
+        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
+        petClinicFlow.createNewPetOwner();
+        List<PetType> pets = Arrays.stream(PetType.values()).toList();
+        for (int i = 0; i < pets.size(); i++) {
+            String id = RandomUtilities.generateRandomUID().substring(0, 10);
+            PetData pet = PetData.getEmptyPetData().setName("Bello" + id).setDateOfBirth("10.10.2020").setPetType(pets.get(i));
+            OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+            ownerInfoPage.clickAddNewPetButton().addPet(pet);
+
+            assertTrue(
+                    RetryUtils.isConditionFulfilledWithWait(() -> getDriver().getPageSource().contains(pet.getName()), NumericConstants.NUMERIC_8),
+                    "PetData Name should be created with name " + pet.getName()
+            );
+            assertTrue(
+                    RetryUtils.isConditionFulfilledWithWait(() -> getDriver().getPageSource().contains(pet.getPetType().getType()), NumericConstants.NUMERIC_8),
+                    "PetData type should be created with type " + pet.getPetType()
+            );
+
+        }
+
+    }
+
+
+    @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
+    @Tag(name = "major")
+    @DisplayName("TC-PET-009: Alle PetData typen kann angelegt werden")
+    void shouldAddMultiplePetsOfDifferentType() {
+        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
+        int numberOfPets = 13;
+        OwnerInfoPage ownerInfoPage = petClinicFlow.addMultiplePets(numberOfPets);
+        assertTrue(ownerInfoPage.getNumberOfPets() == numberOfPets,
+                "Number of Pets added is not correct, expected amount " + numberOfPets);
+
+        // Check for different pet types
+        List<String> differentPetTypes = ownerInfoPage.getPetTypes();
+        Set<String> petType = Set.copyOf(differentPetTypes);
+
+        assertTrue(petType.size() > 1,
+                "Different pet types were not added");
+    }
+
+    @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
+    @Tag(name = "major")
+    @DisplayName("TC-PET-003: Derselbe Owner darf kein PetData mit gleichem Namen anlegen")
+    void shouldRejectDuplicatePetNameForSameOwner() {
+        String petName = Faker.instance().name().firstName();
+        PetData pet1 = PetData.getEmptyPetData().setName(petName).setDateOfBirth("2020-05-10").setPetType(PetType.DOG);
+        PetData pet2 = PetData.getEmptyPetData().setName(petName).setDateOfBirth("2020-05-10").setPetType(PetType.DOG);
+
+        AddPetPage addPetPage = preparePetFlow();
+
+         // Add first pet
+        addPetPage.addPet(pet1);
+
+        // Add Second pet
+        OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+        ownerInfoPage.clickAddNewPetButton();
+        addPetPage.addPet(pet2);
+        assertTrue(
+                RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("is already in use"), NumericConstants.NUMERIC_8),
+                "PetData Name must be unique for same owner pet, duplicate pet name " + petName
+        );
+    }
+
+    @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
+    @Tag(name = "major")
+    @DisplayName("TC-PET-003B: Gleicher PetData-Name ist bei anderem Owner erlaubt")
+    void shouldAllowSamePetNameForDifferentOwner() {
+        String id = RandomUtilities.generateRandomUID().substring(0, 10);
+        String petName = Faker.instance().name().firstName() + id;
+        PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth("10.10.2020").setPetType(PetType.HAMSTER);
+
+        AddPetPage addPetPage  = preparePetFlow();
+        OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+
+        addPetPage.addPet(pet);
+        RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains(pet.getName()), NumericConstants.NUMERIC_8);
+
+        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
+        petClinicFlow.createNewPetOwner();
+
+        ownerInfoPage.clickAddNewPetButton();
+        addPetPage.addPet(pet);
+
+        assertFalse(
+                RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("is already in use"), NumericConstants.NUMERIC_2),
+                "Same PetData Name can exist for different users " + petName
+        );
+
+        assertTrue(
+                RetryUtils.isConditionFulfilledWithWait(() -> getDriver().getPageSource().contains(petName), NumericConstants.NUMERIC_2),
+                "Same PetData Name should allowed for different users" + petName
+        );
+    }
+
+    @Test(groups = {FRONTEND_REGRESSION_PETCLINIC})
+    @DisplayName("TC-PET-004: PetData ohne Namen oder Geburtstag kann nicht angelegt werden")
+    void shouldNotCreatePetWithoutNameAndDateOfBirth() {
+
+        PetData pet = PetData.getEmptyPetData().setName("").setDateOfBirth("2020-05-10").setPetType(PetType.SNAKE);
+        AddPetPage addPetPage = preparePetFlow();
+        addPetPage.addPet(pet);
+        addPetPage.save();
+        assertTrue(
+                getDriver().getCurrentUrl()
+                        .contains("/pets/new")
+        );
+
+        pet.setName(RandomUtilities.generateRandomName()+RandomUtilities.generateRandomUID().substring(0, 10));
+        pet.setDateOfBirth("");
+        addPetPage.addPet(pet);
+        addPetPage.save();
+        assertTrue(
+                getDriver().getCurrentUrl()
+                        .contains("/pets/new")
+        );
+
+    }
+
+    @Test(groups = {FRONTEND_REGRESSION_PETCLINIC})
+    @Tag(name = "medium")
+    @DisplayName("TC-PET-005: PetData mit zukünftigem Geburtsdatum")
+    void shouldHandleFutureBirthDate() {
+        String petName = Faker.instance().name().firstName();
+        PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth("01.05.2030").setPetType(PetType.DOG);
+        AddPetPage addPetPage = preparePetFlow();
+        addPetPage.addPet(pet);
+        assertTrue(
+                RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("invalid date"), NumericConstants.NUMERIC_3),
+                "Future date are not allowed"
+        );
+    }
+
+    @Test(groups = {FRONTEND_REGRESSION_PETCLINIC})
+    @Tag(name = "medium")
+    @DisplayName("TC-PET-007: Existierende Pet erfolgreich bearbeiten")
+    void shouldEditPet() {
+        PetOwnerData petOwnerData = TestDataFactory.uniqueOwner();
+        PetData petData = TestDataFactory.uniquePet();
+        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
+        petClinicFlow.createNewOwnerWithPet(petOwnerData, petData);
+        OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+        PetData petData1 = TestDataFactory.uniquePet();
+        ownerInfoPage.editPet(petData1);
+
+        assertTrue(
+                RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains(petData1.getName()), NumericConstants.NUMERIC_8),
+                "PetData Name should be created with name " + petData1.getName()
+        );
+    }
+
+    private AddPetPage preparePetFlow(){
+        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
+        petClinicFlow.createNewPetOwner();
+        OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+        ownerInfoPage.clickAddNewPetButton();
+        return new AddPetPage(getDriver());
+    }
+
+}
