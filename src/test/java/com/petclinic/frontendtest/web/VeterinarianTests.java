@@ -38,8 +38,10 @@ public class VeterinarianTests extends Hooks {
 
         VeterinarianPage veterinarianPage = new VeterinarianPage(getDriver());
 
+        log.info("Very veterinarians are on the page");
         List<VetData> vets = veterinarianPage.getVetsOnCurrentPage();
 
+        log.info("Very veterinarians are shown {}", vets);
         assertFalse(
                 vets.isEmpty(),
                 "Mindestens ein Tierarzt muss angezeigt werden."

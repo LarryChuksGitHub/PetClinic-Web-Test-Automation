@@ -56,6 +56,8 @@ public class PetTests extends Hooks {
 
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
         ownerInfoPage.clickAddNewPetButton().addPet(pet);
+
+        log.info("Verify Pet is added");
         assertTrue(
                 RetryUtils.isConditionFulfilledWithWait(() -> getDriver().getPageSource().contains(pet.getName()), NumericConstants.NUMERIC_8),
                 "PetData Name should be created with name " + pet.getName()
@@ -81,6 +83,8 @@ public class PetTests extends Hooks {
         //Get list of created pet types
         List<String> petTypes = ownerInfoPage.getPetTypes();
         Set<String> petTypesSet = Set.copyOf(petTypes);
+
+        log.info("Verify different Pet were added");
         assertEquals(petTypes.size(), pets.size(), "Different pets were not added");
         dippAssertions.assertGreaterThan(5, "Different pet types should be added", petTypesSet.size());
     }
@@ -98,6 +102,7 @@ public class PetTests extends Hooks {
         List<String> differentPetTypes = ownerInfoPage.getPetTypes();
         Set<String> petType = Set.copyOf(differentPetTypes);
 
+        log.info("Verify Pet types were added");
         assertTrue(petType.size() > 1,
                 "Different pet types were not added");
     }
@@ -109,7 +114,7 @@ public class PetTests extends Hooks {
         String petName = Faker.instance().name().firstName();
         PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth("2020-05-10").setPetType(PetType.LIZARD);
 
-        AddPetPage addPetPage = preparePetFlow();
+        AddPetPage addPetPage = createOwnerAndPreparePetFlow();
 
          // Add first pet
         addPetPage.addPet(pet);
@@ -119,6 +124,8 @@ public class PetTests extends Hooks {
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
         ownerInfoPage.clickAddNewPetButton();
         addPetPage.addPet(pet.setPetType(PetType.DOG));
+
+        log.info("Verify Pet with same name was not added");
         assertTrue(
                 RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("is already in use"), NumericConstants.NUMERIC_8),
                 "PetData Name must be unique for same owner pet, duplicate pet name " + petName
@@ -140,20 +147,23 @@ public class PetTests extends Hooks {
         String petName = Faker.instance().name().firstName() + id;
         PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth("10.10.2020").setPetType(PetType.HAMSTER);
 
-        AddPetPage addPetPage  = preparePetFlow();
+        AddPetPage addPetPage  = createOwnerAndPreparePetFlow();
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
 
         addPetPage.addPet(pet);
         RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains(pet.getName()), NumericConstants.NUMERIC_8);
 
+        log.info("Create 2 owner");
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         petClinicFlow.createNewPetOwner();
 
+        log.info("Add same pet name " + petName);
         ownerInfoPage.clickAddNewPetButton();
         addPetPage.addPet(pet);
 
         assertPetExist(petName);
 
+        log.info("Verify Pet with same name was added");
         assertFalse(
                 RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("is already in use"), NumericConstants.NUMERIC_2),
                 "Same PetData Name can exist for different users " + petName
@@ -165,7 +175,7 @@ public class PetTests extends Hooks {
     void shouldNotCreatePetWithoutNameAndDateOfBirth() {
 
         PetData pet = PetData.getEmptyPetData().setName("").setDateOfBirth("2020-05-10").setPetType(PetType.SNAKE);
-        AddPetPage addPetPage = preparePetFlow();
+        AddPetPage addPetPage = createOwnerAndPreparePetFlow();
         addPetPage.addPet(pet);
         addPetPage.save();
         assertTrue(
@@ -177,6 +187,8 @@ public class PetTests extends Hooks {
         pet.setDateOfBirth("");
         addPetPage.addPet(pet);
         addPetPage.save();
+
+        log.info("Very pet was not added ");
         assertTrue(
                 getDriver().getCurrentUrl()
                         .contains("/pets/new")
@@ -189,8 +201,10 @@ public class PetTests extends Hooks {
     void shouldHandleFutureBirthDate() {
         String petName = Faker.instance().name().firstName();
         PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth("01.05.2030").setPetType(PetType.DOG);
-        AddPetPage addPetPage = preparePetFlow();
+        AddPetPage addPetPage = createOwnerAndPreparePetFlow();
         addPetPage.addPet(pet);
+
+        log.info("Very pet wit wrong date was not added ");
         assertTrue(
                 RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("invalid date"), NumericConstants.NUMERIC_3),
                 "Future date are not allowed"
@@ -209,10 +223,11 @@ public class PetTests extends Hooks {
         PetData petData1 = TestDataFactory.uniquePet(PetType.BIRD);
         ownerInfoPage.editPet(petData1);
 
+        log.info("Very pet data was edited");
         assertPetExist(petData1.getName());
     }
 
-    private AddPetPage preparePetFlow(){
+    private AddPetPage createOwnerAndPreparePetFlow(){
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         petClinicFlow.createNewPetOwner();
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());

@@ -49,6 +49,8 @@ public class PetOwnerTests extends Hooks {
     void shouldNotFindUnknownOwner() {
         String searchText = "OwnerDoesNotExist";
         OwnerInfoPage OwnerInfoPage = searchPetOwner(searchText);
+
+        log.info("Very no owner was found ");
         assertFalse(OwnerInfoPage.isOwnerDisplayed(searchText),
                 "PetData owner that does not exist should not be found."
         );
@@ -65,6 +67,7 @@ public class PetOwnerTests extends Hooks {
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
         OwnerInfoPage ownerInfoPage = addOwnerPage.createOwner(owner);
 
+        log.info("Very no owner found ");
         assertTrue(ownerInfoPage.isPetOwnerCreated(owner),
                 "Newly created owner " + owner.getLastName() + " should be created."
         );
@@ -90,6 +93,7 @@ public class PetOwnerTests extends Hooks {
         OwnerInfoPage ownerInfoPage;
         ownerInfoPage = homePage.openFindOwner().searchOwner(owner.getLastName());
 
+        log.info("Very with same data are found");
         assertEquals(owners.size(), numberOfOwner, "Owners with same lastnames " + owner.getLastName() + " should be created");
 
         assertTrue(ownerInfoPage.arePetOwnerNamesDisplayed(numberOfOwner, owner.getFirstName() + " "+owner.getLastName()),
@@ -107,6 +111,8 @@ public class PetOwnerTests extends Hooks {
         OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
         addOwnerPage.createOwner(owner);
+
+        log.info("Very no owner without lastname was created ");
         assertTrue(RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("must not be blank"), NumericConstants.NUMERIC_5),
                 "It should not be possible to create owner without last name"
         );
@@ -125,6 +131,8 @@ public class PetOwnerTests extends Hooks {
         // All fields are empty
         owner.setFirstName("").setLastName("").setAddress("").setCity("").setTelephone("");
         addOwnerPage.createOwner(owner);
+
+        log.info("Very the number of error messages in the page ");
         assertTrue(addOwnerPage.getNumberOfErrors() == 5,
                 "Error messages should be 5"
         );
@@ -176,6 +184,8 @@ public class PetOwnerTests extends Hooks {
         petOwner.setLastName(generateRandomName() + generateRandomUID().substring(0, 4));
         petOwner = petClinicFlow.createNewPetOwner(petOwner);
         OwnerInfoPage ownerInfoPage = homePage.openFindOwner().searchOwner(petOwner.getLastName().substring(0, 4));
+
+        log.info("Very owner was found ");
         assertTrue(ownerInfoPage.isPetOwnerNameDisplayed(petOwner.getLastName()), "Should Find Owner via partial last name");
     }
 
@@ -187,6 +197,7 @@ public class PetOwnerTests extends Hooks {
         String searchText = "";
         searchPetOwner(searchText);
 
+        log.info("Very list of owners were found");
         assertTrue(
                 getDriver().getCurrentUrl()
                         .contains("/owners"),
@@ -200,6 +211,8 @@ public class PetOwnerTests extends Hooks {
     void shouldHandleSpecialCharacters() {
         String searchText = "MÜ&%$§";
         searchPetOwner(searchText);
+
+        log.info("Very no owner was found and app does not crash");
         assertTrue(RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("has not been found"), NumericConstants.NUMERIC_5),
                 "Special character should not crash the app."
         );
@@ -221,6 +234,8 @@ public class PetOwnerTests extends Hooks {
         OwnerInfoPage ownerInfoPage = searchPetOwner(petOwner.getLastName());
         PetOwnerData petOwner1 = TestDataFactory.uniqueOwner();
         ownerInfoPage.editOwner(petOwner1);
+
+        log.info("Verify edited ower is visible");
         assertTrue(ownerInfoPage.isPetOwnerCreated(petOwner1),
                 "Updated owner " + petOwner1.getLastName() + " should be visible."
         );
