@@ -65,6 +65,20 @@ public class PetClinicFlow extends BasicFlow {
         return owner;
     }
 
+    public List<PetOwnerData> createNewPetOwner(PetOwnerData owner, int numberOfOwner) {
+        HomePage homePage = new HomePage(getDriver());
+        List<PetOwnerData> owners = new ArrayList<>();
+        while (numberOfOwner > 0) {
+            OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
+            AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
+            addOwnerPage.createOwner(owner);
+            owners.add(owner);
+            numberOfOwner--;
+        }
+        return owners;
+    }
+
+
     public PetOwnerData editPetOwner(PetOwnerData petOwner) {
         HomePage homePage = new HomePage(getDriver());
         homePage.openHomePage();

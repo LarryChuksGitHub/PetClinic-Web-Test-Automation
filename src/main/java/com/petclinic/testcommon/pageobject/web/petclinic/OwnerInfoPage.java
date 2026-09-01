@@ -21,6 +21,12 @@ public class OwnerInfoPage extends Page {
     @FindBy(xpath = "//th[normalize-space()='Name']/following-sibling::td")
     private WebElement petOwnerlastnameValue;
 
+    @FindBy(id = "owners")
+    private WebElement ownerTable;
+
+    @FindBy(xpath = "//th[normalize-space()='Name']/following-sibling::td")
+    private List<WebElement> petOwnerlastnameValues;
+
     @FindBy(xpath = "//th[normalize-space()='Address']/following-sibling::td")
     private WebElement addressValue;
 
@@ -143,6 +149,12 @@ public class OwnerInfoPage extends Page {
 
     public boolean isPetOwnerNameDisplayed(String lastName) {
         return waitUntilVisible(petOwnerlastnameValue).getText().contains(lastName);
+    }
+
+    public boolean arePetOwnerNamesDisplayed(int numberOfLastnames, String ownerName) {
+        waitUntilVisible(ownerTable);
+        List<WebElement> elements = driver.findElements(By.xpath("//a[normalize-space()='" + ownerName + "']"));
+        return elements.size() == numberOfLastnames;
     }
 
     public AddVisitPage openVisit(int petId) {

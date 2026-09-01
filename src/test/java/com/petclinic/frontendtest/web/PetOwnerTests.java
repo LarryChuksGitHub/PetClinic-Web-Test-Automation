@@ -6,9 +6,11 @@ import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_SM
 import static com.petclinic.testcommon.framework.utils.random.RandomUtilities.generateRandomName;
 import static com.petclinic.testcommon.framework.utils.random.RandomUtilities.generateRandomStringDigit;
 import static com.petclinic.testcommon.framework.utils.random.RandomUtilities.generateRandomUID;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.junit.jupiter.api.DisplayName;
@@ -69,6 +71,28 @@ public class PetOwnerTests extends Hooks {
         ownerInfoPage = homePage.openFindOwner().searchOwner(owner.getLastName());
         assertTrue(ownerInfoPage.isPetOwnerNameDisplayed(owner.getLastName()),
                 "Existing Owner " + owner.getLastName() + " should be displayed.");
+    }
+
+
+    @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
+    @Tag(name = "major")
+    @DisplayName("TC-OWN-012: Mehrere Owner mit demselben Namen")
+    void shouldCreateOwnersWithSameName() {
+        setUp();
+        PetOwnerData owner =
+                TestDataFactory.uniqueOwner();
+        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
+        int numberOfOwner = 3;
+        List<PetOwnerData> owners = petClinicFlow.createNewPetOwner(owner, numberOfOwner);
+
+        new OwnerInfoPage(getDriver());
+        OwnerInfoPage ownerInfoPage;
+        ownerInfoPage = homePage.openFindOwner().searchOwner(owner.getLastName());
+
+        assertEquals(owners.size(), numberOfOwner, "Owners with same lastnames " + owner.getLastName() + " should be created");
+
+        assertTrue(ownerInfoPage.arePetOwnerNamesDisplayed(numberOfOwner, owner.getFirstName() + " "+owner.getLastName()),
+                "Owners with same lastnames " + owner.getLastName() + " should be created");
     }
 
 
