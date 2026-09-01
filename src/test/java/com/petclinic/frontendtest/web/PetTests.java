@@ -3,6 +3,7 @@ package com.petclinic.frontendtest.web;
 
 import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_REGRESSION_PETCLINIC;
 import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_SMOKE_PETCLINIC;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -63,30 +64,25 @@ public class PetTests extends Hooks {
 
     @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
     @Tag(name = "major")
-    @DisplayName("TC-PET-009: Alle PetData typen kann angelegt werden")
+    @DisplayName("TC-PET-009: Alle Pet typen kann angelegt werden")
     void shouldAddAllPetTypes() {
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         petClinicFlow.createNewPetOwner();
+        OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
         List<PetType> pets = Arrays.stream(PetType.values()).toList();
         for (int i = 0; i < pets.size(); i++) {
             String id = RandomUtilities.generateRandomUID().substring(0, 10);
             PetData pet = PetData.getEmptyPetData().setName("Bello" + id).setDateOfBirth("10.10.2020").setPetType(pets.get(i));
-            OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
             ownerInfoPage.clickAddNewPetButton().addPet(pet);
-
-            assertTrue(
-                    RetryUtils.isConditionFulfilledWithWait(() -> getDriver().getPageSource().contains(pet.getName()), NumericConstants.NUMERIC_8),
-                    "PetData Name should be created with name " + pet.getName()
-            );
-            assertTrue(
-                    RetryUtils.isConditionFulfilledWithWait(() -> getDriver().getPageSource().contains(pet.getPetType().getType()), NumericConstants.NUMERIC_8),
-                    "PetData type should be created with type " + pet.getPetType()
-            );
-
+            assertPetExist(pet.getName());
         }
 
+        //Get list of created pet types
+        List<String> petTypes = ownerInfoPage.getPetTypes();
+        Set<String> petTypesSet = Set.copyOf(petTypes);
+        assertEquals(petTypes.size(), pets.size(), "Different pets were not added");
+        dippAssertions.assertGreaterThan(5, "Different pet types should be added", petTypesSet.size());
     }
-
 
     @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
     @Tag(name = "major")
@@ -94,9 +90,8 @@ public class PetTests extends Hooks {
     void shouldAddMultiplePetsOfDifferentType() {
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         int numberOfPets = 13;
-        OwnerInfoPage ownerInfoPage = petClinicFlow.addMultiplePets(numberOfPets);
-        assertTrue(ownerInfoPage.getNumberOfPets() == numberOfPets,
-                "Number of Pets added is not correct, expected amount " + numberOfPets);
+        OwnerInfoPage ownerInfoPage = petClinicFlow.addDifferentPets(numberOfPets);
+        assertEquals(ownerInfoPage.getNumberOfPets(), numberOfPets, "Number of Pets added is not correct, expected amount " + numberOfPets);
 
         // Check for different pet types
         List<String> differentPetTypes = ownerInfoPage.getPetTypes();
@@ -111,22 +106,29 @@ public class PetTests extends Hooks {
     @DisplayName("TC-PET-003: Derselbe Owner darf kein PetData mit gleichem Namen anlegen")
     void shouldRejectDuplicatePetNameForSameOwner() {
         String petName = Faker.instance().name().firstName();
-        PetData pet1 = PetData.getEmptyPetData().setName(petName).setDateOfBirth("2020-05-10").setPetType(PetType.DOG);
-        PetData pet2 = PetData.getEmptyPetData().setName(petName).setDateOfBirth("2020-05-10").setPetType(PetType.DOG);
+        PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth("2020-05-10").setPetType(PetType.LIZARD);
 
         AddPetPage addPetPage = preparePetFlow();
 
          // Add first pet
-        addPetPage.addPet(pet1);
+        addPetPage.addPet(pet);
+        assertPetExist(petName);
 
         // Add Second pet
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
         ownerInfoPage.clickAddNewPetButton();
-        addPetPage.addPet(pet2);
+        addPetPage.addPet(pet.setPetType(PetType.DOG));
         assertTrue(
                 RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("is already in use"), NumericConstants.NUMERIC_8),
                 "PetData Name must be unique for same owner pet, duplicate pet name " + petName
         );
+    }
+
+    private void assertPetExist(String petName) {
+            assertTrue(
+                    RetryUtils.isConditionFulfilledWithWait(()-> getDriver().getPageSource().contains(petName), NumericConstants.NUMERIC_8),
+                    "Pet with name " + petName + " was not found"
+            );
     }
 
     @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
@@ -149,14 +151,11 @@ public class PetTests extends Hooks {
         ownerInfoPage.clickAddNewPetButton();
         addPetPage.addPet(pet);
 
+        assertPetExist(petName);
+
         assertFalse(
                 RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains("is already in use"), NumericConstants.NUMERIC_2),
                 "Same PetData Name can exist for different users " + petName
-        );
-
-        assertTrue(
-                RetryUtils.isConditionFulfilledWithWait(() -> getDriver().getPageSource().contains(petName), NumericConstants.NUMERIC_2),
-                "Same PetData Name should allowed for different users" + petName
         );
     }
 
@@ -181,7 +180,6 @@ public class PetTests extends Hooks {
                 getDriver().getCurrentUrl()
                         .contains("/pets/new")
         );
-
     }
 
     @Test(groups = {FRONTEND_REGRESSION_PETCLINIC})
@@ -210,10 +208,7 @@ public class PetTests extends Hooks {
         PetData petData1 = TestDataFactory.uniquePet();
         ownerInfoPage.editPet(petData1);
 
-        assertTrue(
-                RetryUtils.isConditionFulfilledWithWait(() -> Objects.requireNonNull(getDriver().getPageSource()).contains(petData1.getName()), NumericConstants.NUMERIC_8),
-                "PetData Name should be created with name " + petData1.getName()
-        );
+        assertPetExist(petData1.getName());
     }
 
     private AddPetPage preparePetFlow(){
@@ -223,5 +218,4 @@ public class PetTests extends Hooks {
         ownerInfoPage.clickAddNewPetButton();
         return new AddPetPage(getDriver());
     }
-
 }

@@ -37,6 +37,7 @@ public abstract class CloudProvider {
         return Boolean.parseBoolean(System.getProperty("browserStackRun", "false"))
                 || Boolean.parseBoolean(System.getProperty("lambdaTestRun", "false"))
                 || Boolean.parseBoolean(System.getProperty("mobileDeviceCloudRun", "false"));
+
     }
 
     public abstract String getAppId(String app) throws JSONException;

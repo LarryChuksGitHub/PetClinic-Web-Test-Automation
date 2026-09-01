@@ -93,7 +93,7 @@ public class PetClinicFlow extends BasicFlow {
         return owner;
     }
 
-    public OwnerInfoPage addMultiplePets(int numberOfPets) {
+    public OwnerInfoPage addDifferentPets(int numberOfPets) {
         HomePage homePage = new HomePage(getDriver());
         PetOwnerData owner =
                 TestDataFactory.uniqueOwner();
@@ -149,7 +149,6 @@ public class PetClinicFlow extends BasicFlow {
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
         ownerInfoPage.clickAddNewPetButton();
         addPetPage.addPet(pet);
-        //OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
         ownerInfoPage.clickVisitButton(1);
         AddVisitPage addVisitPage = new AddVisitPage(getDriver());
         addVisitPage.addVisit(visitType);

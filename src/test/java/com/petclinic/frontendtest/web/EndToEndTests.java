@@ -5,6 +5,8 @@ import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_SM
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.testng.annotations.Test;
 import org.testng.xml.dom.Tag;
@@ -111,36 +113,27 @@ public class EndToEndTests extends Hooks {
     @Tag(name = "major")
     @DisplayName("TC-INT-003: Gleicher PetData-Name bei unterschiedlichen Ownern")
     void shouldSupportSamePetNameForDifferentOwners() {
-       // Generate Data for Owners
-        PetOwnerData owner1 = TestDataFactory.uniqueOwner();
-        PetOwnerData owner2 = TestDataFactory.uniqueOwner();
-        PetOwnerData owner3 = TestDataFactory.uniqueOwner();
+        //Owners anlegen
+        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
+        List<PetOwnerData> petOwers = petClinicFlow.createMultiplePetOwner(3);
 
-        // 1. Owner anlegen
-        PetOwnerData petOwner1 = createOwner(owner1);
-
-        PetOwnerData petOwner2 = createOwner(owner2);
-
-        PetOwnerData petOwner3 = createOwner(owner3);
-
-        // 2. PetData anlegen
+        // Data for 1 pet anlegen
         String petName = RandomUtilities.generateRandomName();
         PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth("01.02.2025").setPetType(PetType.CAT);
-        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
 
-        // Add same pet name to 1 Owner
-        petClinicFlow.searchPetOwner(petOwner1.getLastName());
-        addPet(owner1, pet);
+        // Add same pet name to 1 Owner und validieren
+        petClinicFlow.searchPetOwner(petOwers.get(0).getLastName());
+        addPet(petOwers.get(0), pet);
         assertPetExists(petName);
 
-        // Add same pet name to 2 Owner
-        petClinicFlow.searchPetOwner(petOwner2.getLastName());
-        addPet(owner2, pet);
+        // Add same pet name to 2 Owner und validieren
+        petClinicFlow.searchPetOwner(petOwers.get(1).getLastName());
+        addPet(petOwers.get(1), pet);
         assertPetExists(petName);
 
-        // Add same pet name to 3 Owner
-        petClinicFlow.searchPetOwner(petOwner3.getLastName());
-        addPet(owner3, pet);
+        // Add same pet name to 3 Owner und validieren
+        petClinicFlow.searchPetOwner(petOwers.get(2).getLastName());
+        addPet(petOwers.get(2), pet);
         assertPetExists(petName);
     }
 
