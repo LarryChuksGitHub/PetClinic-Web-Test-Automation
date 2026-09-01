@@ -85,6 +85,7 @@ public class OwnerInfoPage extends Page {
     }
 
     public void clickVisitButton(int petId) {
+        scrollToBottom();
         waitUntilVisible(addVisitButton);
         waitUntilClickable(addVisitButton.get(petId - 1)).click();
     }
@@ -155,6 +156,11 @@ public class OwnerInfoPage extends Page {
         waitUntilVisible(ownerTable);
         List<WebElement> elements = driver.findElements(By.xpath("//a[normalize-space()='" + ownerName + "']"));
         return elements.size() == numberOfLastnames;
+    }
+
+    public List<WebElement> getDisplayedElements(String text) {
+        waitUntilVisible(addVisitButton);
+        return driver.findElements(By.xpath("//table//tbody//td[normalize-space()='"+text+"']"));
     }
 
     public AddVisitPage openVisit(int petId) {

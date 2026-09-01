@@ -17,8 +17,9 @@ import com.petclinic.testcommon.framework.asserts.DippSoftAssertions;
 import com.petclinic.testcommon.model.petclinic.VetData;
 import com.petclinic.testcommon.pageobject.web.petclinic.HomePage;
 import com.petclinic.testcommon.pageobject.web.petclinic.VeterinarianPage;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class VeterinarianTests extends Hooks {
 
     HomePage homePage;

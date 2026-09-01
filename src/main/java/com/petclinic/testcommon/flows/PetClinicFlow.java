@@ -148,6 +148,17 @@ public class PetClinicFlow extends BasicFlow {
         return petOwner;
     }
 
+    public PetOwnerData createNewOwnerWithMultiplePets(PetOwnerData ownerData, List<PetData> pets) {
+        PetOwnerData petOwner = createNewPetOwner(ownerData);
+        OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+        AddPetPage addPetPage = new AddPetPage(getDriver());
+        for (PetData pet : pets) {
+            ownerInfoPage.clickAddNewPetButton();
+            addPetPage.addPet(pet);
+        }
+        return petOwner;
+    }
+
     public PetOwnerData addPetClinicVisitForNewOwner(String visitType) {
         HomePage homePage = new HomePage(getDriver());
         homePage.openHomePage();
@@ -171,6 +182,7 @@ public class PetClinicFlow extends BasicFlow {
 
     public PetOwnerData addPetClinicVisit(PetOwnerData owner, int petId, String visitType) {
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+
         ownerInfoPage.clickVisitButton(petId);
         AddVisitPage addVisitPage = new AddVisitPage(getDriver());
         addVisitPage.addVisit(visitType);

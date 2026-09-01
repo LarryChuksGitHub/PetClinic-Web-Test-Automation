@@ -26,7 +26,7 @@ public final class TestDataFactory {
                 .setTelephone("030" + RandomUtilities.generateRandomStringDigit(7));
         return owner;
     }
-    public static PetData uniquePet() {
+    public static PetData uniquePet(PetType petType) {
         String id = UUID.randomUUID()
                         .toString()
                         .substring(0, 8);
@@ -37,7 +37,7 @@ public final class TestDataFactory {
         LocalDate endDate = LocalDate.of(2026, 12, 31);
 
         pet.setName(RandomUtilities.generateRandomName()+ id)
-                .setPetType(PetType.BIRD)
+                .setPetType(petType)
                 .setDateOfBirth(DateTimeUtils.generateRandomDateInDdMmYyyyFormat(startDate, endDate));
 
         return pet;

@@ -31,8 +31,9 @@ import com.petclinic.testcommon.pageobject.web.petclinic.AddPetPage;
 import com.petclinic.testcommon.pageobject.web.petclinic.HomePage;
 import com.petclinic.testcommon.pageobject.web.petclinic.OwnerInfoPage;
 import com.petclinic.testcommon.testdata.petclinic.TestDataFactory;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class PetTests extends Hooks {
 
     HomePage homePage;
@@ -201,11 +202,11 @@ public class PetTests extends Hooks {
     @DisplayName("TC-PET-007: Existierende Pet erfolgreich bearbeiten")
     void shouldEditPet() {
         PetOwnerData petOwnerData = TestDataFactory.uniqueOwner();
-        PetData petData = TestDataFactory.uniquePet();
+        PetData petData = TestDataFactory.uniquePet(PetType.SNAKE);
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         petClinicFlow.createNewOwnerWithPet(petOwnerData, petData);
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
-        PetData petData1 = TestDataFactory.uniquePet();
+        PetData petData1 = TestDataFactory.uniquePet(PetType.BIRD);
         ownerInfoPage.editPet(petData1);
 
         assertPetExist(petData1.getName());

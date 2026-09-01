@@ -4,7 +4,6 @@ import static com.petclinic.testcommon.config.Config.LOAD_WAIT;
 import static com.petclinic.testcommon.framework.utils.constant.CommonConstants.CLASS_ATTRIBUTE;
 import static com.petclinic.testcommon.framework.utils.constant.CommonConstants.VALUE_ATTRIBUTE;
 import static com.petclinic.testcommon.framework.utils.constant.NumericConstants.NUMERIC_1;
-import static com.petclinic.testcommon.framework.utils.constant.NumericConstants.NUMERIC_20;
 import static com.petclinic.testcommon.framework.utils.constant.NumericConstants.NUMERIC_4;
 import static com.petclinic.testcommon.framework.utils.constant.NumericConstants.WAIT_500;
 import static java.lang.String.valueOf;
@@ -34,7 +33,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -45,7 +43,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.petclinic.testcommon.config.Config;
 import com.petclinic.testcommon.config.cloudprovider.CloudProvider;
-import com.petclinic.testcommon.framework.asserts.DippAssertions;
 import com.petclinic.testcommon.framework.utils.BrowserTabOperation;
 import com.petclinic.testcommon.framework.utils.retry.RetryUtils;
 import com.petclinic.testcommon.framework.utils.sleep.SleepUtil;
@@ -59,13 +56,6 @@ import okhttp3.Response;
 @Slf4j
 public abstract class Page {
 
-    public static final String HEADER_LOGOUT_ID = "header-logout";
-    public static final String DE_HEADER_TITLE = "Bei Verimi anmelden";
-    public static final String NO_PASSWORD_TEXT_DE = "Kein Passwort oder vergessen?";
-    public static final String TENANT_LOCATOR = "tenant";
-    protected static final String MY_DATA_MENU = "menu-profile";
-    private static final String SAVE_BUTTON_ID = "save";
-    private static final String OK_BUTTON = "ok";
     private static final String LOADING = "img[class='loading']";
     private static final String MODAL_CONTENT = "div.modal-content";
     private static final By MODAL_CONTENT_BY = By.cssSelector(MODAL_CONTENT);
@@ -78,93 +68,15 @@ public abstract class Page {
     public static final String ELEMENT_NOT_FOUND = " Element not found after waiting for ";
     public static final String WAIT_SECONDS = " seconds...";
     private final String url;
-    protected WebElement save;
     protected WebDriver driver;
-    protected static DippAssertions dippAssertions = new DippAssertions();
-
-
-    @FindBy(id = SAVE_BUTTON_ID)
-    protected By saveBy = By.id(SAVE_BUTTON_ID);
-
-    @FindBy(id = OK_BUTTON)
-    protected WebElement okButton;
-    protected By okButtonBy = By.id(OK_BUTTON);
-
-    @FindBy(css = "body")
-    protected WebElement body;
-
-    @FindBy(id = "langEn")
-    protected WebElement changeLanguageToEnLink;
-
-    @FindBy(id = "langDe")
-    protected WebElement changeLanguageToDeLink;
-    @FindBy(id = "confirmModal")
-    protected WebElement confirmModal;
-    @FindBy(id = "cancelModal")
-    protected WebElement cancelModal;
-    @FindBy(id = MY_DATA_MENU)
-    protected WebElement myProfileMenu;
-    @FindBy(id = "cancel")
-    protected WebElement cancel;
-    @FindBy(id = "header-logo")
-    private WebElement homePage;
-    @FindBy(id = "menu-esign")
-    private WebElement mySignatureMenu;
-    @FindBy(id = "menu-verimis")
-    private WebElement myVerimisMenu;
-    @FindBy(id = "menu-activities")
-    private WebElement activitiesMenu;
-
-    @FindBy(id = "menu-settings")
-    private WebElement settingsMenu;
-
-    @FindBy(css = MODAL_CONTENT)
-    private List<WebElement> modalContentOpen;
-
-    @FindBy(id = HEADER_LOGOUT_ID)
-    private WebElement logOutButton;
-
-    @FindBy(css = "[data-i18n='portal:logout']")
-    private WebElement logOutNewButton;
-
-    @FindBy(css = "[data-i18n='portal:deleteAccountModal.subtitle']")
-    public WebElement deleteAccountModal;
-
 
     private final By loading = By.cssSelector(LOADING);
-
     @FindBy(id = "submit")
     private WebElement submitButton;
-
-    @FindBy(id = SAVE_BUTTON_ID)
-    protected WebElement saveButton;
-    @FindBy(className = "logo")
-    private WebElement logo;
 
     @FindBy(id = "cancelButton")
     private WebElement cancelButton;
 
-    @FindBy(css = "input[placeholder *= 'beispiel@mail.de']")
-    private WebElement germanEmailAddressPlaceHolder;
-
-    @FindBy(xpath = " //*[text() = '" + DE_HEADER_TITLE + "']")
-    private WebElement germanPageHeader;
-
-    @FindBy(xpath = " //*[text() = '" + NO_PASSWORD_TEXT_DE + "']")
-    private WebElement noPasswordDe;
-
-    @FindBy(css = "#langDe[aria-pressed='true']")
-    private WebElement activeGermanLanguageButton;
-
-    //for OTL there are 2 logos
-    @FindBy(css = "#spLogoImage,.transferHeaderRight")
-    private List<WebElement> partnerLogos;
-
-    @FindAll({
-            @FindBy(xpath = "//*[text()='Weiter']"),
-            @FindBy(id = "continue"),
-    })
-    private WebElement nextContinue;
 
     protected Page(WebDriver driver, String path) {
         this.driver = driver;
@@ -267,9 +179,6 @@ public abstract class Page {
         waitUntilVisible(cancelButton).click();
     }
 
-    public void clickOnVerimiLogo() {
-        waitUntilClickable(homePage).click();
-    }
 
 
     /**
@@ -280,9 +189,6 @@ public abstract class Page {
         executor.executeScript("arguments[0].click();", el);
     }
 
-    private void waitUntilMyDataMenuVisible() {
-        waitUntilVisible(myProfileMenu);
-    }
 
 
     public void clickIfPresent(WebElement element, String elementName) {
@@ -345,39 +251,6 @@ public abstract class Page {
         scrollToElement(element);
     }
 
-    public void switchToGivenLang(String language) {
-        if (Objects.equals(language, "de"))
-            changeLanguageToDeLink.click();
-        else if (Objects.equals(language, "en"))
-            changeLanguageToEnLink.click();
-        waitForMilliSecs(300);
-    }
-
-    public void switchToGermanLocale() {
-        if (isElementDisplayedWithWait(changeLanguageToDeLink, NUMERIC_20)) {
-            waitUntilVisible(changeLanguageToDeLink).click();
-
-            int attempts = 0;
-            while (!driver.getTitle().contains(DE_HEADER_TITLE) && attempts < 1) {
-
-                log.info("Retrying to switch to German locale: attempt {}", attempts + 1);
-                waitUntilVisible(changeLanguageToDeLink).click();
-                Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(1));
-                attempts++;
-            }
-        }
-
-    }
-
-    public void changeLanguageToGerman() {
-        waitUntilVisible(changeLanguageToDeLink).click();
-        try {
-            waitUntilVisible(activeGermanLanguageButton);
-        } catch (Exception e) {
-            throw new IllegalStateException("Unable to switch to German locale", e);
-        }
-    }
-
     protected void selectDropDownValueByText(WebElement element, String value) {
         if (!value.isEmpty()) {
             waitUntilVisible(element);
@@ -400,9 +273,6 @@ public abstract class Page {
         dropDown.selectByIndex(1);
     }
 
-    public boolean isLogoutButtonDisplayed() {
-        return isElementDisplayedWithWait(logOutButton);
-    }
 
     protected boolean isElementDisplayed(WebElement element) {
         try {
@@ -797,24 +667,6 @@ public abstract class Page {
                 .until(ExpectedConditions.refreshed(ExpectedConditions.attributeContains(element, CLASS_ATTRIBUTE, "modal-open")));
     }
 
-    protected void waitUntilModalIsOpened() {
-        waitUntilBodyHasModal(body);
-    }
-
-    protected void waitUntilModalIsClosed() {
-        waitUntilBodyHasNoModal(body);
-    }
-
-    public boolean isModalContentOpened() {
-        waitUntilVisible(MODAL_CONTENT_BY);
-        return !modalContentOpen.isEmpty();
-    }
-
-    public boolean isModalContentNotVisible() {
-        waitUntilNotVisible(MODAL_CONTENT_BY);
-        return modalContentOpen.isEmpty();
-    }
-
     protected Boolean waitUntilNotVisible(By by) {
         return new WebDriverWait(driver, Duration.ofSeconds(LOAD_WAIT)).until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
@@ -1146,13 +998,6 @@ public abstract class Page {
         }
     }
 
-    public void clickConfirmOnModal() {
-        waitUntilVisible(confirmModal).click();
-    }
-
-    public List<WebElement> getLogos() {
-        return partnerLogos;
-    }
 
     /**
      * Injects image to the camera from BrowserStack uploaded media files

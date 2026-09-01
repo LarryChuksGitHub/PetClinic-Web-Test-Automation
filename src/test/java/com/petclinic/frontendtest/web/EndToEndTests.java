@@ -21,8 +21,9 @@ import com.petclinic.testcommon.model.petclinic.PetOwnerData;
 import com.petclinic.testcommon.model.petclinic.PetType;
 import com.petclinic.testcommon.pageobject.web.petclinic.OwnerInfoPage;
 import com.petclinic.testcommon.testdata.petclinic.TestDataFactory;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class EndToEndTests extends Hooks {
 
     @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
@@ -42,12 +43,14 @@ public class EndToEndTests extends Hooks {
         PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth("01.02.2025").setPetType(PetType.CAT);
         addPet(owner, pet);
 
+        log.info("Ensure Pet is added");
         assertPetExists(pet.getName());
 
         String visitType = "Leg treatment";
         // VisitData anlegen
         createVisit(owner, 1, visitType);
 
+        log.info("Ensure Visit is added");
         assertVisitExists(visitType);
     }
 

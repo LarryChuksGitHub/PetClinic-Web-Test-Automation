@@ -29,8 +29,9 @@ import com.petclinic.testcommon.pageobject.web.petclinic.HomePage;
 import com.petclinic.testcommon.pageobject.web.petclinic.OwnerInfoPage;
 import com.petclinic.testcommon.pageobject.web.petclinic.OwnerSearchPage;
 import com.petclinic.testcommon.testdata.petclinic.TestDataFactory;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class PetOwnerTests extends Hooks {
 
     HomePage homePage;
