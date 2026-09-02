@@ -22,6 +22,7 @@ import com.petclinic.testcommon.config.hooks.Hooks;
 import com.petclinic.testcommon.flows.PetClinicFlow;
 import com.petclinic.testcommon.framework.asserts.DippSoftAssertions;
 import com.petclinic.testcommon.framework.utils.constant.NumericConstants;
+import com.petclinic.testcommon.framework.utils.datetime.DateTimeUtils;
 import com.petclinic.testcommon.framework.utils.random.RandomUtilities;
 import com.petclinic.testcommon.framework.utils.retry.RetryUtils;
 import com.petclinic.testcommon.model.petclinic.PetData;
@@ -94,16 +95,18 @@ public class PetTests extends Hooks {
     @DisplayName("TC-PET-009: Alle PetData typen kann angelegt werden")
     void shouldAddMultiplePetsOfDifferentType() {
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
-        int numberOfPets = 13;
-        OwnerInfoPage ownerInfoPage = petClinicFlow.addDifferentPets(numberOfPets);
-        assertEquals(ownerInfoPage.getNumberOfPets(), numberOfPets, "Number of Pets added is not correct, expected amount " + numberOfPets);
+        int numberOfPets = 30;
+        PetOwnerData owner = TestDataFactory.generateUniquePetOwnerData();
+        petClinicFlow.addDifferentPets(owner,numberOfPets);
+        OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+                assertEquals(ownerInfoPage.getNumberOfPets(), numberOfPets, "Number of Pets added is not correct, expected amount " + numberOfPets);
 
         // Check for different pet types
         List<String> differentPetTypes = ownerInfoPage.getPetTypes();
         Set<String> petType = Set.copyOf(differentPetTypes);
 
-        log.info("Verify Pet types were added");
-        assertTrue(petType.size() > 1,
+        log.info("Verify different Pet types were added");
+        assertTrue(petType.size() > 3,
                 "Different pet types were not added");
     }
 
@@ -200,7 +203,7 @@ public class PetTests extends Hooks {
     @DisplayName("TC-PET-005: PetData mit zukünftigem Geburtsdatum")
     void shouldHandleFutureBirthDate() {
         String petName = Faker.instance().name().firstName();
-        PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth("01.05.2030").setPetType(PetType.DOG);
+        PetData pet = PetData.getEmptyPetData().setName(petName).setDateOfBirth(DateTimeUtils.getFutureDateInDdMmYyyy(2)).setPetType(PetType.DOG);
         AddPetPage addPetPage = createOwnerAndPreparePetFlow();
         addPetPage.addPet(pet);
 
@@ -215,7 +218,7 @@ public class PetTests extends Hooks {
     @Tag(name = "medium")
     @DisplayName("TC-PET-007: Existierende Pet erfolgreich bearbeiten")
     void shouldEditPet() {
-        PetOwnerData petOwnerData = TestDataFactory.uniqueOwner();
+        PetOwnerData petOwnerData = TestDataFactory.generateUniquePetOwnerData();
         PetData petData = TestDataFactory.uniquePet(PetType.SNAKE);
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         petClinicFlow.createNewOwnerWithPet(petOwnerData, petData);

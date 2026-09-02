@@ -14,10 +14,10 @@ public final class TestDataFactory {
     private TestDataFactory() {
     }
 
-    public static PetOwnerData uniqueOwner() {
+    public static PetOwnerData generateUniquePetOwnerData() {
         String id = UUID.randomUUID()
-                        .toString()
-                        .substring(0, 8);
+                .toString()
+                .substring(0, 8);
         PetOwnerData owner = PetOwnerData.getEmptyOwnerData();
         owner.setFirstName(RandomUtilities.generateRandomName() + id)
                 .setLastName("LastName" + id)
@@ -26,21 +26,26 @@ public final class TestDataFactory {
                 .setTelephone("030" + RandomUtilities.generateRandomStringDigit(7));
         return owner;
     }
+
     public static PetData uniquePet(PetType petType) {
         String id = UUID.randomUUID()
-                        .toString()
-                        .substring(0, 8);
+                .toString()
+                .substring(0, 8);
         PetData pet = PetData.getEmptyPetData();
 
-        // Define the date range boundaries
-        LocalDate startDate = LocalDate.of(1990, 1, 1);
-        LocalDate endDate = LocalDate.of(2026, 12, 31);
 
-        pet.setName(RandomUtilities.generateRandomName()+ id)
+        pet.setName(RandomUtilities.generateRandomName() + id)
                 .setPetType(petType)
-                .setDateOfBirth(DateTimeUtils.generateRandomDateInDdMmYyyyFormat(startDate, endDate));
+                .setDateOfBirth(generateRandomPetDateOfBirth());
 
         return pet;
+    }
+
+    public static String generateRandomPetDateOfBirth() {
+        // Define the date range boundaries
+        LocalDate startDate = LocalDate.of(1990, 1, 1);
+        LocalDate endDate = LocalDate.of(2026, 06, 25);
+        return DateTimeUtils.generateRandomDateInDdMmYyyyFormat(startDate, endDate);
     }
 
     public static String uniquePetName() {

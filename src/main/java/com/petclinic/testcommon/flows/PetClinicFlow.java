@@ -2,10 +2,14 @@ package com.petclinic.testcommon.flows;
 
 import static com.petclinic.testcommon.framework.utils.random.RandomUtilities.generateRandomName;
 import static com.petclinic.testcommon.pageobject.web.petclinic.HomePage.BASE_URL;
+import static com.petclinic.testcommon.testdata.petclinic.TestDataFactory.generateRandomPetDateOfBirth;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 
@@ -49,7 +53,7 @@ public class PetClinicFlow extends BasicFlow {
         HomePage homePage = new HomePage(getDriver());
         homePage.openHomePage();
         PetOwnerData owner =
-                TestDataFactory.uniqueOwner();
+                TestDataFactory.generateUniquePetOwnerData();
         OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
         addOwnerPage.createOwner(owner);
@@ -65,10 +69,13 @@ public class PetClinicFlow extends BasicFlow {
         return owner;
     }
 
-    public List<PetOwnerData> createNewPetOwner(PetOwnerData owner, int numberOfOwner) {
+    public List<PetOwnerData> createNewPetOwners(PetOwnerData owner, boolean sameName, int numberOfOwner) {
         HomePage homePage = new HomePage(getDriver());
         List<PetOwnerData> owners = new ArrayList<>();
         while (numberOfOwner > 0) {
+            if(!sameName) {
+                owner = TestDataFactory.generateUniquePetOwnerData();
+            }
             OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
             AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
             addOwnerPage.createOwner(owner);
@@ -83,7 +90,7 @@ public class PetClinicFlow extends BasicFlow {
         HomePage homePage = new HomePage(getDriver());
         homePage.openHomePage();
         PetOwnerData owner =
-                TestDataFactory.uniqueOwner();
+                TestDataFactory.generateUniquePetOwnerData();
         OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
         addOwnerPage.createOwner(owner);
@@ -96,7 +103,7 @@ public class PetClinicFlow extends BasicFlow {
         HomePage homePage = new HomePage(getDriver());
         homePage.openHomePage();
         PetOwnerData owner =
-                TestDataFactory.uniqueOwner();
+                TestDataFactory.generateUniquePetOwnerData();
         OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
         addOwnerPage.createOwner(owner);
@@ -107,28 +114,64 @@ public class PetClinicFlow extends BasicFlow {
         return owner;
     }
 
-    public OwnerInfoPage addDifferentPets(int numberOfPets) {
+    public Map<PetOwnerData, List<PetData>> addDifferentPets(PetOwnerData owner, int numberOfPets) {
         HomePage homePage = new HomePage(getDriver());
-        PetOwnerData owner =
-                TestDataFactory.uniqueOwner();
+        homePage.openHomePage();
         OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
         addOwnerPage.createOwner(owner);
-        List<PetType> pets = Arrays.stream(PetType.values()).toList();
+        List<PetType> petTypes = Arrays.stream(PetType.values()).toList();
+        List<PetData> pets = new ArrayList<>();
+        Map<PetOwnerData, List<PetData>> petOwnerAndPets = new HashMap<>();
         int j = 0;
-        OwnerInfoPage ownerInfoPage = null;
+        OwnerInfoPage ownerInfoPage;
         for (int i = 0; i < numberOfPets; i++) {
             String id = RandomUtilities.generateRandomUID().substring(0, 10);
-            if (i > pets.size() - 1 && (i == j || i % pets.size() == 0)) {
-                pets = Arrays.stream(PetType.values()).toList();
+            if (i > petTypes.size() - 1 && (i == j || i % petTypes.size() == 0)) {
+                petTypes = Arrays.stream(PetType.values()).toList();
                 j = 0;
             }
-            PetData pet = PetData.getEmptyPetData().setName(generateRandomName() + id).setDateOfBirth("10.11.2020").setPetType(pets.get(j));
+            PetData pet = PetData.getEmptyPetData().setName(generateRandomName() + id).setDateOfBirth(generateRandomPetDateOfBirth()).setPetType(petTypes.get(j));
             j++;
             ownerInfoPage = new OwnerInfoPage(getDriver());
             ownerInfoPage.clickAddNewPetButton().addPet(pet);
+            pets.add(pet);
         }
-        return ownerInfoPage;
+        petOwnerAndPets.put(owner, pets);
+        return petOwnerAndPets;
+    }
+
+    public Map<List<PetOwnerData>, List<PetData>> addDifferentPets(List<PetOwnerData> owners, int numberOfPets) {
+        HomePage homePage = new HomePage(getDriver());
+        homePage.openHomePage();
+
+
+        List<PetType> petTypes = Arrays.stream(PetType.values()).toList();
+        List<PetData> pets = new ArrayList<>();
+        Map<List<PetOwnerData>, List<PetData>> petOwnerAndPets = new LinkedHashMap<>();
+        int j = 0;
+        int petOwners = owners.size();
+        for (int i = 0; i < numberOfPets; i++) {
+            String id = RandomUtilities.generateRandomUID().substring(0, 10);
+            if (i > petTypes.size() - 1 && (i == j || i % petTypes.size() == 0)) {
+                petTypes = Arrays.stream(PetType.values()).toList();
+                j = 0;
+            }
+
+            PetData pet = PetData.getEmptyPetData().setName(generateRandomName() + id).setDateOfBirth(generateRandomPetDateOfBirth()).setPetType(petTypes.get(j));
+            j++;
+
+            OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
+            if(petOwners == 0){
+               petOwners = owners.size();
+            }
+            OwnerInfoPage ownerInfoPage = ownerSearchPage.searchOwner(owners.get(petOwners - 1).getLastName());
+            ownerInfoPage.clickAddNewPetButton().addPet(pet);
+            pets.add(pet);
+            petOwners--;
+        }
+        petOwnerAndPets.put(owners, pets);
+        return petOwnerAndPets;
     }
 
     public PetOwnerData createNewPet(PetOwnerData owner, PetData pet) {
@@ -163,7 +206,7 @@ public class PetClinicFlow extends BasicFlow {
         HomePage homePage = new HomePage(getDriver());
         homePage.openHomePage();
         PetOwnerData owner =
-                TestDataFactory.uniqueOwner();
+                TestDataFactory.generateUniquePetOwnerData();
         OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
         addOwnerPage.createOwner(owner);
@@ -197,7 +240,7 @@ public class PetClinicFlow extends BasicFlow {
 
         while (numberOfPetOwners > 0) {
             PetOwnerData owner =
-                    TestDataFactory.uniqueOwner();
+                    TestDataFactory.generateUniquePetOwnerData();
             OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
             AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
             addOwnerPage.createOwner(owner);

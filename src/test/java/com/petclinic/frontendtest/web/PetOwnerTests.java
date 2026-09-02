@@ -6,6 +6,7 @@ import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_SM
 import static com.petclinic.testcommon.framework.utils.random.RandomUtilities.generateRandomName;
 import static com.petclinic.testcommon.framework.utils.random.RandomUtilities.generateRandomStringDigit;
 import static com.petclinic.testcommon.framework.utils.random.RandomUtilities.generateRandomUID;
+import static com.petclinic.testcommon.framework.utils.random.RandomUtilities.getNameWithSpecialCharacter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -58,11 +59,18 @@ public class PetOwnerTests extends Hooks {
 
     @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
     @Tag(name = "major")
-    @DisplayName("TC-OWN-006: Neuer Owner angelegen und wieder finden")
-    void shouldCreateAndFindOwner() {
+    @DisplayName("TC-OWN-006: Neuer Owner mit Sonderzeichen angelegen und wieder finden")
+    void shouldCreateAndFindOwnerWithSpecialCharacters() {
+
+        log.info("Set up test");
         setUp();
+
+        log.info("Create name with special characters and id ");
+        String name = getNameWithSpecialCharacter(30);
+
+        log.info("Create owner");
         PetOwnerData owner =
-                TestDataFactory.uniqueOwner();
+                TestDataFactory.generateUniquePetOwnerData().setLastName(name);
         OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
         OwnerInfoPage ownerInfoPage = addOwnerPage.createOwner(owner);
@@ -77,27 +85,58 @@ public class PetOwnerTests extends Hooks {
                 "Existing Owner " + owner.getLastName() + " should be displayed.");
     }
 
-
     @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
     @Tag(name = "major")
     @DisplayName("TC-OWN-012: Mehrere Owner mit demselben Namen")
     void shouldCreateOwnersWithSameName() {
         setUp();
         PetOwnerData owner =
-                TestDataFactory.uniqueOwner();
+                TestDataFactory.generateUniquePetOwnerData();
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         int numberOfOwner = 3;
-        List<PetOwnerData> owners = petClinicFlow.createNewPetOwner(owner, numberOfOwner);
+
+        List<PetOwnerData> owners = petClinicFlow.createNewPetOwners(owner, true, numberOfOwner);
 
         new OwnerInfoPage(getDriver());
         OwnerInfoPage ownerInfoPage;
         ownerInfoPage = homePage.openFindOwner().searchOwner(owner.getLastName());
 
-        log.info("Very with same data are found");
+        log.info("Very Pet with same data are found");
         assertEquals(owners.size(), numberOfOwner, "Owners with same lastnames " + owner.getLastName() + " should be created");
 
         assertTrue(ownerInfoPage.arePetOwnerNamesDisplayed(numberOfOwner, owner.getFirstName() + " "+owner.getLastName()),
                 "Owners with same lastnames " + owner.getLastName() + " should be created");
+    }
+
+
+    @Test(groups = {FRONTEND_SMOKE_PETCLINIC})
+    @Tag(name = "medium")
+    @DisplayName("TC-OWN-013: Mehrere Owner mit unterschiedliche Pets")
+    public void shouldCreateOwnersWithDifferentPetsTypes() {
+
+        log.info("Set up test");
+        setUp();
+
+        log.info("Generate Test data for owner");
+        PetOwnerData owner =
+                TestDataFactory.generateUniquePetOwnerData();
+        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
+        int numberOfOwner = 10;
+        int numberOfPet = 24;
+
+        log.info("Create multiple owner");
+        List<PetOwnerData> owners = petClinicFlow.createNewPetOwners(owner.setLastName(generateRandomName() + generateRandomUID().substring(0,8)), false, numberOfOwner);
+
+        log.info("Add pets of multiple pets types to different owners");
+        petClinicFlow.addDifferentPets(owners, numberOfPet);
+        new OwnerInfoPage(getDriver());
+        OwnerInfoPage ownerInfoPage;
+
+        log.info("Very Pets are added to each owner");
+        for(PetOwnerData petOwner : owners){
+            ownerInfoPage = homePage.openFindOwner().searchOwner(petOwner.getLastName());
+            dippAssertions.assertGreaterThan(1, "Different pet types should be added", ownerInfoPage.getPetTypes().size());
+        }
     }
 
 
@@ -107,7 +146,7 @@ public class PetOwnerTests extends Hooks {
     void shouldNotCreateOwnerWithoutLastName() {
         setUp();
         PetOwnerData owner =
-                TestDataFactory.uniqueOwner().setLastName("");
+                TestDataFactory.generateUniquePetOwnerData().setLastName("");
         OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
         addOwnerPage.createOwner(owner);
@@ -124,7 +163,7 @@ public class PetOwnerTests extends Hooks {
     void shouldHandleOwnerFieldBoundary() {
         setUp();
         PetOwnerData owner =
-                TestDataFactory.uniqueOwner().setLastName("");
+                TestDataFactory.generateUniquePetOwnerData().setLastName("");
         OwnerSearchPage ownerSearchPage = homePage.openFindOwner();
         AddOwnerPage addOwnerPage = ownerSearchPage.clickAddOwner();
 
@@ -180,7 +219,7 @@ public class PetOwnerTests extends Hooks {
     void shouldFindOwnerUsingPartialLastName() {
         setUp();
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
-        PetOwnerData petOwner = TestDataFactory.uniqueOwner();
+        PetOwnerData petOwner = TestDataFactory.generateUniquePetOwnerData();
         petOwner.setLastName(generateRandomName() + generateRandomUID().substring(0, 4));
         petOwner = petClinicFlow.createNewPetOwner(petOwner);
         OwnerInfoPage ownerInfoPage = homePage.openFindOwner().searchOwner(petOwner.getLastName().substring(0, 4));
@@ -228,11 +267,11 @@ public class PetOwnerTests extends Hooks {
     @Tag(name = "medium")
     @DisplayName("TC-OWN-011: Owner erfolgreich bearbeiten")
     void shouldEditPetOwner() {
-        PetOwnerData petOwner = TestDataFactory.uniqueOwner();
+        PetOwnerData petOwner = TestDataFactory.generateUniquePetOwnerData();
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         petClinicFlow.createNewPetOwner(petOwner);
         OwnerInfoPage ownerInfoPage = searchPetOwner(petOwner.getLastName());
-        PetOwnerData petOwner1 = TestDataFactory.uniqueOwner();
+        PetOwnerData petOwner1 = TestDataFactory.generateUniquePetOwnerData();
         ownerInfoPage.editOwner(petOwner1);
 
         log.info("Verify edited ower is visible");

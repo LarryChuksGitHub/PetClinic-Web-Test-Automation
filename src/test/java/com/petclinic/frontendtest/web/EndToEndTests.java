@@ -30,7 +30,7 @@ public class EndToEndTests extends Hooks {
     @Tag(name = "major")
     @DisplayName("TC-INT-001: Kompletter Prozess Owner -> PetData -> VisitData")
     void shouldCreateOwnerPetAndVisit() {
-        PetOwnerData owner = TestDataFactory.uniqueOwner();
+        PetOwnerData owner = TestDataFactory.generateUniquePetOwnerData();
 
         // Owner anlegen
         createOwner(owner);
@@ -59,7 +59,7 @@ public class EndToEndTests extends Hooks {
     @Tag(name = "major")
     @DisplayName("TC-INT-002: Kompletter Prozess Owner -> PetData und Visits sind getrennt")
     void shouldKeepPetsAndVisitsIndependent() {
-        PetOwnerData owner = TestDataFactory.uniqueOwner();
+        PetOwnerData owner = TestDataFactory.generateUniquePetOwnerData();
 
         // Owner anlegen
         createOwner(owner);

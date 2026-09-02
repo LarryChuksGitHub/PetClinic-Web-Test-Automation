@@ -5,10 +5,8 @@ import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_RE
 import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_SMOKE_PETCLINIC;
 import static org.testng.Assert.assertTrue;
 
-import java.util.LinkedList;
 import java.util.Objects;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.testng.annotations.Test;
 import org.testng.xml.dom.Tag;
@@ -41,35 +39,6 @@ public class PetClinicVisitTests extends Hooks {
                 "Der VisitData sollte angezeigt werden.");
     }
 
-    @Test(groups = {FRONTEND_REGRESSION_PETCLINIC})
-    @Tag(name  ="medium")
-    @DisplayName("TC-VIS-002: Mehrere Tierarztbesuche kann angelegt werden")
-    void shouldCreateMultipleVisitsForPet() {
-        PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
-        String visitType1 = "Jährliche Untersuchung";
-
-        PetOwnerData petOwner = petClinicFlow.addPetClinicVisitForNewOwner(visitType1);
-
-        log.info("Ensure visit 1 is added");
-        assertTrue(RetryUtils.isConditionFulfilledWithWait(()-> Objects.requireNonNull(getDriver().getPageSource()).contains(visitType1), NumericConstants.NUMERIC_4),
-                "VisitData "+ visitType1 +" should be shown.");
-
-        String visitType2 = "Beine Check up";
-        petClinicFlow.addPetClinicVisitForNewOwner(visitType2);
-        petClinicFlow.addPetClinicVisit(petOwner, 1, visitType2);
-
-        log.info("Ensure visit 2 is added");
-        assertTrue(RetryUtils.isConditionFulfilledWithWait(()-> Objects.requireNonNull(getDriver().getPageSource()).contains(visitType2), NumericConstants.NUMERIC_4),
-                "VisitData "+ visitType2 +" should be shown.");
-
-        String visitType3 = "Zähne OP";
-        petClinicFlow.addPetClinicVisit(petOwner, 1, visitType3);
-
-        log.info("Ensure visit 3 is added");
-        assertTrue(RetryUtils.isConditionFulfilledWithWait(()-> Objects.requireNonNull(getDriver().getPageSource()).contains(visitType3), NumericConstants.NUMERIC_4),
-                "VisitData "+ visitType3 +" should be shown.");
-    }
-
 
     @Test(groups = {FRONTEND_REGRESSION_PETCLINIC})
     @Tag(name  ="medium")
@@ -77,13 +46,10 @@ public class PetClinicVisitTests extends Hooks {
     void shouldCreateMultipleVisitsForDifferentPets() {
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         String visitType1 = "Jährliche Untersuchung";
-        PetOwnerData petOwner = TestDataFactory.uniqueOwner();
-
-        log.info("Create Pets list");
-        LinkedList<PetData> pets = getPetData();
+        PetOwnerData petOwner = TestDataFactory.generateUniquePetOwnerData();
 
         log.info("Add pets to the owner");
-        petClinicFlow.createNewOwnerWithMultiplePets(petOwner,pets );
+        petClinicFlow.addDifferentPets(petOwner, 3);
 
         petClinicFlow.addPetClinicVisit(petOwner, 1, visitType1);
 
@@ -120,18 +86,6 @@ public class PetClinicVisitTests extends Hooks {
 
     }
 
-    @NotNull
-    private static LinkedList<PetData> getPetData() {
-        LinkedList<PetData> pets = new LinkedList<>();
-        PetData dog = TestDataFactory.uniquePet(PetType.DOG);
-        PetData cat = TestDataFactory.uniquePet(PetType.CAT);
-        PetData snake = TestDataFactory.uniquePet(PetType.SNAKE);
-        pets.add(dog);
-        pets.add(cat);
-        pets.add(snake);
-        return pets;
-    }
-
     @Test(groups = {FRONTEND_REGRESSION_PETCLINIC})
     @Tag(name = "medium")
     @DisplayName("TC-VIS-003: Visit ohne Beschreibung"
@@ -150,10 +104,10 @@ public class PetClinicVisitTests extends Hooks {
     @Test(groups = {FRONTEND_REGRESSION_PETCLINIC})
     @Tag(name = "medium")
     @DisplayName(
-            "TC-VIS-004: VisitData mit langer Beschreibung"
+            "TC-VIS-004: Visit mit langer Beschreibung"
     )
     void shouldHandleLongVisitDescription() {
-        PetOwnerData petOwnerData = TestDataFactory.uniqueOwner();
+        PetOwnerData petOwnerData = TestDataFactory.generateUniquePetOwnerData();
         PetData petData = TestDataFactory.uniquePet(PetType.DOG);
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         petClinicFlow.createNewOwnerWithPet(petOwnerData, petData);

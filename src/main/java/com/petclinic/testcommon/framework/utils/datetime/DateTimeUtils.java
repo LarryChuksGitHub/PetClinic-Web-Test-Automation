@@ -68,6 +68,14 @@ public class DateTimeUtils {
         return formatter.format(futureDate);
     }
 
+public static String getFutureDateInDdMmYyyy(int advanceYear) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(java.util.Calendar.YEAR, advanceYear);
+        Date futureDate = calendar.getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        return formatter.format(futureDate);
+    }
+
     public static String formatDateToEnLocale(String dateCandidate) throws ParseException {
         String enFormat = "yyyy-MM-dd";
         SimpleDateFormat deFormat = new SimpleDateFormat("dd.MM.yyyy");

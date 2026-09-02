@@ -42,6 +42,7 @@ public class HomePage extends Page {
     }
 
     public OwnerSearchPage openFindOwner() {
+        scrollToTop();
         waitUntilClickable(findOwner).click();
         return new OwnerSearchPage(driver);
     }

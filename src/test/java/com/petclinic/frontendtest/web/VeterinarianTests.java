@@ -4,8 +4,11 @@ package com.petclinic.frontendtest.web;
 import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_REGRESSION_PETCLINIC;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
 import org.testng.annotations.BeforeMethod;
@@ -32,7 +35,7 @@ public class VeterinarianTests extends Hooks {
     }
 
     @Test(groups = {FRONTEND_REGRESSION_PETCLINIC})
-    @Tag(name = "medium")
+    @Tag(name = "major")
     @DisplayName("TC-VET-001: All Tierärzte soll angezeigt werden")
     void shouldDisplayAllVeterinarians() {
 
@@ -47,12 +50,22 @@ public class VeterinarianTests extends Hooks {
                 "Mindestens ein Tierarzt muss angezeigt werden."
         );
 
+        log.info("Very veterinarians are unique");
+        Set<String> vetName = vets.stream().map(VetData::getName).collect(Collectors.toSet());
+        dippAssertions.assertGreaterThan(5,"All Veterinarians were not displayed",vetName.size());
+
+        List<String> listOfVets =  List.of("Linda Douglas", "Rafael Ortega", "Henry Stevens", "Sharon Jenkins", "James Carter", "Helen Leary");
+        for (String vet : vetName) {
+            assertTrue(listOfVets.contains(vet),
+                    "The list of vets is not complete.");
+        }
+
         for (VetData vet : vets) {
             assertFalse(
                     vet.getName().isBlank(),
-                    "Der Name des Tierarztes darf nicht leer sein.");
+                    "Name of vet is not blank.");
 
-            assertNotNull(vet.getSpecialization(),"Specialization des Tierarztes darf nicht null.");
+            assertNotNull(vet.getSpecialization(),"Specialization of vet is not blank.");
         }
         dippAssertions.assertGreaterThan(5,"All Veterinarians were not displayed",vets.size());
 

@@ -3,6 +3,8 @@ package com.petclinic.testcommon.framework.utils.random;
 import java.util.Random;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.javafaker.Faker;
 import lombok.experimental.UtilityClass;
 
@@ -37,6 +39,12 @@ public class RandomUtilities {
     public static String generateRandomName() {
         return Faker.instance().name().firstName();
     }
+
+    @NotNull
+    public static String getNameWithSpecialCharacter(int numberOfCharacter) {
+        return (generateRandomName() + "!@#$%&§&/¶¤?*°#'`-+±.÷" + generateRandomUID()).substring(0,numberOfCharacter);
+    }
+
 
 
 
