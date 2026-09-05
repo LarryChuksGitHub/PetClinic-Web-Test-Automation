@@ -107,6 +107,8 @@ public class PetClinicVisitTests extends Hooks {
             "TC-VIS-004: Visit mit langer Beschreibung"
     )
     void shouldHandleLongVisitDescription() {
+
+        log.info("Generate uniques owner and pet");
         PetOwnerData petOwnerData = TestDataFactory.generateUniquePetOwnerData();
         PetData petData = TestDataFactory.uniquePet(PetType.DOG);
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
@@ -115,6 +117,7 @@ public class PetClinicVisitTests extends Hooks {
         ownerInfoPage.clickVisitButton(1);
         AddVisitPage addVisitPage = new AddVisitPage(getDriver());
 
+        log.info("Generate long visit description");
         String longDescription =
                 "A".repeat(500);
 

@@ -2,6 +2,7 @@ package com.petclinic.frontendtest.web;
 
 
 import static com.petclinic.testcommon.framework.testgroup.TestGroup.FRONTEND_REGRESSION_PETCLINIC;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -41,31 +42,56 @@ public class VeterinarianTests extends Hooks {
 
         VeterinarianPage veterinarianPage = new VeterinarianPage(getDriver());
 
-        log.info("Very veterinarians are on the page");
+        log.info("Very veterinarians and specialization are on the page");
         List<VetData> vets = veterinarianPage.getVetsOnCurrentPage();
-
-        log.info("Very veterinarians are shown {}", vets);
-        assertFalse(
-                vets.isEmpty(),
-                "Mindestens ein Tierarzt muss angezeigt werden."
-        );
 
         log.info("Very veterinarians are unique");
         Set<String> vetName = vets.stream().map(VetData::getName).collect(Collectors.toSet());
+
+        // We assume the number of vets can only increase
+        Set<List<String>> vetSpecialization = vets.stream().map(VetData::getSpecialization).collect(Collectors.toSet());
         dippAssertions.assertGreaterThan(5,"All Veterinarians were not displayed",vetName.size());
 
+        // We assume the number of specializations can only increase
+        dippAssertions.assertGreaterThan(3,"All Veterinarians were not displayed",vetSpecialization.size());
+
         List<String> listOfVets =  List.of("Linda Douglas", "Rafael Ortega", "Henry Stevens", "Sharon Jenkins", "James Carter", "Helen Leary");
-        for (String vet : vetName) {
-            assertTrue(listOfVets.contains(vet),
-                    "The list of vets is not complete.");
-        }
 
         for (VetData vet : vets) {
             assertFalse(
                     vet.getName().isBlank(),
                     "Name of vet is not blank.");
 
-            assertNotNull(vet.getSpecialization(),"Specialization of vet is not blank.");
+            // We assume that vet names and their specialization will not change and number of vets can only increase
+            assertTrue(listOfVets.contains(vet.getName()),
+                    "The list of vets is not complete.");
+
+            assertNotNull(vet.getSpecialization(),"Specialization of vet should not be empty.");
+
+            log.info("Verify vets are correctly mapped to their specialization");
+            if(vet.getName().equals("James Carter")){
+                assertEquals(vet.getSpecialization().iterator().next(), "none", "Vet is not mapped to the correct specialization.");
+            } else if(vet.getName().equals("Helen Leary")){
+                assertEquals(vet.getSpecialization().iterator().next(), "radiology", "Vet is not mapped to the correct specialization.");
+            } else if (vet.getName().equals("Linda Douglas")) {
+                assertEquals(vet.getSpecialization(), List.of("dentistry" ,"surgery"), "Vet is not mapped to the correct specialization.");
+
+            } else if (vet.getName().equals("Rafael Ortega")) {
+                assertEquals(vet.getSpecialization().iterator().next(), "surgery", "Vet is not mapped to the correct specialization.");
+
+            } else if (vet.getName().equals("Henry Stevens")) {
+                assertEquals(vet.getSpecialization().iterator().next(), "radiology", "Vet is not mapped to the correct specialization.");
+
+            }
+            else if (vet.getName().equals("Sharon Jenkins")) {
+                assertEquals(vet.getSpecialization().iterator().next(), "none", "Vet is not mapped to the correct specialization.");
+
+            }
+
+            // We assume that specialization will not change and number of specialization can only increase
+            List<String> listOfSpecialization =  List.of("none", "radiology", "dentistry", "surgery");
+            assertTrue(listOfSpecialization.contains(vet.getSpecialization().iterator().next()),
+                    "The list of vets is not complete.");
         }
         dippAssertions.assertGreaterThan(5,"All Veterinarians were not displayed",vets.size());
 

@@ -73,10 +73,12 @@ public class PetTests extends Hooks {
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         petClinicFlow.createNewPetOwner();
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
+
+        log.info("Generate list of pets types");
         List<PetType> pets = Arrays.stream(PetType.values()).toList();
-        for (int i = 0; i < pets.size(); i++) {
+        for (PetType petType : pets) {
             String id = RandomUtilities.generateRandomUID().substring(0, 10);
-            PetData pet = PetData.getEmptyPetData().setName("Bello" + id).setDateOfBirth("10.10.2020").setPetType(pets.get(i));
+            PetData pet = PetData.getEmptyPetData().setName("Bello" + id).setDateOfBirth(DateTimeUtils.getPastDateInDdMmYyyy(-15)).setPetType(petType);
             ownerInfoPage.clickAddNewPetButton().addPet(pet);
             assertPetExist(pet.getName());
         }
@@ -97,6 +99,8 @@ public class PetTests extends Hooks {
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
         int numberOfPets = 30;
         PetOwnerData owner = TestDataFactory.generateUniquePetOwnerData();
+
+        log.info("Add multiple pets types");
         petClinicFlow.addDifferentPets(owner,numberOfPets);
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
                 assertEquals(ownerInfoPage.getNumberOfPets(), numberOfPets, "Number of Pets added is not correct, expected amount " + numberOfPets);
@@ -177,18 +181,18 @@ public class PetTests extends Hooks {
     @DisplayName("TC-PET-004: PetData ohne Namen oder Geburtstag kann nicht angelegt werden")
     void shouldNotCreatePetWithoutNameAndDateOfBirth() {
 
-        PetData pet = PetData.getEmptyPetData().setName("").setDateOfBirth("2020-05-10").setPetType(PetType.SNAKE);
+        PetData snake = PetData.getEmptyPetData().setName("").setDateOfBirth(DateTimeUtils.getPastDateInDdMmYyyy(-6)).setPetType(PetType.SNAKE);
         AddPetPage addPetPage = createOwnerAndPreparePetFlow();
-        addPetPage.addPet(pet);
+        addPetPage.addPet(snake);
         addPetPage.save();
         assertTrue(
                 getDriver().getCurrentUrl()
                         .contains("/pets/new")
         );
 
-        pet.setName(RandomUtilities.generateRandomName()+RandomUtilities.generateRandomUID().substring(0, 10));
-        pet.setDateOfBirth("");
-        addPetPage.addPet(pet);
+        snake.setName(RandomUtilities.generateRandomName()+RandomUtilities.generateRandomUID().substring(0, 10));
+        snake.setDateOfBirth("");
+        addPetPage.addPet(snake);
         addPetPage.save();
 
         log.info("Very pet was not added ");
@@ -219,15 +223,15 @@ public class PetTests extends Hooks {
     @DisplayName("TC-PET-007: Existierende Pet erfolgreich bearbeiten")
     void shouldEditPet() {
         PetOwnerData petOwnerData = TestDataFactory.generateUniquePetOwnerData();
-        PetData petData = TestDataFactory.uniquePet(PetType.SNAKE);
+        PetData snake = TestDataFactory.uniquePet(PetType.SNAKE);
         PetClinicFlow petClinicFlow = new PetClinicFlow(getDriver());
-        petClinicFlow.createNewOwnerWithPet(petOwnerData, petData);
+        petClinicFlow.createNewOwnerWithPet(petOwnerData, snake);
         OwnerInfoPage ownerInfoPage = new OwnerInfoPage(getDriver());
-        PetData petData1 = TestDataFactory.uniquePet(PetType.BIRD);
-        ownerInfoPage.editPet(petData1);
+        PetData bird = TestDataFactory.uniquePet(PetType.BIRD);
+        ownerInfoPage.editPet(bird);
 
         log.info("Very pet data was edited");
-        assertPetExist(petData1.getName());
+        assertPetExist(bird.getName());
     }
 
     private AddPetPage createOwnerAndPreparePetFlow(){
